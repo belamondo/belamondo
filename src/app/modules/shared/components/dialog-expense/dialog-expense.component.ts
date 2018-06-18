@@ -43,6 +43,7 @@ export class DialogExpenseComponent implements OnInit {
   // Common properties: end
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private _crud: CrudService,
     private _route: ActivatedRoute,
     public _snackbar: MatSnackBar,
@@ -61,44 +62,42 @@ export class DialogExpenseComponent implements OnInit {
   }
 
   expenseFormInit = () => {
-    this._route.params.subscribe(params => {
-      if (params.id) {
-        this.paramToSearch = params.id;
-        this.submitToCreate = false;
-        this.submitToUpdate = true;
-        this.title = 'Atualizar tipo de despesa';
-        this.submitButton = 'Atualizar';
+    if (this.data.id) {
+      this.paramToSearch = this.data.id;
+      this.submitToCreate = false;
+      this.submitToUpdate = true;
+      this.title = 'Atualizar tipo de despesa';
+      this.submitButton = 'Atualizar';
 
-        const param = this.paramToSearch.replace(':', '');
+      const param = this.paramToSearch.replace(':', '');
 
-        this._crud.read({
-          collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes', param],
-        }).then(res => {
-          this.expenseForm.patchValue(res[0]);
+      this._crud.read({
+        collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes', param],
+      }).then(res => {
+        this.expenseForm.patchValue(res[0]);
 
-          /* Check if has additionals fields */
-          if (Object.keys(res[0]).length > 2) {
-            // tslint:disable-next-line:forin
-            for (const key in res[0]) {
-              /* Create form control if it is a additional field */
-              if (key !== 'name' && key !== 'type') {
-                this.expenseForm.addControl(key, new FormControl(res[0][key]));
-                this.fields.push(key);
-              }
+        /* Check if has additionals fields */
+        if (Object.keys(res[0]).length > 2) {
+          // tslint:disable-next-line:forin
+          for (const key in res[0]) {
+            /* Create form control if it is a additional field */
+            if (key !== 'name' && key !== 'type' && key !== '_id') {
+              this.expenseForm.addControl(key, new FormControl(res[0][key]));
+              this.fields.push(key);
             }
           }
-
-          this.isStarted = true;
-        });
-      } else {
-        this.submitToCreate = true;
-        this.submitToUpdate = false;
-        this.title = 'Cadastrar tipo de despesa';
-        this.submitButton = 'Cadastrar';
+        }
 
         this.isStarted = true;
-      }
-    });
+      });
+    } else {
+      this.submitToCreate = true;
+      this.submitToUpdate = false;
+      this.title = 'Cadastrar tipo de despesa';
+      this.submitButton = 'Cadastrar';
+
+      this.isStarted = true;
+    }
   }
 
   onExpenseFormSubmit = (formDirective: FormGroupDirective) => {

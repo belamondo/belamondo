@@ -93,3 +93,19 @@
 .is-mobile .sidenav-container mat-sidenav {
   width: 175px;
 }  
+
+::ng-deep .panel {
+  box-shadow: none !important;
+}
+
+::ng-deep .panel .mat-expansion-panel-header {
+  font-size: smaller;
+  padding-top: 15px;
+  padding-bottom: 15px; 
+}
+
+::ng-deep .panel .mat-expansion-panel-body {
+  font-size: small;
+  background: rgb(247, 247, 247);
+  padding: 0px;
+}

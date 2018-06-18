@@ -21,10 +21,6 @@ table{
   right: 30px;
 }
 
-.icon {
-  float: right;
-}
-
 .link-disable {
   cursor: default;
   color: lightgray;

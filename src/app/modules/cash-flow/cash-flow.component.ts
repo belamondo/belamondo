@@ -15,29 +15,34 @@ export class CashFlowComponent implements OnInit {
 
     /* Options to show in side nav menu */
     this.paramsToTopbarMenu = {
-      title: "Fluxo de Caixa",
+      title: 'Fluxo de Caixa',
       views: [{
         name: 'Painel inicial',
         icon: 'home',
         link: ['dashboard']
-      },{
+      }, {
         name: 'Cadastros',
         icon: 'assignment',
-        link: ['expense']
-      },{
+        expansionMenu: true,
+        subMenus: [
+          { name: 'Despesas', link: 'expense' },
+          { name: 'Produtos e Serviços', link: 'products' },
+          { name: 'clientes', link: 'companies' }
+        ]
+      }, {
         name: 'Lançamentos',
         icon: 'compare_arrows',
         link: ['incoming-outcoming']
-      },{
+      }, {
         name: 'Contas a pagar/receber',
         icon: 'attach_money',
         link: ['payable-receivable']
-      },{
+      }, {
         name: 'Relatórios',
         icon: 'assessment',
         link: ['report']
       }]
-    }
+    };
   }
 
 }

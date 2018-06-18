@@ -20,6 +20,13 @@
               <i class="material-icons" (click)="sort($event, headerId)">{{show.sort}}</i>
             </a>
           </th>
+
+          <form [formGroup]="tableSearchForm">
+            <mat-form-field class="search">
+              <mat-label>Filtrar</mat-label>
+              <input matInput placeholder="Digite filtro" type="text" formControlName="search" (keyup)="searchOverAll()">
+            </mat-form-field>
+          </form>
         </tr>
       </thead>
 
@@ -67,30 +74,23 @@
             </a>
           </td>
 
-        <td>
-          <form [formGroup]="tableFooterForm">
-            <mat-form-field>
-              <mat-select placeholder="Nº de linhas" formControlName="numberOfLines" (selectionChange)="setLimit()">
-                <mat-option *ngFor="let n of params.footer.numberOfLines" value="{{n}}">
-                <p> {{ n }}</p> 
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </form>
-        </td>
+          <td>
+            <form [formGroup]="tableFooterForm">
+              <mat-form-field>
+                <mat-select placeholder="Nº de linhas" formControlName="numberOfLines" (selectionChange)="setLimit()">
+                  <mat-option *ngFor="let n of params.footer.numberOfLines" value="{{n}}">
+                  <p> {{ n }}</p> 
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </form>
+          </td>
 
           <td>
-            <form [formGroup]="tableSearchForm">
-              <mat-form-field class="search">
-                <mat-label>Filtrar</mat-label>
-                <input matInput placeholder="Digite filtro" type="text" formControlName="search" (keyup)="searchOverAll()">
-              </mat-form-field>
-
-              <button mat-raised-button class="icon" *ngFor="let icon of params.header.actionIcon ; let i = index;" (click)="onTableDataOutput($event, undefined)" color="warn">
-                <mat-icon [matTooltip]="icon.tooltip" *ngIf="icon.tooltip">{{icon.icon}}</mat-icon>
-                <mat-icon *ngIf="!icon.tooltip">{{icon.icon}}</mat-icon>
-              </button>
-            </form>
+            <button mat-raised-button *ngFor="let icon of params.header.actionIcon ; let i = index;" (click)="onTableDataOutput($event, undefined)">
+              <mat-icon [matTooltip]="icon.tooltip" *ngIf="icon.tooltip">{{icon.icon}}</mat-icon>
+              <mat-icon *ngIf="!icon.tooltip">{{icon.icon}}</mat-icon>
+            </button>
           </td>
         </tr>
       </tfoot>

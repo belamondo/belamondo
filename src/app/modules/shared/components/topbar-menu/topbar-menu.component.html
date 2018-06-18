@@ -66,12 +66,30 @@
         </mat-card>
         -->
         <ng-template ngFor let-view [ngForOf]="params.views" let-even="even" let-odd="odd" let-rowIndex="index">
-          <a mat-list-item [routerLink]="view.link" routerLinkActive="active-link" (click)="mobile ? snav.close() : {}">
+          <a *ngIf="!view.expansionMenu" mat-list-item [routerLink]="view.link" routerLinkActive="active-link" (click)="mobile ? snav.close() : {}">
             <mat-icon mat-list-icon>{{view.icon}}</mat-icon>
             <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px;">{{view.name}}</span>
             <span mat-line style="font-size: small; color: gray;">{{view.description}}</span>
           </a>
+
+          <mat-expansion-panel *ngIf="view.expansionMenu" class="panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon mat-list-icon style="margin-right: 20px;">{{view.icon}}</mat-icon>
+                <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px;">{{view.name}}</span>
+                <span mat-line style="font-size: small; color: gray;">{{view.description}}</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+          
+            <ng-template ngFor let-subMenu [ngForOf]="view.subMenus" let-even="even" let-odd="odd" let-rowIndex="index">
+              <a mat-list-item [routerLink]="subMenu.link" routerLinkActive="active-link" (click)="mobile ? snav.close() : {}">
+                <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px;">{{subMenu.name}}</span>
+              </a>
+            </ng-template>
+          
+          </mat-expansion-panel>
         </ng-template>
+        
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
