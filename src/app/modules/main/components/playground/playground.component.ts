@@ -17,9 +17,9 @@ export class PlaygroundComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this._crud.read({
+    this._crud.readWithObservable({
       collectionsAndDocs: ['people', 'kslSSyY3IJ8DCGdNYg4B']
-    }).then(res => {
+    }).subscribe(res => {
       console.log(res);
     });
   }

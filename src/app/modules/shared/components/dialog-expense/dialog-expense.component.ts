@@ -21,6 +21,7 @@ import { ActivatedRoute, Router } from '@angular/router';
  * Services
  */
 import { CrudService } from './../../../shared/services/firebase/crud.service';
+import { StrategicDataService } from '../../services/strategic-data.service';
 
 @Component({
   selector: 'app-dialog-expense',
@@ -47,11 +48,12 @@ export class DialogExpenseComponent implements OnInit {
     private _crud: CrudService,
     private _route: ActivatedRoute,
     public _snackbar: MatSnackBar,
-    public dialog: MatDialog
+    public _strategicData: StrategicDataService,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit() {
-    this.userData = JSON.parse(sessionStorage.getItem('userData'));
+    this.userData = this._strategicData.userData$;
 
     this.expenseForm = new FormGroup({
       name: new FormControl(null, Validators.required),
@@ -71,18 +73,18 @@ export class DialogExpenseComponent implements OnInit {
 
       const param = this.paramToSearch.replace(':', '');
 
-      this._crud.read({
+      this._crud.readWithObservable({
         collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes', param],
-      }).then(res => {
-        this.expenseForm.patchValue(res[0]);
+      }).then(expensesTypes => {
+        this.expenseForm.patchValue(expensesTypes[0]);
 
         /* Check if has additionals fields */
-        if (Object.keys(res[0]).length > 2) {
+        if (Object.keys(expensesTypes[0]).length > 2) {
           // tslint:disable-next-line:forin
-          for (const key in res[0]) {
+          for (const key in expensesTypes[0]) {
             /* Create form control if it is a additional field */
             if (key !== 'name' && key !== 'type' && key !== '_id') {
-              this.expenseForm.addControl(key, new FormControl(res[0][key]));
+              this.expenseForm.addControl(key, new FormControl(expensesTypes[0][key]));
               this.fields.push(key);
             }
           }

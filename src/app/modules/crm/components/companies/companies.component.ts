@@ -19,6 +19,7 @@ import { DialogCompanyComponent } from '../../../shared/components/dialog-compan
  * Services
  */
 import { CrudService } from './../../../shared/services/firebase/crud.service';
+import { StrategicDataService } from '../../../shared/services/strategic-data.service';
 
 @Component({
   selector: 'app-companies',
@@ -35,18 +36,19 @@ export class CompaniesComponent implements OnInit {
   constructor(
     private _crud: CrudService,
     private _dialog: MatDialog,
-    public _snackbar: MatSnackBar
+    public _snackbar: MatSnackBar,
+    public _strategicData: StrategicDataService,
   ) {}
 
   ngOnInit() {
-    this.userData = JSON.parse(sessionStorage.getItem('userData'));
+    this.userData = this._strategicData.userData$;
 
     this.isStarted = false;
 
-    this._crud.read({
+    this._crud.readWithObservable({
       collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userCompanies'],
-    }).then(res => {
-      this.userCompanies = res;
+    }).subscribe(userCompanies => {
+      this.userCompanies = userCompanies;
 
       this.makeList();
     });

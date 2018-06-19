@@ -20,6 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
  * Services
  */
 import { CrudService } from './../../../shared/services/firebase/crud.service';
+import { StrategicDataService } from '../../../shared/services/strategic-data.service';
 
 /**
  * Components
@@ -46,21 +47,20 @@ export class ExpenseComponent implements OnInit {
     private _dialog: MatDialog,
     private _crud: CrudService,
     private _route: ActivatedRoute,
-    public dialog: MatDialog
+    public _strategicData: StrategicDataService,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit() {
-    this.userData = JSON.parse(sessionStorage.getItem('userData'));
+    this.userData = this._strategicData.userData$;
     this.makeList();
-
   }
 
   makeList = () => {
     /* Get expenses types from database */
-    this._crud.read({
+    this._crud.readWithObservable({
       collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes'],
-    }).then(res => {
-
+    }).subscribe(expenseTypes => {
       this.paramsToTableData = {
         header: {
           actionIcon: [{
@@ -69,7 +69,7 @@ export class ExpenseComponent implements OnInit {
           }]
         },
         list: {
-          dataSource: res,
+          dataSource: expenseTypes,
           show: [{
             field: 'name',
             header: 'Despesa',

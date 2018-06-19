@@ -5,8 +5,8 @@ import {
   Input
 } from '@angular/core';
 import {
-  MediaMatcher, 
-  BreakpointObserver, 
+  MediaMatcher,
+  BreakpointObserver,
   Breakpoints
 } from '@angular/cdk/layout';
 import { MatSnackBar } from '@angular/material';
@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
  */
 import { AuthenticationService } from './../../services/firebase/authentication.service';
 import { CrudService } from './../../services/firebase/crud.service';
+import { StrategicDataService } from '../../services/strategic-data.service';
 
 @Component({
   selector: 'topbar-menu',
@@ -29,11 +30,11 @@ export class TopbarMenuComponent implements OnInit {
   public mobile = (typeof window !== 'undefined') ?
   (window.screen.availWidth < 800) :
   true;
-  
+
   public options: any;
   public user: any;
   public userData: any;
-  
+
   @Input() params;
 
   constructor(
@@ -41,6 +42,7 @@ export class TopbarMenuComponent implements OnInit {
     private _crud: CrudService,
     private _router: Router,
     public _snackbar: MatSnackBar,
+    public _strategicData: StrategicDataService,
     public breakpointObserver: BreakpointObserver,
     public changeDetectorRef: ChangeDetectorRef,
     public media: MediaMatcher,
@@ -77,20 +79,21 @@ export class TopbarMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userData = JSON.parse(sessionStorage.getItem('userData'));
+    this.userData = this._strategicData.userData$;
 
-    this._crud.read({
-      collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id']]
-    }).then(res => { 
-      this.user = res[0];
-    })
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id']]
+    }).subscribe(userType => {
+      this.user = userType[0];
+    });
   }
 
   logout = () => {
-    let params = {
+    let params;
+    params = {
       navigateTo: '/login'
     };
 
     this._auth.logout(params);
-  } 
+  }
 }

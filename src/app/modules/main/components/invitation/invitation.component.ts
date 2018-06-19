@@ -23,6 +23,7 @@ import {
 import {
   CrudService
 } from './../../../shared/services/firebase/crud.service';
+import { StrategicDataService } from '../../../shared/services/strategic-data.service';
 
 import {
   Observable
@@ -39,23 +40,24 @@ import {
 })
 export class InvitationComponent implements OnInit {
 
-  //Common properties: start
+  // Common properties: start
   public invitationForm: FormGroup;
   public isStarted: boolean;
   public submitButton: string;
   public title: string;
   public userData: any;
-  //Common properties: end
+  // Common properties: end
 
   constructor(
     private _crud: CrudService,
     private _route: ActivatedRoute,
     private _router: Router,
-    public _snackbar: MatSnackBar
+    public _snackbar: MatSnackBar,
+    public _strategicData: StrategicDataService,
   ) {}
 
   ngOnInit() {
-    this.userData = JSON.parse(sessionStorage.getItem('userData'));
+    this.userData = this._strategicData.userData$;
 
     this.invitationForm = new FormGroup({
       email: new FormControl(null, [Validators.required, Validators.email]),
@@ -66,23 +68,23 @@ export class InvitationComponent implements OnInit {
   }
 
   invitationFormInit = () => {
-    this.title = "Convidar novo usuário";
-    this.submitButton = "Convidar";
+    this.title = 'Convidar novo usuário';
+    this.submitButton = 'Convidar';
 
     this.isStarted = true;
   }
 
   onInvitationFormSubmit = (formDirective: FormGroupDirective) => {
     this._crud
-      .create({
-        collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'invitationsTypes'],
-        objectToCreate: this.invitationForm.value
-      }).then(res => {
-        formDirective.resetForm();
+    .create({
+      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'invitationsTypes'],
+      objectToCreate: this.invitationForm.value
+    }).then(res => {
+      formDirective.resetForm();
 
-        this._snackbar.open('Cadastro feito com sucesso', '', {
-          duration: 4000
-        })
-      })
+      this._snackbar.open('Cadastro feito com sucesso', '', {
+        duration: 4000
+      });
+    });
   }
 }

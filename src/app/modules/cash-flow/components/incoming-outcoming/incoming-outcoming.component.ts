@@ -22,6 +22,7 @@ import { ActivatedRoute, Router } from '@angular/router';
  * Services
  */
 import { CrudService } from './../../../shared/services/firebase/crud.service';
+import { StrategicDataService } from '../../../shared/services/strategic-data.service';
 
 /**
  * Third party
@@ -38,7 +39,7 @@ import {map, startWith} from 'rxjs/operators';
 })
 export class IncomingOutcomingComponent implements OnInit {
 
-  //Common properties: start
+  // Common properties: start
   public incomingOutcomingForm: FormGroup;
   public isStarted: boolean;
   public mask: any;
@@ -59,7 +60,7 @@ export class IncomingOutcomingComponent implements OnInit {
   public inAndOut: any = { arrayOfOutcoming: [], arrayOfIncoming: [] };
   public monthAndYear: string;
   public indexOfRegister: number;
-  //Common properties: end
+  // Common properties: end
 
   public autoCorrectedDatePipe: any;
 
@@ -68,18 +69,19 @@ export class IncomingOutcomingComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     public _snackbar: MatSnackBar,
+    public _strategicData: StrategicDataService,
     public dialog: MatDialog
   ) { }
 
   ngOnInit() {
-    this.userData = JSON.parse(sessionStorage.getItem('userData'));
+    this.userData = this._strategicData.userData$;
 
     /* Mock - start */
     this.receivers = [
       { name: 'Papelaria Joarez' },
       { name: 'IFAL' },
       { name: 'Cliente balcão' },
-    ]
+    ];
     /* Mock - end */
 
     this.incomingOutcomingForm = new FormGroup({
@@ -98,46 +100,46 @@ export class IncomingOutcomingComponent implements OnInit {
     this.monthAndYear = (this.getMonthAndYear(new Date()).year).toString() + (this.getMonthAndYear(new Date()).month).toString();
 
     this.mask = {
-      cpf: [/\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'-', /\d/,/\d/ ],
+      cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/ ],
       date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
       zip: [/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/],
-      phone: ['(', /\d/, /\d/, ')',' ' , /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/,],
-      cell_phone: ['(', /\d/, /\d/, ')',' ' , /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
-      cnpj: [/\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-',/\d/,/\d/]
+      phone: ['(', /\d/, /\d/, ')', ' ' , /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
+      cell_phone: ['(', /\d/, /\d/, ')', ' ' , /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
+      cnpj: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]
     };
 
     /* Get expenses types from database */
-    this._crud.read({
-      collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'expensesTypes'],
-    }).then(res => {
-      this.outcomingsTypes = res;
-    })
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes'],
+    }).subscribe(expensesTypes => {
+      this.outcomingsTypes = expensesTypes;
+    });
 
     /* Get products and services from database */
-    this._crud.read({
-      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'products'],
-    }).then(res => {
-      this.incomingsTypes01 = res;
-    })
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'products'],
+    }).then(products => {
+      this.incomingsTypes01 = products;
+    });
 
     /* Get services from database */
-    this._crud.read({
-      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'services'],
-    }).then(res => {
-      this.incomingsTypes02 = res;
-    })
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'services'],
+    }).then(services => {
+      this.incomingsTypes02 = services;
+    });
 
     /* Get incomings and outcomings of the actual month from database */
-    this._crud.read({
-      collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'inAndOut','201806']  // TODO: pegar ano e mês atual
-    }).then(res => {
-      if(res[0] !== undefined){
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'inAndOut', '201806']  // TODO: pegar ano e mês atual
+    }).then(inAndOut => {
+      if (inAndOut[0] !== undefined) {
         this.inAndOut = {
-          arrayOfOutcoming: res[0]['arrayOfOutcoming'],
-          arrayOfIncoming: res[0]['arrayOfIncoming']
-        }
+          arrayOfOutcoming: inAndOut[0]['arrayOfOutcoming'],
+          arrayOfIncoming: inAndOut[0]['arrayOfIncoming']
+        };
       }
-    })
+    });
 
     this.incomingOutcomingFormInit();
 
@@ -145,140 +147,147 @@ export class IncomingOutcomingComponent implements OnInit {
 
   incomingOutcomingFormInit = () => {
     this._route.params.subscribe(params => {
-      
+
       if (params.id) {
         this.paramToSearch = params.id;
         this.submitToCreate = false;
         this.submitToUpdate = true;
-        this.title = "Atualizar lançamento";
-        this.submitButton = "Atualizar";
+        this.title = 'Atualizar lançamento';
+        this.submitButton = 'Atualizar';
 
-        let param = this.paramToSearch.replace(':', '');
+        let param, paramId, paramModality, paramArrayIndex;
 
-        let paramId = param.substring(0, param.indexOf('-'));
-        let paramModality = param.substring((param.indexOf('-')+1), (param.indexOf('-')+2));
-        let paramArrayIndex = param.substring((param.indexOf('-')+2), param.lenght);
+        param = this.paramToSearch.replace(':', '');
+        paramId = param.substring(0, param.indexOf('-'));
+        paramModality = param.substring((param.indexOf('-') + 1), (param.indexOf('-') + 2));
+        paramArrayIndex = param.substring((param.indexOf('-') + 2), param.lenght);
 
         /* Get index to update if necessary */
         this.indexOfRegister = paramArrayIndex;
-        
-        this._crud.read({
-          collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'inAndOut',paramId],
-        }).then(res => {
-          
+
+        this._crud.readWithObservable({
+          collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'inAndOut', paramId],
+        }).subscribe(inAndOut => {
+
           let modality;
-          if(paramModality === 'i'){
+          if (paramModality === 'i') {
             modality = 'arrayOfIncoming';
             this.getListOfTypes('incoming');
           } else {
             modality = 'arrayOfOutcoming';
             this.getListOfTypes('outcoming');
           }
-          
-          this.incomingOutcomingForm.patchValue(res[0]['_data'][modality][paramArrayIndex])
+
+          this.incomingOutcomingForm.patchValue(inAndOut[0]['_data'][modality][paramArrayIndex]);
 
           /* Check if has additionals fields */
-          if(Object.keys(res[0]['_data'][modality][paramArrayIndex]).length > 9){
-            for (var key in res[0]['_data'][modality][paramArrayIndex]) {
+          if (Object.keys(inAndOut[0]['_data'][modality][paramArrayIndex]).length > 9) {
+            for (const key in inAndOut[0]['_data'][modality][paramArrayIndex]) {
               /* Create form control if it is a additional field */
-              if(key !== 'modality' && key !== 'type' && key !== 'receiver' && key !== 'qtd' && key !== 'lostQtd' &&
-                 key !== 'price' && key !== 'payment' && key !== 'paymentQtd' && key !== 'date'
-              ){
-                this.incomingOutcomingForm.addControl(key, new FormControl(res[0]['_data'][modality][paramArrayIndex][key]));
+              if (key !== 'modality' && key !== 'type' &&
+              key !== 'receiver' &&
+              key !== 'qtd' &&
+              key !== 'lostQtd' &&
+              key !== 'price' &&
+              key !== 'payment' &&
+              key !== 'paymentQtd' &&
+              key !== 'date') {
+                this.incomingOutcomingForm.addControl(key, new FormControl(inAndOut[0]['_data'][modality][paramArrayIndex][key]));
                 this.fields.push(key);
-              };
+              }
             }
           }
 
           this.isStarted = true;
-        })
+        });
 
       } else {
         this.submitToCreate = true;
         this.submitToUpdate = false;
-        this.title = "Cadastrar lançamento";
-        this.submitButton = "Cadastrar";
+        this.title = 'Cadastrar lançamento';
+        this.submitButton = 'Cadastrar';
 
         this.isStarted = true;
       }
-    })
+    });
   }
 
   onIncomingOutcomingFormSubmit = (formDirective: FormGroupDirective) => {
-    
     if (this.submitToUpdate) {
       /* Set the object to update in database */
-      if(this.incomingOutcomingForm.controls['modality'].value === 'outcoming'){
-        this.inAndOut['arrayOfOutcoming'][this.indexOfRegister] = this.incomingOutcomingForm.value
+      if (this.incomingOutcomingForm.controls['modality'].value === 'outcoming') {
+        this.inAndOut['arrayOfOutcoming'][this.indexOfRegister] = this.incomingOutcomingForm.value;
       } else {
-        this.inAndOut['arrayOfIncoming'][this.indexOfRegister] = this.incomingOutcomingForm.value
+        this.inAndOut['arrayOfIncoming'][this.indexOfRegister] = this.incomingOutcomingForm.value;
       }
 
       this._crud
       .update({
-        collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'inAndOut',this.monthAndYear],
+        collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'inAndOut', this.monthAndYear],
         objectToUpdate: this.inAndOut
       }).then(res => {
         formDirective.resetForm();
         this.fields = [];
-        
+
         this._snackbar.open('Atualização feita com sucesso', '', {
           duration: 4000
-        })
-      })
+        });
+      });
     }
 
     if (this.submitToCreate) {
       /* Set the object to update in database */
-      if(this.incomingOutcomingForm.controls['modality'].value === 'outcoming'){
-        this.inAndOut['arrayOfOutcoming'].push(this.incomingOutcomingForm.value)
+      if (this.incomingOutcomingForm.controls['modality'].value === 'outcoming') {
+        this.inAndOut['arrayOfOutcoming'].push(this.incomingOutcomingForm.value);
       } else {
-        this.inAndOut['arrayOfIncoming'].push(this.incomingOutcomingForm.value)
+        this.inAndOut['arrayOfIncoming'].push(this.incomingOutcomingForm.value);
       }
 
       this._crud
       .update({
-        collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'inAndOut', '201806'], // TODO: pegar ano e mês atual
+        collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'inAndOut', '201806'], // TODO: pegar ano e mês atual
         objectToUpdate: this.inAndOut
-      }).then(res => { 
+      }).then(res => {
         formDirective.resetForm();
         this.fields = [];
-        
+
         this._snackbar.open('Cadastro feito com sucesso', '', {
           duration: 4000
-        })
-      })
+        });
+      });
     }
   }
 
   getListOfTypes = (value) => {
-    if(value === 'outcoming'){
+    if (value === 'outcoming') {
       this.types = this.outcomingsTypes;
       this.typesServ = [];
-    } else if(value === 'incoming'){
+    } else if (value === 'incoming') {
       this.types = this.incomingsTypes01;
       this.typesServ = this.incomingsTypes02;
     }
   }
 
   getMonthAndYear = (date) => {
-    let finalDate = new Date(date);
+    let finalDate;
+    finalDate = new Date(date);
 
     return {
       month: (finalDate.getMonth() + 1),
-      year: finalDate.getFullYear() 
-    }
+      year: finalDate.getFullYear()
+    };
   }
 
   addField = () => {
-    let dialogRef = this.dialog.open(DialogFormIncomingOutcomingComponent, {
+    let dialogRef;
+    dialogRef = this.dialog.open(DialogFormIncomingOutcomingComponent, {
       height: '250px',
       width: '600px',
       data: { title: 'Adicionar campo', field: 'Nome do campo', buttonDescription: 'Adicionar' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result){
+      if (result) {
         this.incomingOutcomingForm.addControl(result, new FormControl(null));
         this.fields.push(result);
       }
@@ -299,6 +308,7 @@ export class IncomingOutcomingComponent implements OnInit {
   selector: 'dialog-form',
   templateUrl: './dialog-form.html',
 })
+
 export class DialogFormIncomingOutcomingComponent {
 
   constructor(
@@ -308,5 +318,4 @@ export class DialogFormIncomingOutcomingComponent {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
 }

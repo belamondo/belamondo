@@ -19,6 +19,7 @@ import { DialogPersonComponent } from '../../../shared/components/dialog-person/
  * Services
  */
 import { CrudService } from './../../../shared/services/firebase/crud.service';
+import { StrategicDataService } from '../../../shared/services/strategic-data.service';
 
 @Component({
   selector: 'app-people',
@@ -28,28 +29,30 @@ import { CrudService } from './../../../shared/services/firebase/crud.service';
 export class PeopleComponent implements OnInit {
   public isStarted: boolean;
   public userData: any;
-  
+
   constructor(
     private _crud: CrudService,
     private _dialog: MatDialog,
-    public _snackbar: MatSnackBar
+    public _snackbar: MatSnackBar,
+    public _strategicData: StrategicDataService,
   ) {}
 
   ngOnInit() {
-    this.userData = JSON.parse(sessionStorage.getItem('userData'));
+    this.userData = this._strategicData.userData$;
 
     this.isStarted = false;
 
-    this._crud.read({
-      collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'userPeople'],
-    }).then(res => {
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople'],
+    }).then(userPeople => {
       this.isStarted = true;
-      console.log(res)
-    })
+    });
   }
 
   openPersonDialog = () => {
-    let dialogRef = this._dialog.open(DialogPersonComponent, {
+    let dialogRef;
+
+    dialogRef = this._dialog.open(DialogPersonComponent, {
       width: '99%',
       height: '99%',
       data: {
@@ -59,7 +62,7 @@ export class PeopleComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result)
+        console.log(result);
       }
     });
   }

@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
  */
 import { AuthenticationService } from '../services/firebase/authentication.service';
 import { CrudService } from '../services/firebase/crud.service';
+import { StrategicDataService } from '../services/strategic-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class ProfileChoiceGuard implements CanActivate {
     private _auth: AuthenticationService,
     private _crud: CrudService,
     private _router: Router,
-    public _snackbar: MatSnackBar
+    public _snackbar: MatSnackBar,
+    public _strategicData: StrategicDataService,
   ) { }
 
   canActivate(
@@ -30,26 +32,21 @@ export class ProfileChoiceGuard implements CanActivate {
 
           this._snackbar.open('Você precisa logar para entrar.', '', {
             duration: 4000
-          })
+          });
 
           return false;
         }
 
-        this._crud.read({
-          collection: 'people',
-          whereId: res['id']
-        }).then(res => {
-          if (res['length'] > 0) {
-            this._router.navigate(['/main/dashboard'])
+        if (this._strategicData.userData$) {
+          this._router.navigate(['/main/dashboard']);
 
-            this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
-              duration: 4000
-            })
-  
-            return false;
-          }
-        })
-      })
+          this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
+            duration: 4000
+          });
+
+          return false;
+        }
+      });
 
     return true;
   }

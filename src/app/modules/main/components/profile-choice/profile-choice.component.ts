@@ -15,6 +15,7 @@ import { DialogDocumentComponent } from '../../../shared/components/dialog-docum
 import { AuthenticationService } from '../../../shared/services/firebase/authentication.service';
 import { CrudService } from '../../../shared/services/firebase/crud.service';
 import { Router } from '@angular/router';
+import { StrategicDataService } from '../../../shared/services/strategic-data.service';
 
 /**
  * Third party
@@ -41,7 +42,7 @@ export class ProfileChoiceComponent implements OnInit {
   public companiesForm: FormGroup;
   public profileChoiceForm: FormGroup;
   public isStarted: boolean;
-  
+
   public mask: any;
 
   public autoCorrectedDatePipe: any;
@@ -59,18 +60,19 @@ export class ProfileChoiceComponent implements OnInit {
     private _crud: CrudService,
     private _dialog: MatDialog,
     private _router: Router,
-    public _snackbar: MatSnackBar
+    public _snackbar: MatSnackBar,
+    public _strategicData: StrategicDataService,
   ) {
   }
-  
+
   ngOnInit() {
     this.mask = {
-      cpf: [/\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'-', /\d/,/\d/ ],
+      cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/ ],
       date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
       zip: [/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/],
-      phone: ['(', /\d/, /\d/, ')',' ' , /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/,],
-      cell_phone: ['(', /\d/, /\d/, ')',' ' , /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
-      cnpj: [/\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-',/\d/,/\d/]
+      phone: ['(', /\d/, /\d/, ')', ' ' , /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
+      cell_phone: ['(', /\d/, /\d/, ')', ' ' , /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
+      cnpj: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]
     };
 
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
@@ -80,20 +82,20 @@ export class ProfileChoiceComponent implements OnInit {
     this.documentsObject = [];
 
     this.contactsObject = [];
-    this.contacts = JSON.parse(sessionStorage.getItem('contacts'));
+    this.contacts = this._strategicData.contacts$;
 
     this.isStarted = false;
 
     this.mask = {
       cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/],
       date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
-      cnpj: [/\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-',/\d/,/\d/]
+      cnpj: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]
     };
-    
+
     this.profileChoiceForm = new FormGroup({
       description: new FormControl(null)
     });
-  
+
     this.peopleForm = new FormGroup({
       name: new FormControl(null, Validators.required),
       gender: new FormControl(null, Validators.required),
@@ -110,7 +112,9 @@ export class ProfileChoiceComponent implements OnInit {
   }
 
   addAddress = () => {
-    let dialogRef = this._dialog.open(DialogAddressComponent, {
+    let dialogRef;
+
+    dialogRef = this._dialog.open(DialogAddressComponent, {
       height: '500px',
       width: '800px',
       data: {
@@ -121,8 +125,6 @@ export class ProfileChoiceComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result)
-
         this.addressesObject.push(result);
       }
     });
@@ -133,7 +135,8 @@ export class ProfileChoiceComponent implements OnInit {
   }
 
   addContact = () => {
-    let dialogRef = this._dialog.open(DialogContactComponent, {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogContactComponent, {
       height: '250px',
       width: '800px',
       data: {
@@ -160,7 +163,8 @@ export class ProfileChoiceComponent implements OnInit {
   }
 
   addDocument = () => {
-    let dialogRef = this._dialog.open(DialogDocumentComponent, {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogDocumentComponent, {
       height: '320px',
       width: '800px',
       data: {
@@ -189,12 +193,12 @@ export class ProfileChoiceComponent implements OnInit {
 
   checkCompanyExistence = (cnpj) => {
     if (!this.companiesForm.get('cnpj').errors) {
-      this._crud.read({
-        collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']],
-        where: ['cnpj','==',cnpj]
-      }).then(res => {
-        console.log(res)
-      })
+      this._crud.readWithObservable({
+        collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['user']['uid']],
+        where: ['cnpj', '==', cnpj]
+      }).subscribe(res => {
+        console.log(res);
+      });
     }
   }
 
@@ -204,60 +208,60 @@ export class ProfileChoiceComponent implements OnInit {
 
   onPeopleFormSubmit = () => {
 
-    this._crud.read({
-      collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']]
-    }).then(resPeople => {
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['user']['uid']]
+    }).subscribe(resPeople => {
       if (resPeople['length'] > 0) {
-        this._router.navigate(['/main/dashboard'])
-  
+        this._router.navigate(['/main/dashboard']);
+
         this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
           duration: 4000
-        })
-  
+        });
+
         return false;
       } else {
         this._crud.update({
-          collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']],
+          collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['user']['uid']],
           objectToUpdate: this.peopleForm.value
         }).then(res => {
-          this._router.navigate(['/main/dashboard'])
-  
+          this._router.navigate(['/main/dashboard']);
+
           this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
             duration: 4000
-          })
-  
+          });
+
           return true;
-        })
+        });
       }
-    })
+    });
   }
 
   onCompaniesFormSubmit = () => {
-    this._crud.read({
-      collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']]
-    }).then(resCompanies => {
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['user']['uid']]
+    }).subscribe(resCompanies => {
       if (resCompanies && resCompanies['length'] > 0) {
-        this._router.navigate(['/main/dashboard'])
-  
+        this._router.navigate(['/main/dashboard']);
+
         this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
           duration: 4000
-        })
-  
+        });
+
         return false;
       } else {
         this._crud.update({
-          collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']],
+          collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['user']['uid']],
           objectToUpdate: this.companiesForm.value
         }).then(res => {
-          this._router.navigate(['/main/dashboard'])
-  
+          this._router.navigate(['/main/dashboard']);
+
           this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
             duration: 4000
-          })
-  
+          });
+
           return true;
-        })
+        });
       }
-    })
+    });
   }
 }

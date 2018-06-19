@@ -32,7 +32,7 @@ import {map, startWith} from 'rxjs/operators';
 })
 export class ServiceComponent implements OnInit {
 
-  //Common properties: start
+  // Common properties: start
   public serviceForm: FormGroup;
   public isStarted: boolean;
   public paramToSearch: any;
@@ -42,7 +42,7 @@ export class ServiceComponent implements OnInit {
   public title: string;
   public fields: any = [];
   public userData: any;
-  //Common properties: end
+  // Common properties: end
 
   constructor(
     private _crud: CrudService,
@@ -68,82 +68,92 @@ export class ServiceComponent implements OnInit {
         this.paramToSearch = params.id;
         this.submitToCreate = false;
         this.submitToUpdate = true;
-        this.title = "Atualizar serviço";
-        this.submitButton = "Atualizar";
+        this.title = 'Atualizar serviço';
+        this.submitButton = 'Atualizar';
 
-        let param = this.paramToSearch.replace(':', '');
+        let param;
+        param = this.paramToSearch.replace(':', '');
 
-        this._crud.read({
-          collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'services',param],
-        }).then(res => {
-          this.serviceForm.patchValue(res[0]['_data'])
+        this._crud.readWithObservable({
+          collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'services', param],
+        }).subscribe(res => {
+          this.serviceForm.patchValue(res[0]['_data']);
 
           /* Check if has additionals fields */
-          if(Object.keys(res[0]['_data']).length > 1){
-            for (var key in res[0]['_data']) {
+          if (Object.keys(res[0]['_data']).length > 1) {
+            for (const key in res[0]['_data']) {
               /* Create form control if it is a additional field */
-              if(key !== 'name'){
+              if (key !== 'name') {
                 this.serviceForm.addControl(key, new FormControl(res[0]['_data'][key]));
                 this.fields.push(key);
-              };
+              }
             }
           }
 
           this.isStarted = true;
-        })
+        });
 
       } else {
         this.submitToCreate = true;
         this.submitToUpdate = false;
-        this.title = "Cadastrar cliente";
-        this.submitButton = "Cadastrar";
+        this.title = 'Cadastrar cliente';
+        this.submitButton = 'Cadastrar';
 
         this.isStarted = true;
       }
-    })
+    });
   }
 
   onServiceFormSubmit = (formDirective: FormGroupDirective) => {
     if (this.submitToUpdate) {
       this._crud
         .update({
-          collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'services',this.paramToSearch.replace(':', '')],
+          collectionsAndDocs: [
+            this.userData[0]['_data']['userType'],
+            this.userData[0]['_id'], 'services',
+            this.paramToSearch.replace(':', '')
+          ],
           objectToUpdate: this.serviceForm.value
         }).then(res => {
           formDirective.resetForm();
           this.fields = [];
-          
+
           this._snackbar.open('Atualização feita com sucesso', '', {
             duration: 4000
-          })
-        })
+          });
+        });
     }
 
     if (this.submitToCreate) {
       this._crud
       .create({
-        collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'services'],
+        collectionsAndDocs: [
+          this.userData[0]['_data']['userType'],
+          this.userData[0]['_id'],
+          'services'
+        ],
         objectToCreate: this.serviceForm.value
-      }).then(res => { 
+      }).then(res => {
         formDirective.resetForm();
         this.fields = [];
-        
+
         this._snackbar.open('Cadastro feito com sucesso', '', {
           duration: 4000
-        })
-      })
+        });
+      });
     }
   }
 
   addField = () => {
-    let dialogRef = this.dialog.open(DialogFormServiceComponent, {
+    let dialogRef;
+    dialogRef = this.dialog.open(DialogFormServiceComponent, {
       height: '250px',
       width: '600px',
       data: { title: 'Adicionar campo', field: 'Nome do campo', buttonDescription: 'Adicionar' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result){
+      if (result) {
         this.serviceForm.addControl(result, new FormControl(null));
         this.fields.push(result);
       }

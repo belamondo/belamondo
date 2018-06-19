@@ -42,6 +42,7 @@ import {
 import {
   CrudService
 } from './../../../shared/services/firebase/crud.service';
+import { StrategicDataService } from '../../services/strategic-data.service';
 
 /**
  * Third party
@@ -72,7 +73,7 @@ import {
   styleUrls: ['./dialog-person.component.css']
 })
 export class DialogPersonComponent implements OnInit {
-  //Common properties: start
+  // Common properties: start
   public personForm: FormGroup;
   public isDisabled: boolean;
   public isStarted: boolean;
@@ -83,7 +84,7 @@ export class DialogPersonComponent implements OnInit {
   public submitToUpdate: boolean;
   public title: string;
   public userData: any;
-  //Common properties: end
+  // Common properties: end
 
   public autoCorrectedDatePipe: any;
   public addressesObject: any;
@@ -101,7 +102,8 @@ export class DialogPersonComponent implements OnInit {
     private _dialog: MatDialog,
     private _route: ActivatedRoute,
     private _router: Router,
-    public _snackbar: MatSnackBar
+    public _snackbar: MatSnackBar,
+    public _strategicData: StrategicDataService,
   ) {}
 
   ngOnInit() {
@@ -112,7 +114,7 @@ export class DialogPersonComponent implements OnInit {
       gender: new FormControl(null, Validators.required),
     });
 
-    this.userData = JSON.parse(sessionStorage.getItem('userData'))
+    this.userData = this._strategicData.userData$;
 
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
 
@@ -141,32 +143,34 @@ export class DialogPersonComponent implements OnInit {
         this.paramToSearch = params.id;
         this.submitToCreate = false;
         this.submitToUpdate = true;
-        this.title = "Atualizar pessoa";
-        this.submitButton = "Atualizar";
+        this.title = 'Atualizar pessoa';
+        this.submitButton = 'Atualizar';
 
-        let param = this.paramToSearch.replace(':', '');
+        let param;
+        param = this.paramToSearch.replace(':', '');
 
         this._crud
-          .read({
+          .readWithObservable({
             collectionsAndDocs: ['people', param]
-          }).then(res => {
+          }).subscribe(res => {
             this.personForm.patchValue(res['obj'][0]);
 
             this.isStarted = true;
-          })
+          });
       } else {
         this.submitToCreate = true;
         this.submitToUpdate = false;
-        this.title = "Cadastrar pessoa";
-        this.submitButton = "Cadastrar";
+        this.title = 'Cadastrar pessoa';
+        this.submitButton = 'Cadastrar';
 
         this.isStarted = true;
       }
-    })
+    });
   }
 
   addAddress = () => {
-    let dialogRef = this._dialog.open(DialogAddressComponent, {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogAddressComponent, {
       height: '500px',
       width: '800px',
       data: {
@@ -177,8 +181,6 @@ export class DialogPersonComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result)
-
         this.addressesObject.push(result);
       }
     });
@@ -189,7 +191,8 @@ export class DialogPersonComponent implements OnInit {
   }
 
   addContact = () => {
-    let dialogRef = this._dialog.open(DialogContactComponent, {
+    let dialogRef ;
+    dialogRef = this._dialog.open(DialogContactComponent, {
       height: '250px',
       width: '800px',
       data: {
@@ -216,7 +219,8 @@ export class DialogPersonComponent implements OnInit {
   }
 
   addDocument = () => {
-    let dialogRef = this._dialog.open(DialogDocumentComponent, {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogDocumentComponent, {
       height: '320px',
       width: '800px',
       data: {
@@ -244,7 +248,8 @@ export class DialogPersonComponent implements OnInit {
   }
 
   addRelationship = () => {
-    let dialogRef = this._dialog.open(DialogRelationshipComponent, {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogRelationshipComponent, {
       height: '320px',
       width: '800px',
       data: {
@@ -273,7 +278,9 @@ export class DialogPersonComponent implements OnInit {
 
   checkPersonExistence = (cpf) => {
     if (!this.personForm.get('cpf').errors) {
-      //Check existence of userPeople by cpf, first on sessionStorage, then, if there are at least 400 userPeople in the sesionStorage (populated on crm.guard || cash-flow.guard) and none of then are related to the cpf, look on firestore userPeople collection
+      // Check existence of userPeople by cpf, first on sessionStorage, then,
+      // if there are at least 400 userPeople in the sesionStorage (populated on crm.guard ||
+      // cash-flow.guard) and none of then are related to the cpf, look on firestore userPeople collection
     }
   }
 
@@ -326,18 +333,18 @@ export class DialogPersonComponent implements OnInit {
                 objectToCreate: {
                   documentsToParse: JSON.stringify(this.documentsObject)
                 }
-              })
-          };
+              });
+          }
 
           if (this.contactsObject.length > 0) {
             this._crud
-              .create({
-                collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleContacts'],
-                objectToCreate: {
-                  contactsToParse: JSON.stringify(this.contactsObject)
-                }
-              })
-          };
+            .create({
+              collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleContacts'],
+              objectToCreate: {
+                contactsToParse: JSON.stringify(this.contactsObject)
+              }
+            });
+          }
 
           if (this.addressesObject.length > 0) {
             this._crud
@@ -346,15 +353,15 @@ export class DialogPersonComponent implements OnInit {
                 objectToCreate: {
                   addressesToParse: JSON.stringify(this.addressesObject)
                 }
-              })
-          };
+              });
+          }
 
           formDirective.resetForm();
 
           this._snackbar.open('Cadastro feito com sucesso', '', {
             duration: 4000
-          })
-        })
+          });
+        });
     }
   }
 }

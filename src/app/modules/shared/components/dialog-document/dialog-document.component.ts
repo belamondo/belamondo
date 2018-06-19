@@ -11,6 +11,7 @@ import { CrudService } from './../../services/firebase/crud.service';
  * Third party
  */
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
+import { StrategicDataService } from '../../services/strategic-data.service';
 
 @Component({
   selector: 'app-dialog-document',
@@ -26,7 +27,8 @@ export class DialogDocumentComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _crud: CrudService
+    private _crud: CrudService,
+    public _strategicData: StrategicDataService,
   ) {
   }
 
@@ -35,12 +37,12 @@ export class DialogDocumentComponent implements OnInit {
     this.isStarted = false;
 
     this._crud
-    .read({
+    .readWithObservable({
       collectionsAndDocs: [
         'documents'
       ]
-    }).then(res => {
-      this.documents = res;
+    }).subscribe(documents => {
+      this.documents = documents;
 
       this.isStarted = true;
     });

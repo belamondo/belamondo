@@ -42,6 +42,7 @@ import {
 import {
   CrudService
 } from './../../../shared/services/firebase/crud.service';
+import { StrategicDataService } from '../../services/strategic-data.service';
 
 /**
  * Third party
@@ -103,6 +104,7 @@ export class DialogCompanyComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     public _snackbar: MatSnackBar,
+    public _strategicData: StrategicDataService,
     public dialogRef: MatDialogRef<DialogCompanyComponent>,
   ) {}
 
@@ -113,7 +115,7 @@ export class DialogCompanyComponent implements OnInit {
       company_name: new FormControl(null)
     });
 
-    this.userData = JSON.parse(sessionStorage.getItem('userData'));
+    this.userData = this._strategicData.userData$;
 
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
 
@@ -144,14 +146,14 @@ export class DialogCompanyComponent implements OnInit {
       this.submitButton = 'Atualizar';
 
       this._crud
-        .read({
+        .readWithObservable({
           collectionsAndDocs: [
             this.userData[0]['userType'],
             this.userData[0]['_id'],
             'userCompanies',
             this.data.id
           ]
-        }).then(res => {
+        }).subscribe(res => {
           this.companyForm.patchValue(res[0]);
 
           this.isStarted = true;
