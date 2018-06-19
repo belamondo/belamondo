@@ -10,7 +10,7 @@ import { CrudService } from './firebase/crud.service';
   providedIn: 'root'
 })
 
-export class StrategicDataService {
+export class StrategicDataService implements OnInit {
   public companiesDocuments$: any;
   public contacts$: any;
   public peopleDocuments$: any;
@@ -23,57 +23,57 @@ export class StrategicDataService {
 
   constructor(
     private _crud: CrudService,
-  ) {
-    if (!this.userData$ || this.userData$.length < 1) {
-      this.user = JSON.parse(sessionStorage.getItem('user'));
-      this._crud.readWithObservable({
-        collectionsAndDocs: ['animals', this.user['uid']]
-      }).subscribe(resAnimals => {
-        this.userAnimals = resAnimals;
-      }, err => {
-        return err;
-      });
+  ) {}
 
-      this._crud.readWithObservable({
-        collectionsAndDocs: ['companies', this.user['uid']]
-      }).subscribe(resCompanies => {
-        this.userCompanies = resCompanies;
-      }, err => {
-        return err;
-      });
-
-      this._crud.readWithObservable({
-        collectionsAndDocs: ['entities', this.user['uid']]
-      }).subscribe(resEntities => {
-        this.userEntities = resEntities;
-      }, err => {
-        return err;
-      });
-
-      this._crud.readWithObservable({
-        collectionsAndDocs: ['people', this.user['uid']]
-      }).subscribe(resPeople => {
-        this.userPeople = resPeople;
-      }, err => {
-        return err;
-      });
+  ngOnInit() {
+    if (!this.userData$ || this.userData$.length < 1) {      
     }
   }
 
-  userChosen = () => new Promise((resolve, reject) => {
-    if (this.userAnimals) {
-      this.userData$ = this.userAnimals;
-    } else if (this.userCompanies) {
-      this.userData$ = this.userCompanies;
-    } else if (this.userEntities) {
-      this.userData$ = this.userEntities;
-    } else if (this.userPeople) {
-      this.userData$ = this.userPeople;
-    } else {
-      this.userData$ = undefined;
-    }
-
-    console.log(this.userData$);
+  userChosen = () => new Promise((resolve, reject) => { console.log(33)
+    this.user = JSON.parse(sessionStorage.getItem('user'));
+      
+    this._crud.readWithObservable({
+      collectionsAndDocs: ['people', this.user['uid']]
+    }).subscribe(resPeople => {
+      if(resPeople[0]) {
+        this.userData$ = resPeople;
+      } else {        
+        this._crud.readWithObservable({
+          collectionsAndDocs: ['companies', this.user['uid']]
+        }).subscribe(resCompanies => {
+          if(resCompanies[0]) {
+            this.userData$ = resCompanies;
+          } else {
+            this._crud.readWithObservable({
+              collectionsAndDocs: ['animals', this.user['uid']]
+            }).subscribe(resAnimals => {
+              if(resAnimals[0]) {
+                this.userData$ = resAnimals;
+              } else {
+                this._crud.readWithObservable({
+                  collectionsAndDocs: ['entities', this.user['uid']]
+                }).subscribe(resEntities => {
+                  if(resEntities[0]) {
+                    this.userData$ = resEntities;
+                  } else {
+                    this.userData$ = {};
+                  }
+                }, err => {
+                  return err;
+                });
+              }
+            }, err => {
+              return err;
+            });
+          }
+        }, err => {
+          return err;
+        });
+      }
+    }, err => {
+      return err;
+    });
 
     return true;
   })
