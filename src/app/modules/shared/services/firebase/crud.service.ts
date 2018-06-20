@@ -9,7 +9,7 @@ import {
  * Third party class
  */
 import {
-  Observable, observable
+  Observable
 } from 'rxjs';
 
 import {
@@ -94,10 +94,10 @@ export class CrudService {
 
   })
 
-  readWithObservable = (params) => new Observable (observable => {
+  readWithObservable = (params) => Observable.create(observer => {
     // Check params: start
     if (!params) {
-      observable.next({
+      observer.next({
         code: 'r-error-01',
         message: 'Minimum params required'
       });
@@ -106,7 +106,7 @@ export class CrudService {
     }
 
     if (!params.collectionsAndDocs) {
-      observable.next({
+      observer.next({
         code: 'r-error-02',
         message: 'Required param: collectionsAndDocs'
       });
@@ -160,7 +160,7 @@ export class CrudService {
         snapshot.push(object);
       }
 
-      observable.next(snapshot);
+      observer.next(snapshot);
     });
   })
 

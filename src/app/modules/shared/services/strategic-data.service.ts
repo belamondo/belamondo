@@ -17,7 +17,7 @@ export class StrategicDataService implements OnInit {
   public user: any;
   public userAnimals: any;
   public userCompanies: any;
-  public userData$: any;
+  public userData$: Observable<any>;
   public userEntities: any;
   public userPeople: any;
 
@@ -26,55 +26,55 @@ export class StrategicDataService implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (!this.userData$ || this.userData$.length < 1) {      
-    }
+    
   }
 
-  userChosen = () => new Promise((resolve, reject) => { console.log(33)
+  userChosen = () => new Promise((resolve, reject) => { 
     this.user = JSON.parse(sessionStorage.getItem('user'));
       
     this._crud.readWithObservable({
       collectionsAndDocs: ['people', this.user['uid']]
     }).subscribe(resPeople => {
       if(resPeople[0]) {
-        this.userData$ = resPeople;
-      } else {        
+        resolve(resPeople);
+        console.log(resPeople)
+      } else {
         this._crud.readWithObservable({
           collectionsAndDocs: ['companies', this.user['uid']]
         }).subscribe(resCompanies => {
           if(resCompanies[0]) {
-            this.userData$ = resCompanies;
+            resolve(resCompanies);
           } else {
             this._crud.readWithObservable({
               collectionsAndDocs: ['animals', this.user['uid']]
             }).subscribe(resAnimals => {
               if(resAnimals[0]) {
-                this.userData$ = resAnimals;
+                resolve(resAnimals);
               } else {
                 this._crud.readWithObservable({
                   collectionsAndDocs: ['entities', this.user['uid']]
                 }).subscribe(resEntities => {
                   if(resEntities[0]) {
-                    this.userData$ = resEntities;
+                    this.userData$.lift(resEntities);
+                    resolve(this.userData$);
                   } else {
-                    this.userData$ = {};
+                    this.userData$.lift(undefined);
+                    resolve(this.userData$);
                   }
                 }, err => {
-                  return err;
+                  resolve(err);
                 });
               }
             }, err => {
-              return err;
+              resolve(err);
             });
           }
         }, err => {
-          return err;
+          resolve(err);
         });
       }
     }, err => {
-      return err;
+      resolve(err);
     });
-
-    return true;
   })
 }

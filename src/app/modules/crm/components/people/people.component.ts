@@ -44,7 +44,7 @@ export class PeopleComponent implements OnInit {
 
     this._crud.readWithObservable({
       collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople'],
-    }).then(userPeople => {
+    }).subscribe(userPeople => {
       this.isStarted = true;
     });
   }

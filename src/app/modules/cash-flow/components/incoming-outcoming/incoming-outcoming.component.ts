@@ -118,21 +118,21 @@ export class IncomingOutcomingComponent implements OnInit {
     /* Get products and services from database */
     this._crud.readWithObservable({
       collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'products'],
-    }).then(products => {
+    }).subscribe(products => {
       this.incomingsTypes01 = products;
     });
 
     /* Get services from database */
     this._crud.readWithObservable({
       collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'services'],
-    }).then(services => {
+    }).subscribe(services => {
       this.incomingsTypes02 = services;
     });
 
     /* Get incomings and outcomings of the actual month from database */
     this._crud.readWithObservable({
       collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'inAndOut', '201806']  // TODO: pegar ano e mês atual
-    }).then(inAndOut => {
+    }).subscribe(inAndOut => {
       if (inAndOut[0] !== undefined) {
         this.inAndOut = {
           arrayOfOutcoming: inAndOut[0]['arrayOfOutcoming'],

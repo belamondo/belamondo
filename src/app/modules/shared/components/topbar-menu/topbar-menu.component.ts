@@ -79,11 +79,13 @@ export class TopbarMenuComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this._strategicData.userData$);
     this.userData = this._strategicData.userData$;
 
     this._crud.readWithObservable({
       collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id']]
     }).subscribe(userType => {
+      console.log(userType)
       this.user = userType[0];
     });
   }

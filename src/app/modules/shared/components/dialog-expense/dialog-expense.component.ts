@@ -75,7 +75,7 @@ export class DialogExpenseComponent implements OnInit {
 
       this._crud.readWithObservable({
         collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes', param],
-      }).then(expensesTypes => {
+      }).subscribe(expensesTypes => {
         this.expenseForm.patchValue(expensesTypes[0]);
 
         /* Check if has additionals fields */
