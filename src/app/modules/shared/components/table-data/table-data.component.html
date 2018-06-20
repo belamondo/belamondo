@@ -13,6 +13,24 @@
   <div class="tbl-body">
     <table cellpadding="0" cellspacing="0" border="0">
       <thead>
+        <tr class="tbl-action-area">
+          <td [colSpan]="params.list.show.length + 1">
+            <form [formGroup]="tableSearchForm">
+              <mat-form-field class="search">
+                <mat-label>Filtrar</mat-label>
+                <input matInput placeholder="Digite filtro" type="text" formControlName="search" (keyup)="searchOverAll()">
+              </mat-form-field>
+            </form>
+
+            <button mat-raised-button class="action-button" *ngFor="let icon of params.header.actionIcon ; let i = index;" (click)="onTableDataOutput($event, undefined)">
+              <div [matTooltip]="icon.tooltip" *ngIf="icon.tooltip">
+                <mat-icon>{{icon.icon}}</mat-icon> &nbsp;
+                <span>{{icon.description}}</span>
+              </div>
+              <mat-icon *ngIf="!icon.tooltip">{{icon.icon}}</mat-icon>
+            </button>
+          </td>
+        </tr>
         <tr>
           <th *ngFor="let show of params.list.show; let headerId = index">
             {{show['header']}}
@@ -20,13 +38,6 @@
               <i class="material-icons" (click)="sort($event, headerId)">{{show.sort}}</i>
             </a>
           </th>
-
-          <form [formGroup]="tableSearchForm">
-            <mat-form-field class="search">
-              <mat-label>Filtrar</mat-label>
-              <input matInput placeholder="Digite filtro" type="text" formControlName="search" (keyup)="searchOverAll()">
-            </mat-form-field>
-          </form>
         </tr>
       </thead>
 
@@ -84,13 +95,6 @@
                 </mat-select>
               </mat-form-field>
             </form>
-          </td>
-
-          <td>
-            <button mat-raised-button *ngFor="let icon of params.header.actionIcon ; let i = index;" (click)="onTableDataOutput($event, undefined)">
-              <mat-icon [matTooltip]="icon.tooltip" *ngIf="icon.tooltip">{{icon.icon}}</mat-icon>
-              <mat-icon *ngIf="!icon.tooltip">{{icon.icon}}</mat-icon>
-            </button>
           </td>
         </tr>
       </tfoot>

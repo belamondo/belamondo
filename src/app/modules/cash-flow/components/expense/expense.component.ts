@@ -63,10 +63,18 @@ export class ExpenseComponent implements OnInit {
 
       this.paramsToTableData = {
         header: {
-          actionIcon: [{
-            icon: 'add',
-            tooltip: 'Adicionar nova despesa'
-          }]
+          actionIcon: [
+            {
+              icon: 'add',
+              description: 'Adicionar',
+              tooltip: 'Adicionar nova despesa'
+            },
+            {
+              icon: 'delete',
+              description: 'Excluir',
+              tooltip: 'Excluir selecionados'
+            },
+          ]
         },
         list: {
           dataSource: res,
@@ -87,7 +95,7 @@ export class ExpenseComponent implements OnInit {
   }
 
   onOutputFromTableData = (e) => {
-    if (e.icon === 'add') {
+    if (e.icon === 'add' || e.icon === 'Adicionar') {
       this.openExpenseDialog(undefined);
     }
 

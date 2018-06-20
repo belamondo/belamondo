@@ -57,6 +57,7 @@ export class CompaniesComponent implements OnInit {
       header: {
         actionIcon: [{
           icon: 'add',
+          description: 'Adicionar',
           tooltip: 'Adicionar nova empresa'
         }]
       },
@@ -83,7 +84,7 @@ export class CompaniesComponent implements OnInit {
   }
 
   onOutputFromTableData = (e) => {
-    if (e.icon === 'add') {
+    if (e.icon === 'add' || e.icon === 'Adicionar') {
       this.openCompanyDialog(undefined);
     }
 
