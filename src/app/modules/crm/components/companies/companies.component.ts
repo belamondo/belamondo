@@ -41,17 +41,33 @@ export class CompaniesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.userData = this._strategicData.userData$;
-
     this.isStarted = false;
 
-    this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userCompanies'],
-    }).subscribe(userCompanies => {
-      this.userCompanies = userCompanies;
+    if (!this._strategicData.userData$) {
+      this._strategicData.setUserData()
+      .then(userData => {
+        this.userData = userData;
 
-      this.makeList();
-    });
+        this._crud.readWithObservable({
+          collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userCompanies'],
+        }).subscribe(userCompanies => {
+          this.userCompanies = userCompanies;
+
+          this.makeList();
+        });
+      });
+    } else {
+      this.userData = this._strategicData.userData$;
+
+      this._crud.readWithObservable({
+        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userCompanies'],
+      }).subscribe(userCompanies => {
+        this.userCompanies = userCompanies;
+
+        this.makeList();
+      });
+    }
+
   }
 
   makeList = () => {
@@ -81,6 +97,7 @@ export class CompaniesComponent implements OnInit {
       }
     };
 
+    console.log(97);
     this.isStarted = true;
   }
 

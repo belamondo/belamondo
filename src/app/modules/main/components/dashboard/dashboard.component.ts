@@ -20,6 +20,5 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.isStarted = false;
-    
   }
 }

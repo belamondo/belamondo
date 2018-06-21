@@ -111,25 +111,25 @@ export class AuthenticationService {
         if (fbRes && fbRes['user']['uid']) {
           fbRes['code'] = 'l-success-01';
           fbRes['message'] = 'Welcome';
-
           sessionStorage.clear();
+          this._strategicData.emptyAllData();
 
           this._snackbar.open(fbRes['message'], '', {
             duration: 4000
           });
 
           sessionStorage.setItem('user', JSON.stringify(fbRes['user']));
+
           // Check if user loggedin is assigned and on what type of user
           // Case not assigned, sending to profile choice
-          
-          this._strategicData.userChosen()
+
+          this._strategicData.setUserData()
           .then(user => {
-            if(user[0]) {
+            if (user[0]) {
               this._router.navigate([params.navigateTo]);
             }
           });
         } else {
-          console.log(284)
           res(fbRes);
           if (fbRes) {
             this._snackbar.open(fbRes['message'], '', {
@@ -154,8 +154,10 @@ export class AuthenticationService {
           message: 'Parâmetro obrigatório: navigateTo'
         });
       }
-
+      console.log(this._strategicData.userData$);
       _authentication.signOut();
+      this._strategicData.emptyAllData();
+      sessionStorage.clear();
 
       this._router.navigate([params.navigateTo]);
     }

@@ -136,7 +136,7 @@ export class CrudService {
 
     stringToFilter += stringCreatingFilter;
     functionToFilter = eval(stringToFilter);
-
+    console.log(stringToFilter);
     functionToFilter
     .onSnapshot(querySnapshot => {
       let snapshot;

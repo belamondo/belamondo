@@ -1,5 +1,5 @@
 <div class="general-container" [class.is-mobile]="mobileQuery.matches">
-  <mat-toolbar class="header-toolbar">
+  <mat-toolbar *ngIf="isStarted" class="header-toolbar">
     <div id="header-content">
       <div>
         <button mat-icon-button (click)="snav.toggle()">
@@ -8,12 +8,12 @@
       </div>
       
       <div>
-        <span *ngIf="userData[0]?['userType'] == 'people'" style="font-size: small">
-          {{user?.name.split(' ')[0]}}
+        <span *ngIf="userData[0]['_userType'] === 'people'" style="font-size: small">
+          {{userData[0]['name'].split(' ')[0]}}
         </span>
   
-        <span *ngIf="userData[0]?['userType'] == 'companies'" style="font-size: small">
-          {{user?.business_name}}
+        <span *ngIf="userData[0]['_userType'] === 'companies'" style="font-size: small">
+          {{userData[0]['business_name']}}
         </span>
 
         <mat-menu #appMenu="matMenu" yPosition="below">
@@ -42,11 +42,11 @@
         <span class="app-name" (click)="_router.navigate(['/main'])">{{params.title}}</span> <hr />
         <!--
         <mat-card *ngIf="options.userCard">
-          <span *ngIf="userData[0]?['userType'] == 'people'">
+          <span *ngIf="userData[0]?['_userType'] == 'people'">
             {{user?.name.split(' ')[0]}}
           </span>
 
-          <span *ngIf="userData[0]?['userType'] == 'companies'">
+          <span *ngIf="userData[0]?['_userType'] == 'companies'">
             {{user?.business_name}}
           </span>
           <div>

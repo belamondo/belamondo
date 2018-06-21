@@ -20,11 +20,13 @@ import { CrudService } from './../../services/firebase/crud.service';
 import { StrategicDataService } from '../../services/strategic-data.service';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'topbar-menu',
   templateUrl: './topbar-menu.component.html',
   styleUrls: ['./topbar-menu.component.css']
 })
 export class TopbarMenuComponent implements OnInit {
+  public isStarted: boolean;
   private _mobileQueryListener: () => void;
   public mobileQuery: MediaQueryList;
   public mobile = (typeof window !== 'undefined') ?
@@ -42,11 +44,12 @@ export class TopbarMenuComponent implements OnInit {
     private _crud: CrudService,
     private _router: Router,
     public _snackbar: MatSnackBar,
-    public _strategicData: StrategicDataService,
+    private _strategicData: StrategicDataService,
     public breakpointObserver: BreakpointObserver,
     public changeDetectorRef: ChangeDetectorRef,
     public media: MediaMatcher,
   ) {
+    this.isStarted = false;
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
 
@@ -80,14 +83,20 @@ export class TopbarMenuComponent implements OnInit {
 
   ngOnInit() {
     console.log(this._strategicData.userData$);
-    this.userData = this._strategicData.userData$;
+    if (!this._strategicData.userData$ && !this.userData) {
+      console.log(86);
+      this._strategicData.setUserData()
+      .then(userData => {
+        this.userData = userData;
 
-    this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id']]
-    }).subscribe(userType => {
-      console.log(userType)
-      this.user = userType[0];
-    });
+        this.isStarted = true;
+      });
+    } else {
+      if (!this.userData) {
+        this.userData = this._strategicData.userData$;
+        this.isStarted = true;
+      }
+    }
   }
 
   logout = () => {

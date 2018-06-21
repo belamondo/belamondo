@@ -82,7 +82,7 @@ export class ProfileChoiceComponent implements OnInit {
     this.documentsObject = [];
 
     this.contactsObject = [];
-    this.contacts = this._strategicData.contacts$;
+    // this.contacts = this._strategicData.contacts$;
 
     this.isStarted = false;
 
