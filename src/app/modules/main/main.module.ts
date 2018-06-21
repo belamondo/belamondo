@@ -15,6 +15,7 @@ import { InvitationComponent } from './components/invitation/invitation.componen
 import { MainComponent } from './main.component';
 import { ProfileChoiceComponent } from './components/profile-choice/profile-choice.component';
 import { PlaygroundComponent } from './components/playground/playground.component';
+import { DialogInviationComponent } from './components/invitation/dialog-inviation.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { PlaygroundComponent } from './components/playground/playground.componen
     MainComponent,
     PlaygroundComponent,
     ProfileChoiceComponent,
+    DialogInviationComponent,
   ]
 })
 export class MainModule { }

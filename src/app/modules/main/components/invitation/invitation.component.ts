@@ -4,34 +4,22 @@ import {
   Inject
 } from '@angular/core';
 import {
-  FormGroup,
-  FormControl,
-  Validators,
-  FormGroupDirective
-} from '@angular/forms';
-import {
-  MatSnackBar
+  MatSnackBar,
+  MatDialogRef,
+  MatDialog,
+  MAT_DIALOG_DATA
 } from '@angular/material';
-import {
-  ActivatedRoute,
-  Router
-} from '@angular/router';
+
+/**
+ * Components
+ */
+import { DialogInviationComponent } from './dialog-inviation.component';
 
 /**
  * Services
  */
-import {
-  CrudService
-} from './../../../shared/services/firebase/crud.service';
+import { CrudService } from './../../../shared/services/firebase/crud.service';
 import { StrategicDataService } from '../../../shared/services/strategic-data.service';
-
-import {
-  Observable
-} from 'rxjs';
-import {
-  map,
-  startWith
-} from 'rxjs/operators';
 
 @Component({
   selector: 'app-invitation',
@@ -39,52 +27,95 @@ import {
   styleUrls: ['./invitation.component.css']
 })
 export class InvitationComponent implements OnInit {
-
-  // Common properties: start
-  public invitationForm: FormGroup;
   public isStarted: boolean;
-  public submitButton: string;
-  public title: string;
+  public paramsToTableData: any;
   public userData: any;
-  // Common properties: end
+
+  public userInvitations: any;
 
   constructor(
     private _crud: CrudService,
-    private _route: ActivatedRoute,
-    private _router: Router,
+    private _dialog: MatDialog,
     public _snackbar: MatSnackBar,
     public _strategicData: StrategicDataService,
   ) {}
 
   ngOnInit() {
-    this.userData = this._strategicData.userData$;
+    this.isStarted = false;
 
-    this.invitationForm = new FormGroup({
-      email: new FormControl(null, [Validators.required, Validators.email]),
-      type: new FormControl(this.userData[0]['_id'], Validators.required)
-    });
+    if (!this._strategicData.userData$) {
+      this._strategicData.setUserData()
+      .then(userData => {
+        this.userData = userData;
 
-    this.invitationFormInit();
+        this._crud.readWithObservable({
+          collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userInvitations'],
+        }).subscribe(userInvitations => {
+          this.userInvitations = userInvitations;
+
+          this.makeList();
+        });
+      });
+    } else {
+      this.userData = this._strategicData.userData$;
+
+      this._crud.readWithObservable({
+        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userInvitations'],
+      }).subscribe(userInvitations => {
+        this.userInvitations = userInvitations;
+
+        this.makeList();
+      });
+    }
   }
 
-  invitationFormInit = () => {
-    this.title = 'Convidar novo usuário';
-    this.submitButton = 'Convidar';
+  makeList = () => {
+    this.paramsToTableData = {
+      header: {
+        actionIcon: [{
+          icon: 'add',
+          description: 'Adicionar',
+          tooltip: 'Fazer novo convite'
+        }]
+      },
+      list: {
+        dataSource: this.userInvitations,
+        show: [{
+          field: 'email',
+          header: 'E-mail',
+          sort: 'sort'
+        }]
+      },
+      footer: {
+      }
+    };
 
     this.isStarted = true;
   }
 
-  onInvitationFormSubmit = (formDirective: FormGroupDirective) => {
-    this._crud
-    .create({
-      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'invitationsTypes'],
-      objectToCreate: this.invitationForm.value
-    }).then(res => {
-      formDirective.resetForm();
+  onOutputFromTableData = (e) => {
+    if (e.icon === 'add' || e.icon === 'Adicionar') {
+      this.openInvitationDialog(undefined);
+    }
 
-      this._snackbar.open('Cadastro feito com sucesso', '', {
-        duration: 4000
-      });
+    if (e.icon === 'edit') {
+      this.openInvitationDialog(e.data['_id']);
+    }
+  }
+
+  openInvitationDialog = (idIfUpdate) => {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogInviationComponent, {
+      data: {
+        isCRM: true,
+        id: idIfUpdate
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log(result);
+      }
     });
   }
 }

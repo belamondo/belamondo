@@ -4,34 +4,6 @@
   </div>
 </mat-card>
 
-<div class="flex">
-  <mat-card *ngIf="isStarted" class="container">
-    <mat-card-header>
-      <mat-card-title>Cadastro de cliente</mat-card-title>
-    </mat-card-header>
-  
-    <form [formGroup]="invitationForm" #formDirective="ngForm" (ngSubmit)="onInvitationFormSubmit(this.formDirective)">
-      <mat-card-header>
-        <mat-card-subtitle>Dados mínimos</mat-card-subtitle>
-      </mat-card-header>
-  
-      <mat-card-content>
-        <mat-form-field appearance="outline">
-          <mat-label>E-mail</mat-label>
-          <input matInput placeholder="Digite o e-mail do convidado" type="text" formControlName="email" 
-          (keyup)="checkInvitationExistence(invitationForm.value.email)" required>
-        </mat-form-field>
-      </mat-card-content>
-  
-      <mat-card-actions>
-        <div class="flex">
-          <button mat-raised-button [disabled]="invitationForm.invalid">{{submitButton}}</button>
-        </div>
-      </mat-card-actions>
-    </form>
-  </mat-card>
-
-  <mat-card *ngIf="isStarted" class="container">
-    Listagem
-  </mat-card>
+<div class="flex container" *ngIf="isStarted">
+  <table-data [params]="paramsToTableData" (changeTable)="onOutputFromTableData($event)"></table-data>
 </div>
