@@ -3,11 +3,6 @@ import {
   OnInit,
   ChangeDetectorRef
 } from '@angular/core';
-import {
-  MediaMatcher, 
-  BreakpointObserver, 
-  Breakpoints
-} from '@angular/cdk/layout';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 
@@ -26,7 +21,7 @@ export class MainComponent implements OnInit {
   public paramsToTopbarMenu: any;
 
   constructor() {}
-  
+
   ngOnInit() {
     this.paramsToTopbarMenu = {
       title: 'BelaMondo',
@@ -39,6 +34,6 @@ export class MainComponent implements OnInit {
         icon: 'email',
         link: ['invitation']
       }]
-    }
+    };
   }
 }
