@@ -94,13 +94,14 @@ export class InvitationComponent implements OnInit {
   }
 
   onOutputFromTableData = (e) => {
-    if (e.icon === 'add' || e.icon === 'Adicionar') {
-      this.openInvitationDialog(undefined);
-    }
+    console.log(e);
+    // if (e.icon === 'add' || e.icon === 'Adicionar') {
+    //   this.openInvitationDialog(undefined);
+    // }
 
-    if (e.icon === 'edit') {
-      this.openInvitationDialog(e.data['_id']);
-    }
+    // if (e.icon === 'edit') {
+    //   this.openInvitationDialog(e.data['_id']);
+    // }
   }
 
   openInvitationDialog = (idIfUpdate) => {
