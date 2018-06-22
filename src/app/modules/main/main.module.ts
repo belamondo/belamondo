@@ -11,11 +11,11 @@ import { SharedModule } from '../shared/shared.module';
  * Components
  */
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DialogInviationComponent } from './components/invitation/dialog-inviation.component';
 import { InvitationComponent } from './components/invitation/invitation.component';
 import { MainComponent } from './main.component';
 import { ProfileChoiceComponent } from './components/profile-choice/profile-choice.component';
 import { PlaygroundComponent } from './components/playground/playground.component';
-import { DialogInviationComponent } from './components/invitation/dialog-inviation.component';
 
 @NgModule({
   imports: [
@@ -30,6 +30,9 @@ import { DialogInviationComponent } from './components/invitation/dialog-inviati
     PlaygroundComponent,
     ProfileChoiceComponent,
     DialogInviationComponent,
+  ],
+  entryComponents: [
+    DialogInviationComponent
   ]
 })
 export class MainModule { }

@@ -7,7 +7,8 @@ import {
   MatSnackBar,
   MatDialogRef,
   MatDialog,
-  MAT_DIALOG_DATA
+  MAT_DIALOG_DATA,
+  AUTOCOMPLETE_OPTION_HEIGHT
 } from '@angular/material';
 
 /**
@@ -48,24 +49,12 @@ export class InvitationComponent implements OnInit {
       .then(userData => {
         this.userData = userData;
 
-        this._crud.readWithObservable({
-          collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userInvitations'],
-        }).subscribe(userInvitations => {
-          this.userInvitations = userInvitations;
-
-          this.makeList();
-        });
+        this.setInvitations();
       });
     } else {
       this.userData = this._strategicData.userData$;
 
-      this._crud.readWithObservable({
-        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userInvitations'],
-      }).subscribe(userInvitations => {
-        this.userInvitations = userInvitations;
-
-        this.makeList();
-      });
+      this.setInvitations();
     }
   }
 
@@ -93,7 +82,18 @@ export class InvitationComponent implements OnInit {
     this.isStarted = true;
   }
 
-  onOutputFromTableData = (e) => {
+  setInvitations = () => {
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userInvitations'],
+    }).subscribe(userInvitations => {
+      console.log(61)
+      this.userInvitations = userInvitations;
+
+      this.makeList();
+    });
+  }
+
+  onOutputFromTableData = (e) => { console.log(e)
     if (e.icon === 'add' || e.icon === 'Adicionar') {
       this.openInvitationDialog(undefined);
     }
@@ -106,6 +106,8 @@ export class InvitationComponent implements OnInit {
   openInvitationDialog = (idIfUpdate) => {
     let dialogRef;
     dialogRef = this._dialog.open(DialogInviationComponent, {
+      width: '90%',
+      maxHeight: '90%',
       data: {
         isCRM: true,
         id: idIfUpdate
