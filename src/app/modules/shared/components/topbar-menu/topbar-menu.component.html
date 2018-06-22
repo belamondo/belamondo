@@ -83,7 +83,7 @@
           
             <ng-template ngFor let-subMenu [ngForOf]="view.subMenus" let-even="even" let-odd="odd" let-rowIndex="index">
               <a mat-list-item [routerLink]="subMenu.link" routerLinkActive="active-link" (click)="mobile ? snav.close() : {}">
-                <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px;">{{subMenu.name}}</span>
+                <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px; margin-top: 10px; margin-left: 20px">{{subMenu.name}}</span>
               </a>
             </ng-template>
           

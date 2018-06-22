@@ -179,6 +179,7 @@ export class TableDataComponent implements OnInit {
   }
 
   sort = (event, index) => {
+    console.log(event, index);
     this.params.list.dataSource.forEach((object, objectI) => {// looping over array of objects
       for (const key in object) { // looping over keys in each object from array of objects
         if (key === this.params.list.show[index].field) {
