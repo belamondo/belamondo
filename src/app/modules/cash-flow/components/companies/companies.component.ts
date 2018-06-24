@@ -5,7 +5,6 @@ import {
 import {
   MatDialog,
 } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
 
 /**
  * Services
@@ -15,14 +14,14 @@ import { CrudService } from './../../../shared/services/firebase/crud.service';
 /**
  * Components
  */
-import { DialogExpenseComponent } from '../../../shared/components/dialog-expense/dialog-expense.component';
+import { DialogCompanyComponent } from './../../../shared/components/dialog-company/dialog-company.component';
 
 @Component({
-  selector: 'app-expense',
-  templateUrl: './expense.component.html',
-  styleUrls: ['./expense.component.css']
+  selector: 'app-companies',
+  templateUrl: './companies.component.html',
+  styleUrls: ['./companies.component.css']
 })
-export class ExpenseComponent implements OnInit {
+export class CompaniesComponent implements OnInit {
 
   // Common properties: start
   public isStarted: boolean;
@@ -42,9 +41,9 @@ export class ExpenseComponent implements OnInit {
   }
 
   makeList = () => {
-    /* Get expenses types from database */
+    /* Get products types from database */
     this._crud.read({
-      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes'],
+      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userCompanies'],
     }).then(res => {
 
       this.paramsToTableData = {
@@ -53,7 +52,7 @@ export class ExpenseComponent implements OnInit {
             {
               icon: 'add',
               description: 'Adicionar',
-              tooltip: 'Adicionar nova despesa'
+              tooltip: 'Adicionar novo cliente'
             },
             {
               icon: 'delete',
@@ -64,14 +63,24 @@ export class ExpenseComponent implements OnInit {
         },
         list: {
           dataSource: res,
-          show: [{
-            field: 'name',
-            header: 'Despesa',
-            sort: 'sort'
-          }],
+          show: [
+            {
+              field: 'business_name',
+              header: 'Nome Fantasia',
+              sort: 'sort'
+            }, {
+              field: 'company_name',
+              header: 'Razão Social',
+              sort: 'sort'
+            }, {
+              field: 'cnpj',
+              header: 'CNPJ',
+              sort: 'sort'
+            }
+          ],
           actionIcon: [{
             icon: 'edit',
-            tooltip: 'Editar despesa'
+            tooltip: 'Editar produto'
           }]
         },
         checkBox: true,
@@ -83,12 +92,12 @@ export class ExpenseComponent implements OnInit {
   }
 
   onOutputFromTableData = (e) => {
-    if (e.icon.substr(0, 3) === 'add' || e.icon === 'Adicionar') {
-      this.openExpenseDialog(undefined);
+    if (e.icon === 'add' || e.icon === 'Adicionar') {
+      this.openCompanyDialog(undefined);
     }
 
     if (e.icon === 'edit') {
-      this.openExpenseDialog(e.data['_id']);
+      this.openCompanyDialog(e.data['_id']);
     }
 
     if (e.icon === 'delete' || e.icon === 'Excluir') {
@@ -100,11 +109,10 @@ export class ExpenseComponent implements OnInit {
     }
   }
 
-  openExpenseDialog = (idIfUpdate) => {
+  openCompanyDialog = (idIfUpdate) => {
     let dialogRef;
-    dialogRef = this._dialog.open(DialogExpenseComponent, {
+    dialogRef = this._dialog.open(DialogCompanyComponent, {
       data: {
-        isExpense: true,
         id: idIfUpdate
       }
     });

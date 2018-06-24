@@ -37,7 +37,9 @@ import { DialogContactComponent } from './components/dialog-contact/dialog-conta
 import { DialogDocumentComponent } from './components/dialog-document/dialog-document.component';
 import { DialogExpenseComponent, SubDialogExpenseComponent } from './components/dialog-expense/dialog-expense.component';
 import { DialogPersonComponent } from './components/dialog-person/dialog-person.component';
+import { DialogProductComponent, SubDialogProductComponent } from './components/dialog-product/dialog-product.component';
 import { DialogRelationshipComponent } from './components/dialog-relationship/dialog-relationship.component';
+import { DialogServiceComponent, SubDialogServiceComponent } from './components/dialog-service/dialog-service.component';
 import { TableDataComponent } from './components/table-data/table-data.component';
 import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.component';
 
@@ -56,11 +58,15 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogExpenseComponent,
     DialogDocumentComponent,
     DialogPersonComponent,
+    DialogProductComponent,
     DialogRelationshipComponent,
-    SubDialogExpenseComponent,
+    DialogServiceComponent,
     MaterialModule,
     ReactiveFormsModule,
     RouterModule,
+    SubDialogExpenseComponent,
+    SubDialogProductComponent,
+    SubDialogServiceComponent,
     TableDataComponent,
     TextMaskModule,
     TopbarMenuComponent,
@@ -77,8 +83,12 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogDocumentComponent,
     DialogExpenseComponent,
     DialogPersonComponent,
+    DialogProductComponent,
     DialogRelationshipComponent,
+    DialogServiceComponent,
     SubDialogExpenseComponent,
+    SubDialogProductComponent,
+    SubDialogServiceComponent,
     TableDataComponent,
     TopbarMenuComponent,
   ], entryComponents: [
@@ -89,8 +99,12 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogDocumentComponent,
     DialogExpenseComponent,
     DialogPersonComponent,
+    DialogProductComponent,
     DialogRelationshipComponent,
+    DialogServiceComponent,
     SubDialogExpenseComponent,
+    SubDialogProductComponent,
+    SubDialogServiceComponent,
   ]
 })
 export class SharedModule { }

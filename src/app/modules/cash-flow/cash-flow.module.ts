@@ -5,13 +5,21 @@ import { CommonModule } from '@angular/common';
  * Components
  */
 import { CashFlowComponent } from './cash-flow.component';
-import { CompaniesComponent } from '../crm/components/companies/companies.component';
+import { CompaniesComponent } from './components/companies/companies.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ExpenseComponent } from './components/expense/expense.component';
-import { IncomingOutcomingComponent, DialogFormIncomingOutcomingComponent } from './components/incoming-outcoming/incoming-outcoming.component';
+import {
+  IncomingOutcomingComponent,
+  DialogFormIncomingOutcomingComponent
+} from './components/incoming-outcoming/incoming-outcoming.component';
 import { PayableReceivableComponent } from './components/payable-receivable/payable-receivable.component';
-import { ProductComponent } from '../system/components/product/product.component';
-import { ReportComponent, DialogFormReportComponent } from './components/report/report.component';
+import { PeopleComponent } from './components/people/people.component';
+import { ProductComponent } from './components/product/product.component';
+import {
+  ReportComponent,
+  DialogFormReportComponent
+} from './components/report/report.component';
+import { ServiceComponent } from './components/service/service.component';
 
 /**
  * Modules
@@ -34,8 +42,10 @@ import { SharedModule } from './../shared/shared.module';
     ExpenseComponent,
     IncomingOutcomingComponent,
     PayableReceivableComponent,
+    PeopleComponent,
     ProductComponent,
-    ReportComponent
+    ReportComponent,
+    ServiceComponent,
   ],
   entryComponents: [
     DialogFormIncomingOutcomingComponent,

@@ -33,7 +33,7 @@
         </tr>
         <tr>
           <th *ngFor="let show of params.list.show; let headerId = index">
-            <i class="material-icons tbl-icon" *ngIf="headerId === 0">
+            <i class="material-icons tbl-icon" *ngIf="headerId === 0 && params.checkBox">
               <span *ngIf="!allChecked" (click)="checkRow(-1, true)">check_box_outline_blank</span>
               <span *ngIf="allChecked" (click)="checkRow(-1, false)">check_box</span>
             </i>
@@ -48,7 +48,7 @@
       <tbody>
         <tr *ngFor="let data of dataSource; let i = index">
           <td *ngFor="let show of params.list.show, let j = index;">
-            <i class="material-icons tbl-icon" *ngIf="j === 0">
+            <i class="material-icons tbl-icon" *ngIf="j === 0 && params.checkBox">
               <span *ngIf="!data['checked']" (click)="checkRow(i, true)">check_box_outline_blank</span>
               <span *ngIf="data['checked']" (click)="checkRow(i, false)">check_box</span>
             </i>
