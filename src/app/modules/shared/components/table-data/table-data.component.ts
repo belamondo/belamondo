@@ -53,6 +53,7 @@ export class TableDataComponent implements OnInit {
   public numberOfLines: any;
   public tableFooterForm: FormGroup;
   public tableSearchForm: FormGroup;
+  public allChecked: Boolean = false;
 
   constructor(
     private _router: Router
@@ -91,6 +92,19 @@ export class TableDataComponent implements OnInit {
 
     this.lastPage = Math.ceil(this.params.list.dataTotalLength / this.params.list.limit);
     this.setLimitOverPage(this.currentPage);
+  }
+
+  checkRow = (index, check) => {
+    if (index > -1) {
+      const i = ((this.currentPage - 1) * parseInt(this.params.list.limit, 10)) + index;
+      this.dataTemp[i]['checked'] = check;
+      this.setLimitOverPage(this.currentPage);
+    } else {
+      this.allChecked = check;
+      this.dataTemp.forEach(element => {
+        element.checked = check;
+      });
+    }
   }
 
   onTableDataOutput = (event, data) => {
@@ -178,8 +192,13 @@ export class TableDataComponent implements OnInit {
     this.setLimitOverPage(1);
   }
 
-  sort = (event, index) => {
-    console.log(event, index);
+  sort = (field) => {
+    this.dataTemp.sort((a, b) => {
+      return ( a[field] > b[field]) ? 1 : ( (b[field] > a[field]) ? -1 : 0);
+    });
+
+    this.setLimitOverPage(this.currentPage);
+    /*
     this.params.list.dataSource.forEach((object, objectI) => {// looping over array of objects
       for (const key in object) { // looping over keys in each object from array of objects
         if (key === this.params.list.show[index].field) {
@@ -201,5 +220,6 @@ export class TableDataComponent implements OnInit {
         }
       }
     });
+    */
   }
 }

@@ -10,6 +10,7 @@ h1{
   text-align: center;
   margin-bottom: 15px;
 }
+
 table{
   width:100%;
   table-layout: fixed;
@@ -17,6 +18,8 @@ table{
 
 .action-button {
   margin-right: 10px;
+  margin-bottom: 10px;
+
   font-size: small;
 }
 
@@ -28,10 +31,6 @@ table{
 .search {
   max-width: 400px;
   float: right;
-}
-
-.tbl-header{
-  background-color: rgb(255, 255, 255);
 }
 
 .tbl-action-area{
@@ -79,6 +78,17 @@ table{
 
 .tbl-footer td:nth-child(4) {
   width: 100%;
+}
+
+.tbl-header{
+  background-color: rgb(255, 255, 255);
+}
+
+.tbl-icon{
+  line-height: 10px;
+  vertical-align: middle;
+  margin-right: 15px;
+  cursor: pointer;
 }
 
 th{

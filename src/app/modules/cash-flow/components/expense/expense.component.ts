@@ -81,6 +81,7 @@ export class ExpenseComponent implements OnInit {
           show: [{
             field: 'name',
             header: 'Despesa',
+            sort: 'sort'
           }],
           actionIcon: [{
             icon: 'edit',
@@ -101,6 +102,14 @@ export class ExpenseComponent implements OnInit {
 
     if (e.icon === 'edit') {
       this.openExpenseDialog(e.data['_id']);
+    }
+
+    if (e.icon === 'delete' || e.icon === 'Excluir') {
+      e.data.forEach(element => {
+        if (element['checked']) {
+          console.log(element)
+        }
+      });
     }
   }
 
