@@ -26,8 +26,10 @@ export class CashFlowComponent implements OnInit {
         expansionMenu: true,
         subMenus: [
           { name: 'Despesas', link: 'expense' },
-          { name: 'Produtos e Serviços', link: 'products' },
-          { name: 'clientes', link: 'companies' }
+          { name: 'Produtos', link: 'products' },
+          { name: 'Serviços', link: 'services' },
+          { name: 'cliente - Pessoa Jurídica', link: 'companies' },
+          { name: 'cliente - Pessoa Física', link: 'people' },
         ]
       }, {
         name: 'Lançamentos',

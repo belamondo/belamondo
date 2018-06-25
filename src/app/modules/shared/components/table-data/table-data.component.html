@@ -22,7 +22,7 @@
               </mat-form-field>
             </form>
 
-            <button mat-raised-button class="action-button" *ngFor="let icon of params.header.actionIcon ; let i = index;" (click)="onTableDataOutput($event, undefined)">
+            <button mat-raised-button class="action-button" *ngFor="let icon of params.header.actionIcon ; let i = index;" (click)="onTableDataOutput($event, dataTemp)">
               <div [matTooltip]="icon.tooltip" *ngIf="icon.tooltip">
                 <mat-icon>{{icon.icon}}</mat-icon> &nbsp;
                 <span>{{icon.description}}</span>
@@ -33,9 +33,13 @@
         </tr>
         <tr>
           <th *ngFor="let show of params.list.show; let headerId = index">
+            <i class="material-icons tbl-icon" *ngIf="headerId === 0 && params.checkBox">
+              <span *ngIf="!allChecked" (click)="checkRow(-1, true)">check_box_outline_blank</span>
+              <span *ngIf="allChecked" (click)="checkRow(-1, false)">check_box</span>
+            </i>
             {{show['header']}}
             <a *ngIf="show.sort">            
-              <i class="material-icons" (click)="sort($event, headerId)">{{show.sort}}</i>
+              <i class="material-icons tbl-icon" (click)="sort(show.field)">{{show.sort}}</i>
             </a>
           </th>
         </tr>
@@ -44,6 +48,10 @@
       <tbody>
         <tr *ngFor="let data of dataSource; let i = index">
           <td *ngFor="let show of params.list.show, let j = index;">
+            <i class="material-icons tbl-icon" *ngIf="j === 0 && params.checkBox">
+              <span *ngIf="!data['checked']" (click)="checkRow(i, true)">check_box_outline_blank</span>
+              <span *ngIf="data['checked']" (click)="checkRow(i, false)">check_box</span>
+            </i>
             {{data[show['field']]}}
           </td>
 
@@ -60,9 +68,11 @@
           </td>
         </tr>
 
-        <div *ngIf='dataSource.length < 1'>
-          Nenhum dado encontrado.
-        </div>
+        <tr *ngIf='dataSource.length < 1'>
+          <td>
+            Nenhum dado encontrado.
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>

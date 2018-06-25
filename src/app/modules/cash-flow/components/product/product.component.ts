@@ -5,7 +5,6 @@ import {
 import {
   MatDialog,
 } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
 
 /**
  * Services
@@ -16,14 +15,14 @@ import { StrategicDataService } from '../../../shared/services/strategic-data.se
 /**
  * Components
  */
-import { DialogExpenseComponent } from '../../../shared/components/dialog-expense/dialog-expense.component';
+import { DialogProductComponent } from './../../../shared/components/dialog-product/dialog-product.component';
 
 @Component({
-  selector: 'app-expense',
-  templateUrl: './expense.component.html',
-  styleUrls: ['./expense.component.css']
+  selector: 'app-product',
+  templateUrl: './product.component.html',
+  styleUrls: ['./product.component.css']
 })
-export class ExpenseComponent implements OnInit {
+export class ProductComponent implements OnInit {
 
   // Common properties: start
   public isStarted: boolean;
@@ -34,28 +33,36 @@ export class ExpenseComponent implements OnInit {
   constructor(
     private _dialog: MatDialog,
     private _crud: CrudService,
-    private _route: ActivatedRoute,
     public _strategicData: StrategicDataService,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
-    this.userData = this._strategicData.userData$;
-    this.makeList();
+    if(this._strategicData.userData$) {
+      this.userData = this._strategicData.userData$;
+      this.makeList();
+    } else {
+      this._strategicData
+      .setUserData()
+      .then(userData => {
+        this.userData = userData;
+        this.makeList();
+      })
+    }
   }
 
   makeList = () => {
-    /* Get expenses types from database */
+    /* Get products types from database */
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'expensesTypes'],
-    }).subscribe(expenseTypes => {
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'products'],
+    }).subscribe(res => {
       this.paramsToTableData = {
         header: {
           actionIcon: [
             {
               icon: 'add',
               description: 'Adicionar',
-              tooltip: 'Adicionar nova despesa'
+              tooltip: 'Adicionar novo produto'
             },
             {
               icon: 'delete',
@@ -65,19 +72,19 @@ export class ExpenseComponent implements OnInit {
           ]
         },
         list: {
-          dataSource: expenseTypes,
+          dataSource: res,
           show: [{
             field: 'name',
-            header: 'Despesa',
+            header: 'Produto',
             sort: 'sort'
           }],
           actionIcon: [{
             icon: 'edit',
-            tooltip: 'Editar despesa'
+            tooltip: 'Editar produto'
           }]
         },
         checkBox: true,
-        footer: {}
+        footer: {  }
       };
 
       this.isStarted = true;
@@ -85,12 +92,12 @@ export class ExpenseComponent implements OnInit {
   }
 
   onOutputFromTableData = (e) => {
-    if (e.icon.substr(0, 3) === 'add' || e.icon === 'Adicionar') {
-      this.openExpenseDialog(undefined);
+    if (e.icon === 'add' || e.icon === 'Adicionar') {
+      this.openProductDialog(undefined);
     }
 
     if (e.icon === 'edit') {
-      this.openExpenseDialog(e.data['_id']);
+      this.openProductDialog(e.data['_id']);
     }
 
     if (e.icon === 'delete' || e.icon === 'Excluir') {
@@ -102,11 +109,10 @@ export class ExpenseComponent implements OnInit {
     }
   }
 
-  openExpenseDialog = (idIfUpdate) => {
+  openProductDialog = (idIfUpdate) => {
     let dialogRef;
-    dialogRef = this._dialog.open(DialogExpenseComponent, {
+    dialogRef = this._dialog.open(DialogProductComponent, {
       data: {
-        isExpense: true,
         id: idIfUpdate
       }
     });
