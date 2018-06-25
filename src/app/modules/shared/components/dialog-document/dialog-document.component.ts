@@ -21,9 +21,11 @@ import { StrategicDataService } from '../../services/strategic-data.service';
 export class DialogDocumentComponent implements OnInit {
   public autoCorrectedDatePipe: any;
   public documentForm: FormGroup;
+  public documentMask: string;
   public documents: any;
   public isStarted: boolean;
   public mask: any;
+  private userData: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -40,6 +42,9 @@ export class DialogDocumentComponent implements OnInit {
     .readWithObservable({
       collectionsAndDocs: [
         'documents'
+      ],
+      where: [
+        ['type', '==', this.data['_userType']]
       ]
     }).subscribe(documents => {
       this.documents = documents;
@@ -59,5 +64,17 @@ export class DialogDocumentComponent implements OnInit {
       date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
       cnpj: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]
     };
+  }
+
+  documentNameToMask = () => {
+    switch (this.documentForm.value.type) {
+      case 'CNPJ (Cadastro Nacional da Pessoa Jurídica)':
+        this.documentMask = 'cnpj';
+        break;
+
+      default:
+        console.log('Nenhuma máscara para este documento');
+        break;
+    }
   }
 }

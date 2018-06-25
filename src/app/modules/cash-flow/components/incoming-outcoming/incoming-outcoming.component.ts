@@ -110,28 +110,28 @@ export class IncomingOutcomingComponent implements OnInit {
 
     /* Get expenses types from database */
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes'],
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'expensesTypes'],
     }).subscribe(expensesTypes => {
       this.outcomingsTypes = expensesTypes;
     });
 
     /* Get products and services from database */
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'products'],
+      collectionsAndDocs: [this.userData[0]['_data']['_userType'], this.userData[0]['_id'], 'products'],
     }).subscribe(products => {
       this.incomingsTypes01 = products;
     });
 
     /* Get services from database */
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'services'],
+      collectionsAndDocs: [this.userData[0]['_data']['_userType'], this.userData[0]['_id'], 'services'],
     }).subscribe(services => {
       this.incomingsTypes02 = services;
     });
 
     /* Get incomings and outcomings of the actual month from database */
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'inAndOut', '201806']  // TODO: pegar ano e mês atual
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'inAndOut', '201806']  // TODO: pegar ano e mês atual
     }).subscribe(inAndOut => {
       if (inAndOut[0] !== undefined) {
         this.inAndOut = {
@@ -166,7 +166,7 @@ export class IncomingOutcomingComponent implements OnInit {
         this.indexOfRegister = paramArrayIndex;
 
         this._crud.readWithObservable({
-          collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'inAndOut', paramId],
+          collectionsAndDocs: [this.userData[0]['_data']['_userType'], this.userData[0]['_id'], 'inAndOut', paramId],
         }).subscribe(inAndOut => {
 
           let modality;
@@ -223,7 +223,7 @@ export class IncomingOutcomingComponent implements OnInit {
 
       this._crud
       .update({
-        collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'inAndOut', this.monthAndYear],
+        collectionsAndDocs: [this.userData[0]['_data']['_userType'], this.userData[0]['_id'], 'inAndOut', this.monthAndYear],
         objectToUpdate: this.inAndOut
       }).then(res => {
         formDirective.resetForm();
@@ -245,7 +245,7 @@ export class IncomingOutcomingComponent implements OnInit {
 
       this._crud
       .update({
-        collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'inAndOut', '201806'], // TODO: pegar ano e mês atual
+        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'inAndOut', '201806'], // TODO: pegar ano e mês atual
         objectToUpdate: this.inAndOut
       }).then(res => {
         formDirective.resetForm();

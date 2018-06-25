@@ -75,7 +75,7 @@ export class ServiceComponent implements OnInit {
         param = this.paramToSearch.replace(':', '');
 
         this._crud.readWithObservable({
-          collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'services', param],
+          collectionsAndDocs: [this.userData[0]['_data']['_userType'], this.userData[0]['_id'], 'services', param],
         }).subscribe(res => {
           this.serviceForm.patchValue(res[0]['_data']);
 
@@ -109,7 +109,7 @@ export class ServiceComponent implements OnInit {
       this._crud
         .update({
           collectionsAndDocs: [
-            this.userData[0]['_data']['userType'],
+            this.userData[0]['_data']['_userType'],
             this.userData[0]['_id'], 'services',
             this.paramToSearch.replace(':', '')
           ],
@@ -128,7 +128,7 @@ export class ServiceComponent implements OnInit {
       this._crud
       .create({
         collectionsAndDocs: [
-          this.userData[0]['_data']['userType'],
+          this.userData[0]['_data']['_userType'],
           this.userData[0]['_id'],
           'services'
         ],

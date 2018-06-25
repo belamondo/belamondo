@@ -90,10 +90,14 @@ export class DialogCompanyComponent implements OnInit {
   public addressesObject: any;
   public addresses: any;
   public clientType: string;
+  private cnpjToSearch: any;
+  private cnpjToSearchCheck: any;
   public contactsObject: any;
   public contacts: any;
   public documentsObject: any;
   public documents: any;
+  public formEnabled: boolean;
+  public formMessage: string;
   public relationships: any;
   public relationshipsObject: any;
 
@@ -115,17 +119,26 @@ export class DialogCompanyComponent implements OnInit {
       company_name: new FormControl(null)
     });
 
-    this.userData = this._strategicData.userData$;
+    this.cnpjToSearchCheck = null;
+
+    if (!this._strategicData.userData$) {
+      this._strategicData.setUserData()
+      .then(userData => {
+        this.userData = userData;
+      });
+    } else {
+      this.userData = this._strategicData.userData$;
+    }
 
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
 
     this.addressesObject = [];
-
-    this.documentsObject = [];
-
     this.contactsObject = [];
-
+    this.documentsObject = [];
     this.relationshipsObject = [];
+
+    this.formEnabled = false;
+    this.formMessage = null;
 
     this.isStarted = false;
     this.isDisabled = false;
@@ -148,7 +161,7 @@ export class DialogCompanyComponent implements OnInit {
       this._crud
         .readWithObservable({
           collectionsAndDocs: [
-            this.userData[0]['userType'],
+            this.userData[0]['_userType'],
             this.userData[0]['_id'],
             'userCompanies',
             this.data.id
@@ -157,6 +170,22 @@ export class DialogCompanyComponent implements OnInit {
           this.companyForm.patchValue(res[0]);
 
           this.isStarted = true;
+        });
+
+        this._crud
+        .readWithObservable({
+          collectionsAndDocs: [
+            this.userData[0]['_userType'],
+            this.userData[0]['_id'],
+            'userCompanies',
+            this.data.id,
+            'userCompaniesDocuments',
+            0
+          ]
+        }).subscribe(res => {
+          if (res[0]['documentsToParse']) {
+            this.documentsObject = JSON.parse(res[0]['documentsToParse']);
+          }
         });
     } else {
       this.submitToCreate = true;
@@ -193,22 +222,21 @@ export class DialogCompanyComponent implements OnInit {
   addContact = () => {
     let dialogRef;
     dialogRef = this._dialog.open(DialogContactComponent, {
-      height: '250px',
+      height: '320px',
       width: '800px',
       data: {
-        contacts: this.contacts,
         mask: this.mask
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.contacts.forEach(element => {
+        this.contactsObject.forEach(element => {
           if (element.mask === result.type) {
             result.type = element.name;
           }
         });
-
+        console.log(result)
         this.contactsObject.push(result);
       }
     });
@@ -225,13 +253,14 @@ export class DialogCompanyComponent implements OnInit {
       width: '800px',
       data: {
         mask: this.mask,
-        autoCorrectedDatePipe: this.autoCorrectedDatePipe
+        autoCorrectedDatePipe: this.autoCorrectedDatePipe,
+        _userType: 'companies'
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.documents.forEach(element => {
+        this.documentsObject.forEach(element => {
           if (element.mask === result.type) {
             result.type = element.name;
           }
@@ -277,6 +306,34 @@ export class DialogCompanyComponent implements OnInit {
 
   checkCompanyExistence = (cnpj) => {
     if (!this.companyForm.get('cnpj').errors) {
+      let cnpj = this.companyForm.get('cnpj').value;
+      this.cnpjToSearch =  cnpj.replace(/.-/, '');
+
+      if ((this.cnpjToSearch.length > 13) && (this.cnpjToSearch !== this.cnpjToSearchCheck)) {
+        this._crud
+        .readWithPromise({
+          collectionsAndDocs: [
+            this.userData[0]['_userType'],
+            this.userData[0]['_id'],
+            'userCompanies'
+          ],
+          where: [
+            ['cnpj', '==', cnpj]
+          ]
+        })
+        .then(cnpjRes => {
+          // IF non existent company THEN enable form
+          if (!cnpjRes[0]) {
+            this.formEnabled = true;
+            this.formMessage = null;
+          } else {
+            this.formEnabled = false;
+            this.formMessage = 'Já existe uma empresa cadastrada com este CNPJ';
+          }
+
+          this.cnpjToSearchCheck = this.cnpjToSearch;
+        });
+      }
       // Check existence of peopleRelated by cpf, first on sessionStorage, then,
       // if there are at least 400 peopleRelated in the sesionStorage (populated on crm.guard || cash-flow.guard)
       // and none of then are related to the cpf, look on firestore peopleRelated collection
@@ -291,95 +348,130 @@ export class DialogCompanyComponent implements OnInit {
     if (this.submitToUpdate) {
       this._crud
         .update({
-          collectionsAndDocs: ['clientsPeople', this.paramToSearch.replace(':', '')],
+          collectionsAndDocs: [
+            this.userData[0]['_userType'],
+            this.userData[0]['_id'],
+            'userCompanies',
+            this.data.id
+          ],
           objectToUpdate: this.companyForm.value
         });
 
-      if (this.documentsObject.length > 0) {
-        this._crud
-          .update({
-            collectionsAndDocs: ['clientsPeople', this.paramToSearch.replace(':', '')],
-            objectToUpdate: JSON.stringify(this.documentsObject)
-          });
-      }
+      this._crud
+        .update({
+          collectionsAndDocs: [
+            this.userData[0]['_userType'],
+            this.userData[0]['_id'],
+            'userCompanies',
+            this.data.id,
+            'userCompaniesDocuments',
+            0
+          ],
+          objectToUpdate: {
+            documentsToParse: JSON.stringify(this.documentsObject)
+          }
+        });
 
-      if (this.contactsObject.length > 0) {
         this._crud
           .update({
-            collectionsAndDocs: ['clientsPeopleContacts', this.paramToSearch.replace(':', '')],
-            objectToUpdate: JSON.stringify(this.contactsObject)
+            collectionsAndDocs: [
+              this.userData[0]['_userType'],
+              this.userData[0]['_id'],
+              'userCompanies',
+              this.data.id,
+              'userCompaniesContacts',
+              0
+            ],
+            objectToUpdate: {
+              contactsToParse: JSON.stringify(this.contactsObject)
+            }
           });
-      }
 
-      if (this.addressesObject.length > 0) {
-        this._crud
+          this._crud
           .update({
-            collectionsAndDocs: 'clientsPeopleAddresses',
-            whereId: this.paramToSearch.id,
+            collectionsAndDocs: [
+              this.userData[0]['_userType'],
+              this.userData[0]['_id'],
+              'userCompanies',
+              this.data.id,
+              'userCompaniesAddresses',
+              0
+            ],
             objectToUpdate: {
               addressesToParse: JSON.stringify(this.addressesObject)
             }
           });
-      }
     }
 
     if (this.submitToCreate) {
       this._crud
         .create({
           collectionsAndDocs: [
-            this.userData[0]['userType'],
+            this.userData[0]['_userType'],
             this.userData[0]['_id'],
             'userCompanies'
           ],
           objectToCreate: this.companyForm.value
         }).then(res => {
-          if (this.documentsObject.length > 0) {
-            this._crud
-              .create({
-                collectionsAndDocs: [
-                  this.userData[0]['userType'],
-                  this.userData[0]['_id'],
-                  'userCompanies',
-                  res['id'],
-                  'userCompaniesDocuments'
-                ],
-                objectToCreate: {
-                  documentsToParse: JSON.stringify(this.documentsObject)
-                }
-              });
-          }
+          this._crud
+            .update({
+              collectionsAndDocs: [
+                this.userData[0]['_userType'],
+                this.userData[0]['_id'],
+                'userCompanies',
+                res['id'],
+                'userCompaniesAddresses',
+                0
+              ],
+              objectToUpdate: {
+                documentsToParse: JSON.stringify(this.addressesObject)
+              }
+            });
 
-          if (this.contactsObject.length > 0) {
-            this._crud
-              .create({
-                collectionsAndDocs: [
-                  this.userData[0]['userType'],
-                  this.userData[0]['_id'],
-                  'userCompanies',
-                  res['id'],
-                  'userCompaniesContacts'
-                ],
-                objectToCreate: {
-                  contactsToParse: JSON.stringify(this.contactsObject)
-                }
-              });
-          }
+          this._crud
+            .update({
+              collectionsAndDocs: [
+                this.userData[0]['_userType'],
+                this.userData[0]['_id'],
+                'userCompanies',
+                res['id'],
+                'userCompaniesDocuments',
+                0
+              ],
+              objectToUpdate: {
+                documentsToParse: JSON.stringify(this.documentsObject)
+              }
+            });
 
-          if (this.addressesObject.length > 0) {
+          this._crud
+            .update({
+              collectionsAndDocs: [
+                this.userData[0]['_userType'],
+                this.userData[0]['_id'],
+                'userCompanies',
+                res['id'],
+                'userCompaniesContacts',
+                0
+              ],
+              objectToUpdate: {
+                contactsToParse: JSON.stringify(this.contactsObject)
+              }
+            });
+
             this._crud
-              .create({
-                collectionsAndDocs: [
-                  this.userData[0]['userType'],
-                  this.userData[0]['_id'],
-                  'userCompanies',
-                  res['id'],
-                  'userCompaniesAddresses'
-                ],
-                objectToCreate: {
-                  addressesToParse: JSON.stringify(this.addressesObject)
-                }
-              });
-          }
+            .update({
+              collectionsAndDocs: [
+                this.userData[0]['_userType'],
+                this.userData[0]['_id'],
+                'userCompanies',
+                res['id'],
+                'userCompaniesContacts',
+                0
+              ],
+              objectToUpdate: {
+                contactsToParse: JSON.stringify(this.contactsObject)
+              }
+            });
 
           formDirective.resetForm();
 

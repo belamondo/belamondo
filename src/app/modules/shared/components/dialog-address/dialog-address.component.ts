@@ -10,10 +10,10 @@ import { Http, RequestOptions, Headers } from '@angular/http';
 })
 export class DialogAddressComponent implements OnInit {
   public addressForm: FormGroup;
-  
+  public mask: any;
+
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private _http: Http
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
@@ -26,31 +26,10 @@ export class DialogAddressComponent implements OnInit {
       state: new FormControl(null, Validators.required),
       city: new FormControl(null, Validators.required),
       country: new FormControl(null, Validators.required),
-    })
-  }
-
-  findAddress = (zipCode) => {
-    let headersToAuth = new Headers({
-      'Access-Control-Allow-Origin': '*'
     });
 
-    let optionsToAuth = new RequestOptions({
-      'headers': headersToAuth
-    })
-
-
-    this._http
-    .post(
-      'https://us-central1-quickstart-belamondo.cloudfunctions.net/apiAddress',
-      {
-        zipCode: zipCode
-      },
-      optionsToAuth
-    ).subscribe(res => {
-      console.log(res)
-    }, rej => {
-      console.log(rej)
-    })
-    console.log(zipCode)
+    this.mask = {
+      zip: [/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]
+    };
   }
 }

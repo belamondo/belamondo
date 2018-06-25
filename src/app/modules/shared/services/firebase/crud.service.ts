@@ -91,7 +91,47 @@ export class CrudService {
   })
 
   delete = (params) => new Promise((resolve, reject) => {
+    if (!params) {
+      resolve({
+        code: 'd-error-01',
+        message: 'Minimum params required'
+      });
+    }
 
+    if (!params.collectionsAndDocs) {
+      resolve({
+        code: 'd-error-02',
+        message: 'Required param: collection'
+      });
+    }
+
+    let stringToFilter, stringCreatingFilter, functionToFilter;
+
+    stringToFilter = '_firestore';
+    stringCreatingFilter = '';
+
+    for (let lim = params.collectionsAndDocs.length, i = 0; i < lim; i++) {
+      if ((i === 0) || (i % 2 === 0)) {
+        stringCreatingFilter += '.collection("' + params.collectionsAndDocs[i] + '")';
+      } else {
+        stringCreatingFilter += '.doc("' + params.collectionsAndDocs[i] + '")';
+      }
+    }
+
+    if (params.where) {
+      for (let lim = params.where.length, i = 0; i < lim; i++) {
+        stringCreatingFilter += '.where("' + params.where[i][0] + '", "' + params.where[i][1] + '", "' + params.where[i][2] + '")';
+      }
+    }
+
+    stringToFilter += stringCreatingFilter;
+    functionToFilter = eval(stringToFilter);
+
+    functionToFilter
+      .delete()
+      .then(res => {
+        resolve(res);
+      });
   })
 
   readWithObservable = (params) => Observable.create(observer => {
@@ -295,26 +335,11 @@ export class CrudService {
 
     stringToFilter += stringCreatingFilter;
     functionToFilter = eval(stringToFilter);
+    console.log(stringToFilter);
 
     functionToFilter
       .set(params.objectToUpdate)
       .then(res => {
-        // Check sessionStorage flow over update: start
-        if (sessionStorage.getItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 2])) {
-          // Collection will be on length - 2 because length - 1 is the doc identifies to be updated
-          let ssObject;
-          ssObject = JSON.parse(sessionStorage.getItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 2]));
-
-          for (let limSs = ssObject.length, ss = 0; ss < limSs; ss++) {
-            if (ssObject[ss]['_id'] === params.collectionsAndDocs[params.collectionsAndDocs.length - 1]) {
-              ssObject[ss] = params.objectToUpdate;
-            }
-          }
-
-          sessionStorage.setItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 1], JSON.stringify(ssObject));
-
-        }
-        // Check sessionStorage flow over update: end
         resolve(res);
       });
   })

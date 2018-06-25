@@ -11,14 +11,60 @@ import { CrudService } from './firebase/crud.service';
 })
 
 export class StrategicDataService implements OnInit {
+  public documents$: any;
+  public contacts$: any;
   public user: any;
   public userData$: any;
 
   constructor(
     private _crud: CrudService,
-  ) {}
+  ) {
+    if (!this.documents$) {
+      this._crud
+      .readWithObservable({
+        collectionsAndDocs: ['documents']
+      }).subscribe(documents => {
+        this.documents$ = documents;
+      });
+    }
+  }
 
   ngOnInit() {}
+
+  setContacts = () => new Promise((resolve, reject) => {
+    if (!this.contacts$) {
+      this._crud
+      .readWithObservable({
+        collectionsAndDocs: ['contacts']
+      }).subscribe(contacts => {
+        this.contacts$ = contacts;
+
+        resolve(this.contacts$);
+      });
+    }
+  })
+
+  setDocuments = () => new Promise((resolve, reject) => {
+    if (!this.documents$) {
+      this._crud
+      .readWithObservable({
+        collectionsAndDocs: ['documents']
+      }).subscribe(documents => {
+        this.documents$ = documents;
+
+        resolve(this.documents$);
+      });
+    }
+  })
+
+  setUserData = () => new Promise((resolve, reject) => {
+    this.userChosen()
+    .subscribe(userData => {
+      this.userData$ = userData;
+
+      resolve(this.userData$);
+    });
+  })
 
   userChosen = () => Observable.create(observer => {
     this.user = JSON.parse(sessionStorage.getItem('user'));
@@ -71,16 +117,9 @@ export class StrategicDataService implements OnInit {
     });
   })
 
-  setUserData = () => new Promise((resolve, reject) => {
-    this.userChosen()
-    .subscribe(userData => {
-      this.userData$ = userData;
-
-      resolve(this.userData$);
-    });
-  })
-
   emptyAllData = () => {
+    this.contacts$ = undefined;
+    this.documents$ = undefined;
     this.userData$ = undefined;
   }
 }

@@ -323,13 +323,13 @@ export class DialogPersonComponent implements OnInit {
     if (this.submitToCreate) {
       this._crud
         .create({
-          collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople'],
+          collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userPeople'],
           objectToCreate: this.personForm.value
         }).then(res => {
           if (this.documentsObject.length > 0) {
             this._crud
               .create({
-                collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleDocuments'],
+                collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleDocuments'],
                 objectToCreate: {
                   documentsToParse: JSON.stringify(this.documentsObject)
                 }
@@ -339,7 +339,7 @@ export class DialogPersonComponent implements OnInit {
           if (this.contactsObject.length > 0) {
             this._crud
             .create({
-              collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleContacts'],
+              collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleContacts'],
               objectToCreate: {
                 contactsToParse: JSON.stringify(this.contactsObject)
               }
@@ -349,7 +349,7 @@ export class DialogPersonComponent implements OnInit {
           if (this.addressesObject.length > 0) {
             this._crud
               .create({
-                collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleAddresses'],
+                collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleAddresses'],
                 objectToCreate: {
                   addressesToParse: JSON.stringify(this.addressesObject)
                 }

@@ -74,7 +74,7 @@ export class DialogExpenseComponent implements OnInit {
       const param = this.paramToSearch.replace(':', '');
 
       this._crud.readWithObservable({
-        collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes', param],
+        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'expensesTypes', param],
       }).subscribe(expensesTypes => {
         this.expenseForm.patchValue(expensesTypes[0]);
 
@@ -106,7 +106,7 @@ export class DialogExpenseComponent implements OnInit {
     if (this.submitToUpdate) {
       this._crud
         .update({
-          collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes', this.paramToSearch.replace(':', '')],
+          collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'expensesTypes', this.paramToSearch.replace(':', '')],
           objectToUpdate: this.expenseForm.value
         }).then(res => {
           formDirective.resetForm();
@@ -121,7 +121,7 @@ export class DialogExpenseComponent implements OnInit {
     if (this.submitToCreate) {
       this._crud
       .create({
-        collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes'],
+        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'expensesTypes'],
         objectToCreate: this.expenseForm.value
       }).then(res => {
         formDirective.resetForm();

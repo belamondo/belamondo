@@ -79,7 +79,7 @@ export class ProductComponent implements OnInit {
         param = this.paramToSearch.replace(':', '');
 
         this._crud.readWithObservable({
-          collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'products', param],
+          collectionsAndDocs: [this.userData[0]['_data']['_userType'], this.userData[0]['_id'], 'products', param],
         }).subscribe(res => {
           this.productForm.patchValue(res[0]['_data']);
 
@@ -112,7 +112,7 @@ export class ProductComponent implements OnInit {
       this._crud
         .update({
           collectionsAndDocs: [
-            this.userData[0]['_data']['userType'],
+            this.userData[0]['_data']['_userType'],
             this.userData[0]['_id'],
             'products', this.paramToSearch.replace(':', '')
           ],
@@ -130,7 +130,7 @@ export class ProductComponent implements OnInit {
     if (this.submitToCreate) {
       this._crud
       .create({
-        collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'products'],
+        collectionsAndDocs: [this.userData[0]['_data']['_userType'], this.userData[0]['_id'], 'products'],
         objectToCreate: this.productForm.value
       }).then(res => {
         formDirective.resetForm();

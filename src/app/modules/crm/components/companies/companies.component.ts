@@ -97,7 +97,6 @@ export class CompaniesComponent implements OnInit {
       }
     };
 
-    console.log(97);
     this.isStarted = true;
   }
 
@@ -114,6 +113,7 @@ export class CompaniesComponent implements OnInit {
   openCompanyDialog = (idIfUpdate) => {
     let dialogRef;
     dialogRef = this._dialog.open(DialogCompanyComponent, {
+      width: '90%',
       data: {
         isCRM: true,
         id: idIfUpdate

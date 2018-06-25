@@ -59,7 +59,7 @@ export class ExpenseComponent implements OnInit {
   makeList = () => {
     /* Get expenses types from database */
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes'],
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'expensesTypes'],
     }).subscribe(expenseTypes => {
       this.paramsToTableData = {
         header: {

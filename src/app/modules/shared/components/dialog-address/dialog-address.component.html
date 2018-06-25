@@ -3,7 +3,7 @@
   <div class="flex">    
     <mat-form-field appearance="outline" id="zip">
       <mat-label>CEP</mat-label>
-      <input matInput placeholder="Digite o CEP" type="text" formControlName="zip" (focusout)="findAddress(addressForm.value.zip)" [textMask]="{mask: data.mask.zip}"
+      <input matInput placeholder="Digite o CEP" type="text" formControlName="zip" [textMask]="{mask: mask['zip']}"
         required>
     </mat-form-field>
   </div>

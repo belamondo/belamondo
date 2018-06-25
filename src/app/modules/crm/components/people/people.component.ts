@@ -43,7 +43,7 @@ export class PeopleComponent implements OnInit {
     this.isStarted = false;
 
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople'],
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userPeople'],
     }).subscribe(userPeople => {
       this.isStarted = true;
     });

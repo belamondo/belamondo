@@ -9,16 +9,21 @@
   <form [formGroup]="documentForm">
     <div class="flex">
       <mat-form-field appearance="outline">
-        <mat-select placeholder="Tipo de documento *" formControlName="type">
-          <mat-option *ngFor="let document of documents" [value]="document.mask">
+        <mat-select placeholder="Tipo de documento *" formControlName="type" (selectionChange)="documentNameToMask()">
+          <mat-option *ngFor="let document of documents" [value]="document.name">
             {{ document.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>
-  
-      <mat-form-field appearance="outline">
+      
+      <mat-form-field appearance="outline" *ngIf="mask[documentMask]">
         <mat-label>Valor</mat-label>
-        <input matInput placeholder="Identificador do contato" type="text" formControlName="value" required [textMask]="{mask: mask[documentForm.value.type]}">
+        <input matInput placeholder="Identificador do documento" type="text" formControlName="value" required [textMask]="{mask: mask[documentMask]}">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" *ngIf="!mask[documentMask]">
+        <mat-label>Valor</mat-label>
+        <input matInput placeholder="Identificador do documento" type="text" formControlName="value" required>
       </mat-form-field>
     </div>
     
@@ -37,7 +42,9 @@
     <div class="flex">
       <button mat-button [mat-dialog-close]="{
           type: documentForm.value.type,
-          value: documentForm.value.value
+          value: documentForm.value.value,
+          makingDate: documentForm.value.makingDate,
+          validityDate: documentForm.value.validityDate
         }" [disabled]="documentForm.invalid">Adicionar</button>
       <button mat-button [mat-dialog-close]="false">Cancelar</button>
     </div>
