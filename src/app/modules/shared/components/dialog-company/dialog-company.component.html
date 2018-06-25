@@ -1,161 +1,163 @@
-<div *ngIf="!isStarted" class="container">
-  <div class="spinner-container">
-    <mat-spinner></mat-spinner>
+<h1 mat-dialog-title>{{title}}</h1>
+<mat-dialog-content>
+  <div *ngIf="!isStarted" class="container">
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
   </div>
-</div>
-
-<div class="flex">
-  <div *ngIf="isStarted" class="container">
-    <mat-card-header>
-      <mat-card-title class="dialog-title">{{title}}</mat-card-title>
-      <mat-card-subtitle>Dados mínimos</mat-card-subtitle>
-    </mat-card-header>
-
-    <form [formGroup]="companyForm" #formDirective="ngForm">
-      <mat-card-content>
-        <mat-form-field appearance="outline" id="cnpj">
-          <mat-label>CNPJ</mat-label>
-          <input matInput placeholder="Digite o CNPJ do cliente" type="text" formControlName="cnpj" (keyup)="checkCompanyExistence(companyForm.value.cnpj)"
-            [textMask]="{mask: mask.cnpj}" required>
-        </mat-form-field>
-
-        <mat-error *ngIf="formMessage">
-          {{formMessage}}
-        </mat-error>
-        
-        <section *ngIf="formEnabled || data.id">
-          <mat-form-field appearance="outline">
-            <mat-label>Nome fantasia</mat-label>
-            <input matInput placeholder="Digite o nome fantasia do cliente" type="text" formControlName="business_name" required>
+  
+  <div class="flex">
+    <div *ngIf="isStarted" class="container">
+      <mat-card-header>
+        <mat-card-subtitle>Dados mínimos</mat-card-subtitle>
+      </mat-card-header>
+  
+      <form [formGroup]="companyForm" #formDirective="ngForm">
+        <mat-card-content>
+          <mat-form-field appearance="outline" id="cnpj">
+            <mat-label>CNPJ</mat-label>
+            <input matInput placeholder="Digite o CNPJ do cliente" type="text" formControlName="cnpj" (keyup)="checkCompanyExistence(companyForm.value.cnpj)"
+              [textMask]="{mask: mask.cnpj}" required>
           </mat-form-field>
   
-          <mat-form-field appearance="outline">
-            <mat-label>Razão social</mat-label>
-            <input matInput placeholder="Digite a razão social do cliente" type="text" formControlName="company_name">
-          </mat-form-field>
-  
-          <div class="flex">
-            <section id="document">
-              <button mat-raised-button type="button" (click)="addDocument()">Adicionar documento</button>
-              <mat-card-content *ngIf="documentsObject.length > 0">
-                <mat-card-header>
-                  <mat-card-subtitle>Documentos adicionados</mat-card-subtitle>
-                </mat-card-header>
-  
-                <mat-card *ngFor="let document of documentsObject; let i = index;">
-                  <div class="flex">
-                    <section>
-                      {{document.type}} - {{document.value}}
-                      <div *ngIf="document.makingDate != '' || document.validityDate != ''">
-                        <div>
-                          <span *ngIf="document.makingDate != ''" class="subtext">Emissão: {{document.makingDate}}</span>
-                          <span *ngIf="document.validityDate != ''" class="subtext">Validade: {{document.validityDate}}</span>
+          <mat-error *ngIf="formMessage">
+            {{formMessage}}
+          </mat-error>
+          
+          <section *ngIf="formEnabled || data.id">
+            <mat-form-field appearance="outline">
+              <mat-label>Nome fantasia</mat-label>
+              <input matInput placeholder="Digite o nome fantasia do cliente" type="text" formControlName="business_name" required>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline">
+              <mat-label>Razão social</mat-label>
+              <input matInput placeholder="Digite a razão social do cliente" type="text" formControlName="company_name">
+            </mat-form-field>
+    
+            <div class="flex">
+              <section id="document">
+                <button mat-raised-button type="button" (click)="addDocument()">Adicionar documento</button>
+                <mat-card-content *ngIf="documentsObject.length > 0">
+                  <mat-card-header>
+                    <mat-card-subtitle>Documentos adicionados</mat-card-subtitle>
+                  </mat-card-header>
+    
+                  <mat-card *ngFor="let document of documentsObject; let i = index;" class="inside-card">
+                    <div class="flex">
+                      <section>
+                        {{document.type}} - {{document.value}}
+                        <div *ngIf="document.makingDate != '' || document.validityDate != ''">
+                          <div>
+                            <span *ngIf="document.makingDate != ''" class="subtext">Emissão: {{document.makingDate}}</span>
+                            <span *ngIf="document.validityDate != ''" class="subtext">Validade: {{document.validityDate}}</span>
+                          </div>
                         </div>
-                      </div>
-                    </section>
-  
-                    <section class="action-icon">
-                      <a (click)="deleteDocument(i)">
-                        <mat-icon>delete</mat-icon>
-                      </a>
-                    </section>
-                  </div>
-                </mat-card>
-              </mat-card-content>
-            </section>
-  
-            <section id="contact">
-              <button mat-raised-button type="button" (click)="addContact()">Adicionar contato</button>
-              <mat-card-content *ngIf="contactsObject.length > 0">
-                <mat-card-header>
-                  <mat-card-subtitle>Contatos adicionados</mat-card-subtitle>
-                </mat-card-header>
-  
-                <mat-card *ngFor="let contact of contactsObject; let i = index;">
-                  <div class="flex">
-                    <section>
-                      {{contact.type}} - {{contact.value}}
-                    </section>
-  
-                    <section class="action-icon">
-                      <a (click)="deleteContact(i)">
-                        <mat-icon>delete</mat-icon>
-                      </a>
-                    </section>
-                  </div>
-                </mat-card>
-              </mat-card-content>
-            </section>
-  
-  
-            <!--
-            <section class="checkbox">
-              <mat-label>Checkboxes</mat-label>
-              <mat-checkbox>Checked</mat-checkbox>
-              <mat-checkbox>Indeterminate</mat-checkbox>
-            </section>
-            -->
-          </div>
-  
-          <div class="flex">
-            <section id="address">
-              <button mat-raised-button type="button" (click)="addAddress()">Adicionar endereço</button>
-              <mat-card-content *ngIf="addressesObject.length > 0">
-                <mat-card-header>
-                  <mat-card-subtitle>Endereços adicionados</mat-card-subtitle>
-                </mat-card-header>
-  
-                <mat-card *ngFor="let address of addressesObject; let i = index;">
-                  <div class="flex">
-                    <section>
-                      {{address.type}} - {{address.value}}
-                    </section>
-  
-                    <section class="action-icon">
-                      <a (click)="deleteAddress(i)">
-                        <mat-icon>delete</mat-icon>
-                      </a>
-                    </section>
-                  </div>
-                </mat-card>
-              </mat-card-content>
-            </section>
-  
-            <section id="relationship">
-              <button mat-raised-button type="button" (click)="addRelationship()">Adicionar tipo de relação</button>
-              <mat-card-content *ngIf="relationshipsObject.length > 0">
-                <mat-card-header>
-                  <mat-card-subtitle>Tipos de relações adicionadas</mat-card-subtitle>
-                </mat-card-header>
-  
-                <mat-card *ngFor="let relationship of relationshipsObject; let i = index;">
-                  <div class="flex">
-                    <section>
-                      {{relationship.type}} - {{relationship.value}}
-                    </section>
-  
-                    <section class="action-icon">
-                      <a (click)="deleteRelationship(i)">
-                        <mat-icon>delete</mat-icon>
-                      </a>
-                    </section>
-                  </div>
-                </mat-card>
-              </mat-card-content>
-            </section>
-          </div>
-        </section>
-      </mat-card-content>
-
-      <mat-card-actions>
-        <div class="flex">
-          <button mat-raised-button [disabled]="companyForm.invalid || isDisabled" (click)="onCompanyFormSubmit(this.formDirective)" color="primary">
-            {{submitButton}}
-          </button>
-
-          <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
-        </div>
-      </mat-card-actions>
-    </form>
+                      </section>
+    
+                      <section class="action-icon">
+                        <a (click)="deleteDocument(i)">
+                          <mat-icon>delete</mat-icon>
+                        </a>
+                      </section>
+                    </div>
+                  </mat-card>
+                </mat-card-content>
+              </section>
+    
+              <section id="contact">
+                <button mat-raised-button type="button" (click)="addContact()">Adicionar contato</button>
+                <mat-card-content *ngIf="contactsObject.length > 0">
+                  <mat-card-header>
+                    <mat-card-subtitle>Contatos adicionados</mat-card-subtitle>
+                  </mat-card-header>
+    
+                  <mat-card *ngFor="let contact of contactsObject; let i = index;" class="inside-card">
+                    <div class="flex">
+                      <section>
+                        {{contact.type}} - {{contact.value}}
+                      </section>
+    
+                      <section class="action-icon">
+                        <a (click)="deleteContact(i)">
+                          <mat-icon>delete</mat-icon>
+                        </a>
+                      </section>
+                    </div>
+                  </mat-card>
+                </mat-card-content>
+              </section>
+    
+    
+              <!--
+              <section class="checkbox">
+                <mat-label>Checkboxes</mat-label>
+                <mat-checkbox>Checked</mat-checkbox>
+                <mat-checkbox>Indeterminate</mat-checkbox>
+              </section>
+              -->
+            </div>
+    
+            <div class="flex">
+              <section id="address">
+                <button mat-raised-button type="button" (click)="addAddress()">Adicionar endereço</button>
+                <mat-card-content *ngIf="addressesObject.length > 0">
+                  <mat-card-header>
+                    <mat-card-subtitle>Endereços adicionados</mat-card-subtitle>
+                  </mat-card-header>
+    
+                  <mat-card *ngFor="let address of addressesObject; let i = index;" class="inside-card">
+                    <div class="flex">
+                      <section>
+                        {{address.zip}} - {{address.address}}
+                      </section>
+    
+                      <section class="action-icon">
+                        <a (click)="deleteAddress(i)">
+                          <mat-icon>delete</mat-icon>
+                        </a>
+                      </section>
+                    </div>
+                  </mat-card>
+                </mat-card-content>
+              </section>
+    
+              <section id="relationship">
+                <button mat-raised-button type="button" (click)="addRelationship()">Adicionar tipo de relação</button>
+                <mat-card-content *ngIf="relationshipsObject.length > 0">
+                  <mat-card-header>
+                    <mat-card-subtitle>Tipos de relações adicionadas</mat-card-subtitle>
+                  </mat-card-header>
+    
+                  <mat-card *ngFor="let relationship of relationshipsObject; let i = index;" class="inside-card">
+                    <div class="flex">
+                      <section>
+                        {{relationship.relationship}}
+                      </section>
+    
+                      <section class="action-icon">
+                        <a (click)="deleteRelationship(i)">
+                          <mat-icon>delete</mat-icon>
+                        </a>
+                      </section>
+                    </div>
+                  </mat-card>
+                </mat-card-content>
+              </section>
+            </div>
+          </section>
+        </mat-card-content>  
+      </form>
+    </div>
   </div>
-</div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <div class="flex">
+    <button mat-raised-button [disabled]="companyForm.invalid || isDisabled" (click)="onCompanyFormSubmit(this.formDirective)" color="primary">
+      {{submitButton}}
+    </button>
+
+    <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
+  </div>
+</mat-dialog-actions>

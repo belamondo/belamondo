@@ -172,7 +172,7 @@ export class DialogCompanyComponent implements OnInit {
           this.isStarted = true;
         });
 
-        this._crud
+      this._crud
         .readWithObservable({
           collectionsAndDocs: [
             this.userData[0]['_userType'],
@@ -183,8 +183,56 @@ export class DialogCompanyComponent implements OnInit {
             0
           ]
         }).subscribe(res => {
-          if (res[0]['documentsToParse']) {
+          if (res[0] && res[0]['documentsToParse']) {
             this.documentsObject = JSON.parse(res[0]['documentsToParse']);
+          }
+        });
+
+      this._crud
+        .readWithObservable({
+          collectionsAndDocs: [
+            this.userData[0]['_userType'],
+            this.userData[0]['_id'],
+            'userCompanies',
+            this.data.id,
+            'userCompaniesContacts',
+            0
+          ]
+        }).subscribe(res => {
+          if (res[0] && res[0]['contactsToParse']) {
+            this.contactsObject = JSON.parse(res[0]['contactsToParse']);
+          }
+        });
+
+      this._crud
+        .readWithObservable({
+          collectionsAndDocs: [
+            this.userData[0]['_userType'],
+            this.userData[0]['_id'],
+            'userCompanies',
+            this.data.id,
+            'userCompaniesAddresses',
+            0
+          ]
+        }).subscribe(res => {
+          if (res[0] && res[0]['addressesToParse']) {
+            this.addressesObject = JSON.parse(res[0]['addressesToParse']);
+          }
+        });
+
+      this._crud
+        .readWithObservable({
+          collectionsAndDocs: [
+            this.userData[0]['_userType'],
+            this.userData[0]['_id'],
+            'userCompanies',
+            this.data.id,
+            'userCompaniesRelationships',
+            0
+          ]
+        }).subscribe(res => {
+          if (res[0] && res[0]['relationshipsToParse']) {
+            this.relationshipsObject = JSON.parse(res[0]['relationshipsToParse']);
           }
         });
     } else {
@@ -236,7 +284,7 @@ export class DialogCompanyComponent implements OnInit {
             result.type = element.name;
           }
         });
-        console.log(result)
+        
         this.contactsObject.push(result);
       }
     });
@@ -281,15 +329,13 @@ export class DialogCompanyComponent implements OnInit {
       height: '320px',
       width: '800px',
       data: {
-        relationships: this.relationships,
-        mask: this.mask,
-        autoCorrectedDatePipe: this.autoCorrectedDatePipe
+        relationships: this.relationships
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.relationships.forEach(element => {
+        this.relationshipsObject.forEach(element => {
           if (element.mask === result.type) {
             result.type = element.name;
           }
@@ -401,6 +447,21 @@ export class DialogCompanyComponent implements OnInit {
               addressesToParse: JSON.stringify(this.addressesObject)
             }
           });
+
+          this._crud
+          .update({
+            collectionsAndDocs: [
+              this.userData[0]['_userType'],
+              this.userData[0]['_id'],
+              'userCompanies',
+              this.data.id,
+              'userCompaniesRelationships',
+              0
+            ],
+            objectToUpdate: {
+              relationshipsToParse: JSON.stringify(this.relationshipsObject)
+            }
+          });
     }
 
     if (this.submitToCreate) {
@@ -470,6 +531,21 @@ export class DialogCompanyComponent implements OnInit {
               ],
               objectToUpdate: {
                 contactsToParse: JSON.stringify(this.contactsObject)
+              }
+            });
+
+            this._crud
+            .update({
+              collectionsAndDocs: [
+                this.userData[0]['_userType'],
+                this.userData[0]['_id'],
+                'userCompanies',
+                res['id'],
+                'userCompaniesRelationships',
+                0
+              ],
+              objectToUpdate: {
+                relationshipsToParse: JSON.stringify(this.relationshipsObject)
               }
             });
 
