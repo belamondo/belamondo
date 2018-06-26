@@ -106,6 +106,7 @@ export class PeopleComponent implements OnInit {
   openPersonDialog = (idIfUpdate) => {
     let dialogRef;
     dialogRef = this._dialog.open(DialogPersonComponent, {
+      width: '90%',
       data: {
         id: idIfUpdate
       }

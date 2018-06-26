@@ -106,6 +106,7 @@ export class CompaniesComponent implements OnInit {
   openCompanyDialog = (idIfUpdate) => {
     let dialogRef;
     dialogRef = this._dialog.open(DialogCompanyComponent, {
+      width: '90%',
       data: {
         id: idIfUpdate
       }

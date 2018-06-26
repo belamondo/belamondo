@@ -19,17 +19,6 @@ section button {
     font-size: large;
 }
 
-.inside-card {
-    position: relative;
-    background: whitesmoke;
-    width: 80%;
-}
-
-.subtext {
-    font-size: 10px;
-    margin-right: 10px;
-}
-
 @media screen and (max-width:480px){
 	#cnpj {
         width: 100%;
