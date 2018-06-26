@@ -29,66 +29,86 @@ export class ServiceComponent implements OnInit {
   public isStarted: boolean;
   public userData: any;
   public paramsToTableData: any;
+  public sourceToTableData: any;
   // Common properties: end
 
   constructor(
     private _dialog: MatDialog,
     private _crud: CrudService,
-    private _strategicData: StrategicDataService,
-    public dialog: MatDialog
+    private _strategicData: StrategicDataService
   ) { }
 
   ngOnInit() {
-    if(this._strategicData.userData$) {
+    if (this._strategicData.userData$) {
       this.userData = this._strategicData.userData$;
-      this.makeList();
+
+      this.setSourceToTableData();
     } else {
       this._strategicData
       .setUserData()
       .then(userData => {
         this.userData = userData;
-      })
-      this.makeList();
+
+        this.setSourceToTableData();
+      });
     }
   }
 
-  makeList = () => {
-    /* Get products types from database */
+  setSourceToTableData = () => {
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'services'],
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'services']
     }).subscribe(res => {
-      this.paramsToTableData = {
-        header: {
-          actionIcon: [
-            {
-              icon: 'add',
-              description: 'Adicionar',
-              tooltip: 'Adicionar novo serviço'
-            },
-            {
-              icon: 'delete',
-              description: 'Excluir',
-              tooltip: 'Excluir selecionados'
-            },
-          ]
-        },
-        list: {
-          dataSource: res,
-          show: [{
-            field: 'name',
-            header: 'Serviço',
-            sort: 'sort'
-          }],
-          actionIcon: [{
-            icon: 'edit',
-            tooltip: 'Editar serviço'
-          }]
-        },
-        checkBox: true,
-        footer: {  }
-      };
+      this.sourceToTableData = res;
 
-      this.isStarted = true;
+      this.makeList();
+    });
+  }
+
+  makeList = () => {
+    this.paramsToTableData = {
+      header: {
+        actionIcon: [
+          {
+            icon: 'add',
+            description: 'Adicionar',
+            tooltip: 'Adicionar novo serviço'
+          },
+          {
+            icon: 'delete',
+            description: 'Excluir',
+            tooltip: 'Excluir selecionados'
+          },
+        ]
+      },
+      list: {
+        show: [{
+          field: 'name',
+          header: 'Serviço',
+          sort: 'sort'
+        }],
+        actionIcon: [{
+          icon: 'edit',
+          tooltip: 'Editar serviço'
+        }]
+      },
+      checkBox: true,
+      footer: {  }
+    };
+
+    this.isStarted = true;
+  }
+
+  openServiceDialog = (idIfUpdate) => {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogServiceComponent, {
+      data: {
+        id: idIfUpdate
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.isStarted = false;
+      this.setSourceToTableData();
     });
   }
 
@@ -109,20 +129,4 @@ export class ServiceComponent implements OnInit {
       });
     }
   }
-
-  openServiceDialog = (idIfUpdate) => {
-    let dialogRef;
-    dialogRef = this._dialog.open(DialogServiceComponent, {
-      data: {
-        id: idIfUpdate
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log(result);
-      }
-    });
-  }
-
 }

@@ -28,8 +28,6 @@ export class CashFlowComponent implements OnInit {
           { name: 'Despesas', link: 'expense' },
           { name: 'Produtos', link: 'products' },
           { name: 'Serviços', link: 'services' },
-          { name: 'cliente - Pessoa Jurídica', link: 'companies' },
-          { name: 'cliente - Pessoa Física', link: 'people' },
         ]
       }, {
         name: 'Lançamentos',

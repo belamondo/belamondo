@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
  * Components
  */
 import { CashFlowComponent } from './cash-flow.component';
-import { CompaniesComponent } from './components/companies/companies.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ExpenseComponent } from './components/expense/expense.component';
 import {
@@ -13,7 +12,6 @@ import {
   DialogFormIncomingOutcomingComponent
 } from './components/incoming-outcoming/incoming-outcoming.component';
 import { PayableReceivableComponent } from './components/payable-receivable/payable-receivable.component';
-import { PeopleComponent } from './components/people/people.component';
 import { ProductComponent } from './components/product/product.component';
 import {
   ReportComponent,
@@ -35,14 +33,12 @@ import { SharedModule } from './../shared/shared.module';
   ],
   declarations: [
     CashFlowComponent,
-    CompaniesComponent,
     DashboardComponent,
     DialogFormIncomingOutcomingComponent,
     DialogFormReportComponent,
     ExpenseComponent,
     IncomingOutcomingComponent,
     PayableReceivableComponent,
-    PeopleComponent,
     ProductComponent,
     ReportComponent,
     ServiceComponent,

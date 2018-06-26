@@ -74,7 +74,18 @@ export class IncomingOutcomingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.userData = this._strategicData.userData$;
+    if (this._strategicData.userData$) {
+      this.userData = this._strategicData.userData$;
+      this.setData();
+    } else {
+      this._strategicData
+      .setUserData()
+      .then(userData => {
+        this.userData = userData;
+
+        this.setData();
+      });
+    }
 
     /* Mock - start */
     this.receivers = [
@@ -107,7 +118,9 @@ export class IncomingOutcomingComponent implements OnInit {
       cell_phone: ['(', /\d/, /\d/, ')', ' ' , /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
       cnpj: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]
     };
+  }
 
+  setData = () => {
     /* Get expenses types from database */
     this._crud.readWithObservable({
       collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'expensesTypes'],
@@ -117,14 +130,14 @@ export class IncomingOutcomingComponent implements OnInit {
 
     /* Get products and services from database */
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_data']['_userType'], this.userData[0]['_id'], 'products'],
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'products'],
     }).subscribe(products => {
       this.incomingsTypes01 = products;
     });
 
     /* Get services from database */
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_data']['_userType'], this.userData[0]['_id'], 'services'],
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'services'],
     }).subscribe(services => {
       this.incomingsTypes02 = services;
     });
@@ -142,7 +155,6 @@ export class IncomingOutcomingComponent implements OnInit {
     });
 
     this.incomingOutcomingFormInit();
-
   }
 
   incomingOutcomingFormInit = () => {
@@ -166,7 +178,7 @@ export class IncomingOutcomingComponent implements OnInit {
         this.indexOfRegister = paramArrayIndex;
 
         this._crud.readWithObservable({
-          collectionsAndDocs: [this.userData[0]['_data']['_userType'], this.userData[0]['_id'], 'inAndOut', paramId],
+          collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'inAndOut', paramId],
         }).subscribe(inAndOut => {
 
           let modality;
@@ -223,7 +235,7 @@ export class IncomingOutcomingComponent implements OnInit {
 
       this._crud
       .update({
-        collectionsAndDocs: [this.userData[0]['_data']['_userType'], this.userData[0]['_id'], 'inAndOut', this.monthAndYear],
+        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'inAndOut', this.monthAndYear],
         objectToUpdate: this.inAndOut
       }).then(res => {
         formDirective.resetForm();

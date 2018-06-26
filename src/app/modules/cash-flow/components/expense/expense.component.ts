@@ -29,63 +29,91 @@ export class ExpenseComponent implements OnInit {
   public isStarted: boolean;
   public userData: any;
   public paramsToTableData: any;
+  public sourceToTableData: any;
   // Common properties: end
 
   constructor(
     private _dialog: MatDialog,
     private _crud: CrudService,
-    private _route: ActivatedRoute,
-    public _strategicData: StrategicDataService,
-    public dialog: MatDialog,
+    private _strategicData: StrategicDataService
   ) { }
 
   ngOnInit() {
-    this.userData = this._strategicData.userData$;
-    this.makeList();
+    if (this._strategicData.userData$) {
+      this.userData = this._strategicData.userData$;
+
+      this.setSourceToTableData();
+    } else {
+      this._strategicData
+      .setUserData()
+      .then(userData => {
+        this.userData = userData;
+
+        this.setSourceToTableData();
+      });
+    }
+  }
+
+  setSourceToTableData = () => {
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'expensesTypes']
+    }).subscribe(res => {
+      this.sourceToTableData = res;
+
+      this.makeList();
+    });
   }
 
   makeList = () => {
-    /* Get expenses types from database */
-    this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'expensesTypes'],
-    }).subscribe(expenseTypes => {
-      this.paramsToTableData = {
-        header: {
-          actionIcon: [
-            {
-              icon: 'add',
-              description: 'Adicionar',
-              tooltip: 'Adicionar nova despesa'
-            },
-            {
-              icon: 'delete',
-              description: 'Excluir',
-              tooltip: 'Excluir selecionados'
-            },
-          ]
-        },
-        list: {
-          dataSource: expenseTypes,
-          show: [{
-            field: 'name',
-            header: 'Despesa',
-            sort: 'sort'
-          }],
-          actionIcon: [{
-            icon: 'edit',
-            tooltip: 'Editar despesa'
-          }]
-        },
-        checkBox: true,
-        footer: {}
-      };
+    this.paramsToTableData = {
+      header: {
+        actionIcon: [
+          {
+            icon: 'add',
+            description: 'Adicionar',
+            tooltip: 'Adicionar nova despesa'
+          },
+          {
+            icon: 'delete',
+            description: 'Excluir',
+            tooltip: 'Excluir selecionados'
+          },
+        ]
+      },
+      list: {
+        show: [{
+          field: 'name',
+          header: 'Despesa',
+          sort: 'sort'
+        }],
+        actionIcon: [{
+          icon: 'edit',
+          tooltip: 'Editar despesa'
+        }]
+      },
+      checkBox: true,
+      footer: {  }
+    };
 
-      this.isStarted = true;
+    this.isStarted = true;
+  }
+
+  openExpenseDialog = (idIfUpdate) => {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogExpenseComponent, {
+      data: {
+        id: idIfUpdate
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.isStarted = false;
+      this.setSourceToTableData();
     });
   }
 
   onOutputFromTableData = (e) => {
-    if (e.icon.substr(0, 3) === 'add' || e.icon === 'Adicionar') {
+    if (e.icon === 'add' || e.icon === 'Adicionar') {
       this.openExpenseDialog(undefined);
     }
 
@@ -101,21 +129,4 @@ export class ExpenseComponent implements OnInit {
       });
     }
   }
-
-  openExpenseDialog = (idIfUpdate) => {
-    let dialogRef;
-    dialogRef = this._dialog.open(DialogExpenseComponent, {
-      data: {
-        isExpense: true,
-        id: idIfUpdate
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log(result);
-      }
-    });
-  }
-
 }

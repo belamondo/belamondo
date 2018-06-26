@@ -86,7 +86,6 @@ export class InvitationComponent implements OnInit {
     this._crud.readWithObservable({
       collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userInvitations'],
     }).subscribe(userInvitations => {
-      console.log(61)
       this.userInvitations = userInvitations;
 
       this.makeList();

@@ -4,10 +4,6 @@
   </div>
 </mat-card>
 
-<div class="flex">
-  <mat-card *ngIf="isStarted" class="container">
-    Listagem de pessoas
-
-    <button mat-raised-button (click)="openPersonDialog()">Dialog test</button>
-  </mat-card>
+<div class="flex container" *ngIf="isStarted">
+  <table-data [params]="paramsToTableData" [source]="sourceToTableData" (changeTable)="onOutputFromTableData($event)"></table-data>
 </div>

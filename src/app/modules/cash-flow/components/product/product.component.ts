@@ -23,71 +23,90 @@ import { DialogProductComponent } from './../../../shared/components/dialog-prod
   styleUrls: ['./product.component.css']
 })
 export class ProductComponent implements OnInit {
-
   // Common properties: start
   public isStarted: boolean;
   public userData: any;
   public paramsToTableData: any;
+  public sourceToTableData: any;
   // Common properties: end
 
   constructor(
     private _dialog: MatDialog,
     private _crud: CrudService,
-    public _strategicData: StrategicDataService,
-    public dialog: MatDialog
+    private _strategicData: StrategicDataService
   ) { }
 
   ngOnInit() {
-    if(this._strategicData.userData$) {
+    if (this._strategicData.userData$) {
       this.userData = this._strategicData.userData$;
-      this.makeList();
+
+      this.setSourceToTableData();
     } else {
       this._strategicData
       .setUserData()
       .then(userData => {
         this.userData = userData;
-        this.makeList();
-      })
+
+        this.setSourceToTableData();
+      });
     }
   }
 
-  makeList = () => {
-    /* Get products types from database */
+  setSourceToTableData = () => {
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'products'],
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'products']
     }).subscribe(res => {
-      this.paramsToTableData = {
-        header: {
-          actionIcon: [
-            {
-              icon: 'add',
-              description: 'Adicionar',
-              tooltip: 'Adicionar novo produto'
-            },
-            {
-              icon: 'delete',
-              description: 'Excluir',
-              tooltip: 'Excluir selecionados'
-            },
-          ]
-        },
-        list: {
-          dataSource: res,
-          show: [{
-            field: 'name',
-            header: 'Produto',
-            sort: 'sort'
-          }],
-          actionIcon: [{
-            icon: 'edit',
-            tooltip: 'Editar produto'
-          }]
-        },
-        checkBox: true,
-        footer: {  }
-      };
+      this.sourceToTableData = res;
 
-      this.isStarted = true;
+      this.makeList();
+    });
+  }
+
+  makeList = () => {
+    this.paramsToTableData = {
+      header: {
+        actionIcon: [
+          {
+            icon: 'add',
+            description: 'Adicionar',
+            tooltip: 'Adicionar novo produto'
+          },
+          {
+            icon: 'delete',
+            description: 'Excluir',
+            tooltip: 'Excluir selecionados'
+          },
+        ]
+      },
+      list: {
+        show: [{
+          field: 'name',
+          header: 'Produto',
+          sort: 'sort'
+        }],
+        actionIcon: [{
+          icon: 'edit',
+          tooltip: 'Editar produto'
+        }]
+      },
+      checkBox: true,
+      footer: {  }
+    };
+
+    this.isStarted = true;
+  }
+
+  openProductDialog = (idIfUpdate) => {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogProductComponent, {
+      data: {
+        id: idIfUpdate
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.isStarted = false;
+      this.setSourceToTableData();
     });
   }
 
@@ -108,20 +127,4 @@ export class ProductComponent implements OnInit {
       });
     }
   }
-
-  openProductDialog = (idIfUpdate) => {
-    let dialogRef;
-    dialogRef = this._dialog.open(DialogProductComponent, {
-      data: {
-        id: idIfUpdate
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log(result);
-      }
-    });
-  }
-
 }

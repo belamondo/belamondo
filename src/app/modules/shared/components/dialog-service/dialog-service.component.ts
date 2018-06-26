@@ -20,6 +20,7 @@ import {
  * Services
  */
 import { CrudService } from './../../../shared/services/firebase/crud.service';
+import { StrategicDataService } from './../../services/strategic-data.service';
 
 @Component({
   selector: 'app-dialog-service',
@@ -44,12 +45,21 @@ export class DialogServiceComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _crud: CrudService,
+    public _dialog: MatDialog,
     public _snackbar: MatSnackBar,
-    public dialog: MatDialog
+    private _strategicData: StrategicDataService,
   ) { }
 
   ngOnInit() {
-    this.userData = JSON.parse(sessionStorage.getItem('userData'));
+    if (this._strategicData.userData$) {
+      this.userData = this._strategicData.userData$;
+    } else {
+      this._strategicData
+      .setUserData()
+      .then(userData => {
+        this.userData = userData;
+      });
+    }
 
     this.serviceForm = new FormGroup({
       name: new FormControl(null, Validators.required),
@@ -69,7 +79,7 @@ export class DialogServiceComponent implements OnInit {
       const param = this.paramToSearch.replace(':', '');
 
       this._crud.readWithObservable({
-        collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'services', param],
+        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'services', param],
       }).subscribe(res => {
         this.serviceForm.patchValue(res[0]);
 
@@ -101,7 +111,7 @@ export class DialogServiceComponent implements OnInit {
     if (this.submitToUpdate) {
       this._crud
         .update({
-          collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'services', this.paramToSearch.replace(':', '')],
+          collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'services', this.paramToSearch.replace(':', '')],
           objectToUpdate: this.serviceForm.value
         }).then(() => {
           formDirective.resetForm();
@@ -110,13 +120,15 @@ export class DialogServiceComponent implements OnInit {
           this._snackbar.open('Atualização feita com sucesso', '', {
             duration: 4000
           });
+
+          this._dialog.closeAll();
         });
     }
 
     if (this.submitToCreate) {
       this._crud
       .create({
-        collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'services'],
+        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'services'],
         objectToCreate: this.serviceForm.value
       }).then(() => {
         formDirective.resetForm();
@@ -130,7 +142,7 @@ export class DialogServiceComponent implements OnInit {
   }
 
   addField = () => {
-    const dialogRef = this.dialog.open(SubDialogServiceComponent, {
+    const dialogRef = this._dialog.open(SubDialogServiceComponent, {
       height: '250px',
       width: '600px',
       data: { title: 'Adicionar campo', field: 'Nome do campo', buttonDescription: 'Adicionar' }

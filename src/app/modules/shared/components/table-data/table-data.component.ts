@@ -11,14 +11,10 @@ import {
 } from '@angular/core';
 import {
   FormGroup,
-  FormControl,
-  Validators
+  FormControl
 } from '@angular/forms';
 import {
-  MatSnackBar,
-  MatDialog,
   MatPaginator,
-  MatTableDataSource,
 } from '@angular/material';
 import {
   Router
@@ -41,6 +37,10 @@ import {
 export class TableDataComponent implements OnInit {
   @Input('params')
   params: any;
+
+  @Input('source')
+  source: any;
+
   @Output()
   changeTable: EventEmitter<any>;
   @ViewChild(MatPaginator)
@@ -77,7 +77,7 @@ export class TableDataComponent implements OnInit {
     }
 
     if (!this.params.list.dataTotalLength) {
-      this.params.list.dataTotalLength = this.params.list.dataSource.length;
+      this.params.list.dataTotalLength = this.source.length;
     }
 
     if (!this.params.list.limit) {
@@ -88,7 +88,7 @@ export class TableDataComponent implements OnInit {
       this.currentPage = 1;
     }
 
-    this.dataTemp = this.params.list.dataSource;
+    this.dataTemp = this.source;
 
     this.lastPage = Math.ceil(this.params.list.dataTotalLength / this.params.list.limit);
     this.setLimitOverPage(this.currentPage);
@@ -137,13 +137,13 @@ export class TableDataComponent implements OnInit {
     this.dataTemp = [];
 
     if (!this.tableSearchForm.value.search && this.tableSearchForm.value.search === '') {
-      this.dataTemp = this.params.list.dataSource;
+      this.dataTemp = this.source;
       this.lastPage = Math.ceil(this.params.list.dataTotalLength / this.params.list.limit);
       this.setLimitOverPage(1);
       return false;
     }
 
-    this.params.list.dataSource.forEach(object => {
+    this.source.forEach(object => {
       for (const key in object) {
         if (object.hasOwnProperty(key)) {
           if (object[key]) {
@@ -164,14 +164,14 @@ export class TableDataComponent implements OnInit {
   // Search over specific properties
   searchOverProperties = (propertiesArray) => {
     if (!this.tableSearchForm.value.search && this.tableSearchForm.value.search === '') {
-      this.dataTemp = this.params.list.dataSource;
+      this.dataTemp = this.source;
       this.lastPage = Math.ceil(this.params.list.dataTotalLength / this.params.list.limit);
       this.setLimitOverPage(1);
       return false;
     }
 
     let objectToBreak = {};
-    this.params.list.dataSource.forEach(object => { // looping over array of objects
+    this.source.forEach(object => { // looping over array of objects
       propertiesArray.forEach(property => { // looping over properties chosen by user to make the filter
         for (const key in object) {
         // looping over keys in each object from array of objects
@@ -199,7 +199,7 @@ export class TableDataComponent implements OnInit {
 
     this.setLimitOverPage(this.currentPage);
     /*
-    this.params.list.dataSource.forEach((object, objectI) => {// looping over array of objects
+    this.source.forEach((object, objectI) => {// looping over array of objects
       for (const key in object) { // looping over keys in each object from array of objects
         if (key === this.params.list.show[index].field) {
           if (this.dataTemp[0][key] > object[key]) {

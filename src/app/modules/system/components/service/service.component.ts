@@ -46,10 +46,9 @@ export class ServiceComponent implements OnInit {
 
   constructor(
     private _crud: CrudService,
+    public _dialog: MatDialog,
     private _route: ActivatedRoute,
-    private _router: Router,
     public _snackbar: MatSnackBar,
-    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -146,7 +145,7 @@ export class ServiceComponent implements OnInit {
 
   addField = () => {
     let dialogRef;
-    dialogRef = this.dialog.open(DialogFormServiceComponent, {
+    dialogRef = this._dialog.open(DialogFormServiceComponent, {
       height: '250px',
       width: '600px',
       data: { title: 'Adicionar campo', field: 'Nome do campo', buttonDescription: 'Adicionar' }

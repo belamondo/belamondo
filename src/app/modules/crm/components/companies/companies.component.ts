@@ -27,65 +27,68 @@ import { StrategicDataService } from '../../../shared/services/strategic-data.se
   styleUrls: ['./companies.component.css']
 })
 export class CompaniesComponent implements OnInit {
+  // Common properties: start
   public isStarted: boolean;
-  public paramsToTableData: any;
   public userData: any;
-
-  public userCompanies: any;
+  public paramsToTableData: any;
+  public sourceToTableData: any;
+  // Common properties: end
 
   constructor(
-    private _crud: CrudService,
     private _dialog: MatDialog,
-    public _snackbar: MatSnackBar,
-    public _strategicData: StrategicDataService,
-  ) {}
+    private _crud: CrudService,
+    private _strategicData: StrategicDataService
+  ) { }
 
   ngOnInit() {
-    this.isStarted = false;
+    if (this._strategicData.userData$) {
+      this.userData = this._strategicData.userData$;
 
-    if (!this._strategicData.userData$) {
-      this._strategicData.setUserData()
+      this.setSourceToTableData();
+    } else {
+      this._strategicData
+      .setUserData()
       .then(userData => {
         this.userData = userData;
 
-        this._crud.readWithObservable({
-          collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userCompanies'],
-        }).subscribe(userCompanies => {
-          this.userCompanies = userCompanies;
-
-          this.makeList();
-        });
-      });
-    } else {
-      this.userData = this._strategicData.userData$;
-
-      this._crud.readWithObservable({
-        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userCompanies'],
-      }).subscribe(userCompanies => {
-        this.userCompanies = userCompanies;
-
-        this.makeList();
+        this.setSourceToTableData();
       });
     }
+  }
+
+  setSourceToTableData = () => {
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userCompanies']
+    }).subscribe(res => {
+      this.sourceToTableData = res;
+
+      this.makeList();
+    });
   }
 
   makeList = () => {
     this.paramsToTableData = {
       header: {
-        actionIcon: [{
-          icon: 'add',
-          description: 'Adicionar',
-          tooltip: 'Adicionar nova empresa'
-        }]
+        actionIcon: [
+          {
+            icon: 'add',
+            description: 'Adicionar',
+            tooltip: 'Adicionar nova empresa'
+          },
+          {
+            icon: 'delete',
+            description: 'Excluir',
+            tooltip: 'Excluir selecionados'
+          },
+        ]
       },
       list: {
-        dataSource: this.userCompanies,
         show: [{
           field: 'cnpj',
           header: 'CNPJ'
         }, {
           field: 'business_name',
-          header: 'Nome',
+          header: 'Empresa',
           sort: 'sort'
         }],
         actionIcon: [{
@@ -93,11 +96,25 @@ export class CompaniesComponent implements OnInit {
           tooltip: 'Editar empresa'
         }]
       },
-      footer: {
-      }
+      checkBox: true,
+      footer: {  }
     };
 
     this.isStarted = true;
+  }
+
+  openCompanyDialog = (idIfUpdate) => {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogCompanyComponent, {
+      data: {
+        id: idIfUpdate
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.isStarted = false;
+      this.setSourceToTableData();
+    });
   }
 
   onOutputFromTableData = (e) => {
@@ -108,22 +125,13 @@ export class CompaniesComponent implements OnInit {
     if (e.icon === 'edit') {
       this.openCompanyDialog(e.data['_id']);
     }
-  }
 
-  openCompanyDialog = (idIfUpdate) => {
-    let dialogRef;
-    dialogRef = this._dialog.open(DialogCompanyComponent, {
-      width: '90%',
-      data: {
-        isCRM: true,
-        id: idIfUpdate
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log(result);
-      }
-    });
+    if (e.icon === 'delete' || e.icon === 'Excluir') {
+      e.data.forEach(element => {
+        if (element['checked']) {
+          console.log(element);
+        }
+      });
+    }
   }
 }

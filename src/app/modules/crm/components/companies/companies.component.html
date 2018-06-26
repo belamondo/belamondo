@@ -5,5 +5,5 @@
 </mat-card>
 
 <div class="flex container" *ngIf="isStarted">
-  <table-data [params]="paramsToTableData" (changeTable)="onOutputFromTableData($event)"></table-data>
+  <table-data [params]="paramsToTableData" [source]="sourceToTableData" (changeTable)="onOutputFromTableData($event)"></table-data>
 </div>
