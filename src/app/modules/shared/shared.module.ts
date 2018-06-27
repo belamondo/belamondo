@@ -20,6 +20,7 @@ import { MaterialModule } from './material.module';
  */
 import { AuthenticationService } from './services/firebase/authentication.service';
 import { CrudService } from './services/firebase/crud.service';
+import { ProductService } from './services/product.service';
 import { StrategicDataService } from './services/strategic-data.service';
 
 /**
@@ -74,6 +75,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     AuthenticationService,
     AuthGuard,
     CrudService,
+    ProductService,
     StrategicDataService,
   ], declarations: [
     DeleteConfirmComponent,

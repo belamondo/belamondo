@@ -32,7 +32,12 @@ export class CashFlowComponent implements OnInit {
       }, {
         name: 'Lançamentos',
         icon: 'compare_arrows',
-        link: ['incoming-outcoming']
+        expansionMenu: true,
+        subMenus: [
+          { name: 'Entrada', link: 'incoming' },
+          { name: 'Saída', link: 'outcoming' },
+          { name: 'Funcionando por enquanto', link: 'incoming-outcoming' },
+        ]
       }, {
         name: 'Contas a pagar/receber',
         icon: 'attach_money',

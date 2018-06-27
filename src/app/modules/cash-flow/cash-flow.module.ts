@@ -6,10 +6,14 @@ import { CommonModule } from '@angular/common';
  */
 import { CashFlowComponent } from './cash-flow.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DialogIncomingComponent } from './components/dialog-incoming/dialog-incoming.component';
+import { DialogOutcomingComponent } from './components/dialog-outcoming/dialog-outcoming.component';
 import { ExpenseComponent } from './components/expense/expense.component';
+import { IncomingComponent } from './components/incoming/incoming.component';
 import {
   IncomingOutcomingComponent
 } from './components/incoming-outcoming/incoming-outcoming.component';
+import { OutcomingComponent } from './components/outcoming/outcoming.component';
 import { PayableReceivableComponent } from './components/payable-receivable/payable-receivable.component';
 import { ProductComponent } from './components/product/product.component';
 import {
@@ -40,9 +44,15 @@ import { SharedModule } from './../shared/shared.module';
     ProductComponent,
     ReportComponent,
     ServiceComponent,
+    IncomingComponent,
+    OutcomingComponent,
+    DialogIncomingComponent,
+    DialogOutcomingComponent,
   ],
   entryComponents: [
     DialogFormReportComponent,
+    DialogIncomingComponent,
+    DialogOutcomingComponent,
   ]
 })
 export class CashFlowModule { }

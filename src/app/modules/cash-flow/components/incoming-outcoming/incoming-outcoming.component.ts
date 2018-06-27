@@ -13,7 +13,7 @@ import {
 /**
  * Components
  */
-//import { DialogCompanyComponent } from '../../../shared/components/dialog-company/dialog-company.component';
+import { DialogCompanyComponent } from '../../../shared/components/dialog-company/dialog-company.component';
 
 /**
  * Services

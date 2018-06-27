@@ -8,6 +8,8 @@ import { CashFlowComponent } from './cash-flow.component';
 import { DashboardComponent } from './../cash-flow/components/dashboard/dashboard.component';
 import { ExpenseComponent } from './components/expense/expense.component';
 import { IncomingOutcomingComponent } from './components/incoming-outcoming/incoming-outcoming.component';
+import { IncomingComponent } from './components/incoming/incoming.component';
+import { OutcomingComponent } from './components/outcoming/outcoming.component';
 import { PayableReceivableComponent } from './components/payable-receivable/payable-receivable.component';
 import { ProductComponent } from './components/product/product.component';
 import { ReportComponent } from './components/report/report.component';
@@ -45,6 +47,12 @@ const routes: Routes = [{
   }, {
     path: 'incoming-outcoming/:id',
     component: IncomingOutcomingComponent
+  }, {
+    path: 'incoming',
+    component: IncomingComponent
+  }, {
+    path: 'outcoming',
+    component: OutcomingComponent
   }, {
     path: 'payable-receivable',
     component: PayableReceivableComponent
