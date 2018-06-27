@@ -95,15 +95,68 @@ export class TableDataComponent implements OnInit {
   }
 
   checkRow = (index, check) => {
-    if (index > -1) {
+    if (index > -1) { /* Check a specific row */
       const i = ((this.currentPage - 1) * parseInt(this.params.list.limit, 10)) + index;
       this.dataTemp[i]['checked'] = check;
-      this.setLimitOverPage(this.currentPage);
-    } else {
+
+      this.dataSource = this.dataTemp.slice(this.params.list.limit * (this.currentPage - 1), (this.params.list.limit * this.currentPage));
+      this.lastPage = Math.ceil(this.dataTemp.length / this.params.list.limit);
+      this.currentPage = this.currentPage;
+
+      /* Check master if all checkbox was selected or not selected */
+      let count = 0;
+      this.dataTemp.map((element, x) => {
+        if (
+          x >= ((this.currentPage - 1) * parseInt(this.params.list.limit, 10)) &&
+          x < ((this.currentPage - 1) * parseInt(this.params.list.limit, 10) + parseInt(this.params.list.limit, 10)) &&
+          element.checked
+        ) {
+          count++;
+        }
+      });
+      if (count === this.dataSource.length) {
+        this.allChecked = true;
+      } else {
+        this.allChecked = false;
+      }
+
+    } else { /* Check all rows */
       this.allChecked = check;
-      this.dataTemp.forEach(element => {
+      this.dataTemp.map((element, i) => {
         element.checked = check;
       });
+    }
+
+    /* Enable button */
+    if (check) { /* Enable */
+      this.params.header.actionIcon.map(element => {
+        for (const key in element) {
+          /* Enable button */
+          if (key === 'disabled') {
+            element.disabled = false;
+          }
+        }
+      });
+    } else { /* Disable */
+      /* Check if all rows are not selected */
+      let hasElementChecked = false;
+      if (this.dataSource !== undefined) {
+        this.dataSource.map((element, x) => {
+          if (element.checked) {
+            hasElementChecked = true;
+          }
+        });
+        if (!hasElementChecked) {
+          /* Disable button */
+          this.params.header.actionIcon.map(element => {
+            for (const key in element) {
+              if (key === 'disabled') {
+                element.disabled = true;
+              }
+            }
+          });
+        }
+      }
     }
   }
 
@@ -125,6 +178,10 @@ export class TableDataComponent implements OnInit {
   }
 
   setLimitOverPage = (page) => {
+    /* Clear checkbox */
+    this.allChecked = false;
+    this.checkRow(-1, false);
+
     this.dataSource = this.dataTemp.slice(this.params.list.limit * (page - 1), (this.params.list.limit * page));
 
     this.lastPage = Math.ceil(this.dataTemp.length / this.params.list.limit);
@@ -193,33 +250,29 @@ export class TableDataComponent implements OnInit {
   }
 
   sort = (field) => {
-    this.dataTemp.sort((a, b) => {
-      return ( a[field] > b[field]) ? 1 : ( (b[field] > a[field]) ? -1 : 0);
-    });
+
+    /* Check if array is alread sorted */
+    let isSorted = true;
+    for (let i = 0; i < this.dataTemp.length; i++) {
+      if (
+        this.dataTemp[i + 1] !== undefined &&
+        this.dataTemp[i][field].localeCompare(this.dataTemp[i + 1][field]) === 1
+      ) {
+        isSorted = false;
+        break;
+      }
+    }
+
+    if (!isSorted) { /* Sort */
+      this.dataTemp.sort((a, b) => {
+        return a[field].localeCompare(b[field]);
+      });
+    } else { /* Reverse Sort */
+      this.dataTemp.sort((a, b) => {
+        return b[field].localeCompare(a[field]);
+      });
+    }
 
     this.setLimitOverPage(this.currentPage);
-    /*
-    this.source.forEach((object, objectI) => {// looping over array of objects
-      for (const key in object) { // looping over keys in each object from array of objects
-        if (key === this.params.list.show[index].field) {
-          if (this.dataTemp[0][key] > object[key]) {
-            let temp;
-            temp = this.dataTemp[0];
-            this.dataTemp[0] = object;
-            this.dataTemp[objectI] = temp;
-            break;
-          } else {
-            if ((objectI > 0) && (this.dataTemp[objectI - 1][key] > object[key])) {
-              let temp;
-              temp = this.dataTemp[objectI - 1][key];
-              this.dataTemp[objectI - 1] = object;
-              this.dataTemp[objectI] = temp;
-              break;
-            }
-          }
-        }
-      }
-    });
-    */
   }
 }

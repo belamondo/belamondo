@@ -76,7 +76,8 @@ export class ServiceComponent implements OnInit {
           {
             icon: 'delete',
             description: 'Excluir',
-            tooltip: 'Excluir selecionados'
+            tooltip: 'Excluir selecionados',
+            disabled: true,
           },
         ]
       },
