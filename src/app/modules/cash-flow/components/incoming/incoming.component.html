@@ -3,6 +3,5 @@
 </div>
 
 <div style="margin-top: 20px;" class="flex container" *ngIf="isStarted">
-
   <table-data [params]="paramsToTableData" [source]="sourceToTableData" (changeTable)="onOutputFromTableData($event)" style="margin-right: 10px;"></table-data>
 </div>

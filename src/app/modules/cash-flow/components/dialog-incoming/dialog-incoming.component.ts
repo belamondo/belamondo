@@ -41,7 +41,8 @@ export class DialogIncomingComponent implements OnInit {
   public paramsToTableData: any;
   // Common properties: end
 
-  public types: any;
+  public products: any;
+  public services: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -52,22 +53,6 @@ export class DialogIncomingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.types = [];
-
-    if (this._strategicData.userData$) {
-      this.userData = this._strategicData.userData$;
-
-      this.setTypes();
-    } else {
-      this._strategicData
-      .setUserData()
-      .then(userData => {
-        this.userData = userData;
-
-        this.setTypes();
-      });
-    }
-
     this.incomingForm = new FormGroup({
       type: new FormControl(null, Validators.required),
       receiver: new FormControl(null),
@@ -76,10 +61,28 @@ export class DialogIncomingComponent implements OnInit {
       price: new FormControl(null),
       payment: new FormControl(null),
       payment_quantity: new FormControl(null),
+      product: new FormControl(null),
+      service: new FormControl(null),
       date: new FormControl(null),
+
     });
 
-    this.incomingFormInit();
+    this.products = [];
+    this.services = [];
+
+    if (this._strategicData.userData$) {
+      this.userData = this._strategicData.userData$;
+
+      this.incomingFormInit();
+    } else {
+      this._strategicData
+      .setUserData()
+      .then(userData => {
+        this.userData = userData;
+
+        this.incomingFormInit();
+      });
+    }
   }
 
   incomingFormInit = () => {
@@ -119,6 +122,9 @@ export class DialogIncomingComponent implements OnInit {
 
       this.isStarted = true;
     }
+    
+    this.setProducts();
+    this.setServices();
   }
 
   onIncomingFormSubmit = (formDirective: FormGroupDirective) => {
@@ -173,24 +179,26 @@ export class DialogIncomingComponent implements OnInit {
     this.fields.splice(index, 1);
   }
 
-  setTypes = () => {
+  setProducts = () => { console.log(180)
     this._crud
     .readWithObservable({
       collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'products']
-    }).subscribe(products => {
+    }).subscribe(products => { console.log(products)
       if (products.length > 0) {
-        this.types.push(products);
-        console.log(this.types);
+        this.products.push(products);
+        console.log(this.products);
       }
     });
+  }
 
+  setServices = () => {
     this._crud
     .readWithObservable({
       collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'services']
-    }).subscribe(services => {
+    }).subscribe(services => { console.log(services)
       if (services.length > 0) {
-        this.types.push(services);
-        console.log(this.types);
+        this.services.push(services);
+        console.log(this.services);
       }
     });
   }

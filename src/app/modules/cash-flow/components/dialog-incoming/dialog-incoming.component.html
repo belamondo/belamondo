@@ -9,17 +9,27 @@
   <div class="flex">
     <div *ngIf="isStarted" class="container">
       <form [formGroup]="incomingForm" #formDirective="ngForm">
-        <mat-card-header>
-          <mat-card-title>Efetuar lançamentos</mat-card-title>
-        </mat-card-header>
-  
-        <hr>
         <mat-card-content>  
-          <mat-form-field appearance="outline">
-            <mat-label>Lançamento</mat-label>
-            <mat-select placeholder="Escolha qual o lançamento" formControlName="type" required>
-              <mat-option *ngFor="let type of types" [value]="type._id">
-                {{ type.name }}
+          <mat-radio-group formControlName="type">
+            <mat-label>Tipo *</mat-label>
+            <mat-radio-button value="product">Produto</mat-radio-button>
+            <mat-radio-button value="service">Serviço</mat-radio-button>
+          </mat-radio-group>
+
+          <mat-form-field appearance="outline" *ngIf="incomingForm.value.type === 'product' && products.length > 0">
+            <mat-label>Produto</mat-label>
+            <mat-select placeholder="Escolha o produto lançado" formControlName="product" required>
+              <mat-option *ngFor="let product of products" [value]="product._id">
+                {{ product.barcode }} - {{ product.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" *ngIf="incomingForm.value.type === 'service'">
+            <mat-label>Serviço</mat-label>
+            <mat-select placeholder="Escolha o serviço lançado" formControlName="service" required>
+              <mat-option *ngFor="let service of services" [value]="service._id">
+                {{ service.name }}
               </mat-option>
             </mat-select>
           </mat-form-field>
