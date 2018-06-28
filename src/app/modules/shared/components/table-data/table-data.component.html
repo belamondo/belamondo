@@ -22,7 +22,7 @@
               </mat-form-field>
             </form>
 
-            <button mat-raised-button class="action-button" *ngFor="let icon of params.header.actionIcon ; let i = index;" (click)="onTableDataOutput($event, dataTemp)">
+            <button mat-raised-button [disabled]="icon.disabled" class="action-button" *ngFor="let icon of params.header.actionIcon ; let i = index;" (click)="onTableDataOutput($event, dataTemp)">
               <div [matTooltip]="icon.tooltip" *ngIf="icon.tooltip">
                 <mat-icon>{{icon.icon}}</mat-icon> &nbsp;
                 <span>{{icon.description}}</span>
@@ -56,7 +56,7 @@
           </td>
 
           <td style="min-width: 2%; text-align: right;">
-            <a *ngFor="let icon of params.list.actionIcon ; let i = index;">            
+            <a *ngFor="let icon of params.list.actionIcon ; let i = index;">
               <mat-icon [matTooltip]="icon.tooltip" *ngIf="icon.tooltip" (click)="onTableDataOutput($event, data)">
                 {{icon.icon}}
               </mat-icon>
@@ -72,6 +72,7 @@
           <td>
             Nenhum dado encontrado.
           </td>
+          <td *ngFor="let show of params.list.show;"><mat-icon></mat-icon></td>
         </tr>
       </tbody>
     </table>

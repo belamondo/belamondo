@@ -71,12 +71,13 @@ export class ExpenseComponent implements OnInit {
           {
             icon: 'add',
             description: 'Adicionar',
-            tooltip: 'Adicionar nova despesa'
+            tooltip: 'Adicionar nova despesa',
           },
           {
             icon: 'delete',
             description: 'Excluir',
-            tooltip: 'Excluir selecionados'
+            tooltip: 'Excluir selecionados',
+            disabled: true,
           },
         ]
       },

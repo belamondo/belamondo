@@ -74,7 +74,8 @@ export class ProductComponent implements OnInit {
           {
             icon: 'delete',
             description: 'Excluir',
-            tooltip: 'Excluir selecionados'
+            tooltip: 'Excluir selecionados',
+            disabled: true,
           },
         ]
       },
