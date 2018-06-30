@@ -1,0 +1,173 @@
+<h1 mat-dialog-title>{{title}}</h1>
+<mat-dialog-content>
+  <div *ngIf="!isStarted" class="container">
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  </div>
+  
+  <div class="flex">
+    <div *ngIf="isStarted" class="container">
+      <form [formGroup]="incomingForm" #formDirective="ngForm">
+        <mat-card-content>
+          <section id="client">
+
+            <mat-radio-group formControlName="clientType">
+              <mat-label>Tipo de cliente*</mat-label>
+              <mat-radio-button value="person">Pessoa</mat-radio-button>
+              <mat-radio-button value="company">Empresa</mat-radio-button>
+              <mat-radio-button value="counter">Balcão</mat-radio-button>
+            </mat-radio-group>
+  
+            <mat-form-field appearance="outline" *ngIf="incomingForm.value.clientType === 'person' && people.length > 0">
+              <mat-label>Cliente</mat-label>
+              <input matInput 
+              placeholder="Escolha o cliente" 
+              type="text" formControlName="person"
+              [matAutocomplete]="autoClientPerson">
+            </mat-form-field>
+            <mat-autocomplete #autoClientPerson="matAutocomplete" [displayWith]="displayPerson" (optionSelected)="onClientChoice($event)">
+                <mat-option *ngFor="let person of filteredPeople | async; let i = index" [value]="person">
+                  {{ person.name }} - {{ person.cpf }}
+                </mat-option>
+            </mat-autocomplete>
+  
+            <mat-form-field appearance="outline" *ngIf="incomingForm.value.clientType === 'company' && companies.length > 0">
+                <mat-label>Cliente</mat-label>
+                <input matInput 
+                placeholder="Escolha o cliente" 
+                type="text" formControlName="company"
+                [matAutocomplete]="autoClientCompany">
+            </mat-form-field>
+            <mat-autocomplete #autoClientCompany="matAutocomplete" [displayWith]="displayCompany" (optionSelected)="onClientChoice($event)">
+                <mat-option *ngFor="let company of filteredCompanies | async; let i = index" [value]="company">
+                  {{ company.business_name }} - {{ company.cnpj }}
+                </mat-option>
+            </mat-autocomplete>
+          </section>
+
+          <section id="selling" *ngIf="startSelling">
+            <mat-radio-group formControlName="sellingType">
+              <mat-label>Tipo de venda *</mat-label>
+              <mat-radio-button value="product">Produto</mat-radio-button>
+              <mat-radio-button value="service">Serviço</mat-radio-button>
+            </mat-radio-group>
+            
+            <mat-form-field appearance="outline" *ngIf="incomingForm.value.sellingType === 'product' && products.length > 0">
+              <mat-label>Produto</mat-label>
+              <input matInput 
+              placeholder="Escolha o produto" 
+              type="text" formControlName="product"
+              [matAutocomplete]="autoProduct">
+            </mat-form-field>
+            <mat-autocomplete #autoProduct="matAutocomplete" [displayWith]="displayProduct" (optionSelected)="onSelling($event)">
+                <mat-option *ngFor="let product of filteredProducts | async; let i = index" [value]="product">
+                  {{ product.name }} - {{ product.barcode }}
+                </mat-option>
+            </mat-autocomplete>
+  
+            <mat-form-field appearance="outline" *ngIf="incomingForm.value.sellingType === 'service' && services.length > 0">
+              <mat-label>Serviço</mat-label>
+              <input matInput 
+              placeholder="Escolha o serviço" 
+              type="text" formControlName="service"
+              [matAutocomplete]="autoService">
+            </mat-form-field>
+            <mat-autocomplete #autoService="matAutocomplete" [displayWith]="displayService" (optionSelected)="onSelling($event)">
+                <mat-option *ngFor="let service of filteredServices | async; let i = index" [value]="service">
+                  {{ service.name }}
+                </mat-option>
+            </mat-autocomplete>
+            
+            <table *ngIf="sellingObject && sellingObject.length > 0" id="sellingTableData">
+              <tr>
+                <th>
+                  Tipo
+                </th>
+  
+                <th>
+                  Descrição
+                </th>
+  
+                <th>
+                  Preço
+                </th>
+  
+                <th>
+                  Quantidade
+                </th>
+              </tr>
+  
+              <tr *ngFor="let item of sellingObject">
+                <td>
+                  <span *ngIf="item.barcode">Produto</span>
+                  <span *ngIf="!item.barcode">Serviço</span>
+                </td>
+  
+                <td>
+                  {{ item.name }}
+                </td>
+  
+                <td></td>
+  
+                <td>
+                  <input type="text" value="1">
+                </td>
+              </tr>
+            </table>
+          </section>
+  
+          <!-- <mat-form-field appearance="outline">
+            <mat-label>Perdas</mat-label>
+            <input matInput placeholder="Quantidade perdida" type="number" formControlName="lost_quantity">
+          </mat-form-field> -->
+
+          <!-- <section id="payment">
+            <mat-form-field appearance="outline" style="width: 70%; margin-right: 2%;">
+              <mat-label>Forma de pagamento</mat-label>
+              <mat-select placeholder="Escolha a forma de pagamento" formControlName="payment" required>
+                <mat-option value="cash">À vista</mat-option>
+                <mat-option value="financed">Parcelado</mat-option>
+                <mat-option value="card">Cartão - Parcelado</mat-option>
+              </mat-select>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" style="width: 22%">
+              <mat-label>Qtd</mat-label>
+              <input matInput placeholder="Qtd" type="number" formControlName="payment_quantity">
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline">
+              <mat-label>Data</mat-label>
+              <input matInput [matDatepicker]="picker" placeholder="Data do lançamento" formControlName="date">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+    
+            <div *ngFor="let field of fields; let i = index">
+              <mat-form-field appearance="outline" style="width: 85%">
+                <mat-label>{{field}}</mat-label>
+                <input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
+              </mat-form-field>
+              <i class="material-icons" style="cursor: pointer;" (click)="removeField(i)">
+                remove_circle
+              </i>
+            </div>
+          </section> -->
+  
+          <!-- <button mat-raised-button type="button" (click)="addField()" style="width: 100%;">Adicionar campo</button> -->
+        </mat-card-content>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <div class="flex">
+    <button mat-raised-button [disabled]="incomingForm.invalid || isDisabled" (click)="onIncomingFormSubmit(this.formDirective)" color="primary">
+      {{submitButton}}
+    </button>
+
+    <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
+  </div>
+</mat-dialog-actions>

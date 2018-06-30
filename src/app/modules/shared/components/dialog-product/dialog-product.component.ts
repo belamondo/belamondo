@@ -51,14 +51,14 @@ export class DialogProductComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(this._strategicData.userData$) {
+    if (this._strategicData.userData$) {
       this.userData = this._strategicData.userData$;
     } else {
       this._strategicData
       .setUserData()
       .then(userData => {
         this.userData = userData;
-      })
+      });
     }
 
     this.productForm = new FormGroup({

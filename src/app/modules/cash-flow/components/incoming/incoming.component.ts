@@ -1,19 +1,10 @@
 import {
   Component,
-  OnInit,
-  Inject
+  OnInit
 } from '@angular/core';
 import {
-  MatSnackBar,
-  MatDialogRef,
   MatDialog,
-  MAT_DIALOG_DATA
 } from '@angular/material';
-
-/**
- * Components
- */
-import { DialogPersonComponent } from '../../../shared/components/dialog-person/dialog-person.component';
 
 /**
  * Services
@@ -21,12 +12,17 @@ import { DialogPersonComponent } from '../../../shared/components/dialog-person/
 import { CrudService } from './../../../shared/services/firebase/crud.service';
 import { StrategicDataService } from '../../../shared/services/strategic-data.service';
 
+/**
+ * Components
+ */
+import { DialogIncomingComponent } from './../dialog-incoming/dialog-incoming.component';
+
 @Component({
-  selector: 'app-people',
-  templateUrl: './people.component.html',
-  styleUrls: ['./people.component.css']
+  selector: 'app-incoming',
+  templateUrl: './incoming.component.html',
+  styleUrls: ['./incoming.component.css']
 })
-export class PeopleComponent implements OnInit {
+export class IncomingComponent implements OnInit {
   // Common properties: start
   public isStarted: boolean;
   public userData: any;
@@ -58,7 +54,7 @@ export class PeopleComponent implements OnInit {
 
   setSourceToTableData = () => {
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userPeople']
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userIncoming']
     }).subscribe(res => {
       this.sourceToTableData = res;
 
@@ -73,28 +69,28 @@ export class PeopleComponent implements OnInit {
           {
             icon: 'add',
             description: 'Adicionar',
-            tooltip: 'Adicionar nova pessoa'
+            tooltip: 'Adicionar entrada'
           },
           {
             icon: 'delete',
             description: 'Excluir',
-            tooltip: 'Excluir selecionados',
-            disabled: true,
+            tooltip: 'Excluir selecionados'
           },
         ]
       },
       list: {
         show: [{
-          field: 'cpf',
-          header: 'CPF'
+          field: 'date',
+          header: 'Data',
+          sort: 'sort'
         }, {
-          field: 'name',
-          header: 'Nome',
+          field: 'receiver',
+          header: 'Cliente',
           sort: 'sort'
         }],
         actionIcon: [{
           icon: 'edit',
-          tooltip: 'Editar pessoa'
+          tooltip: 'Editar entrada'
         }]
       },
       checkBox: true,
@@ -104,9 +100,9 @@ export class PeopleComponent implements OnInit {
     this.isStarted = true;
   }
 
-  openPersonDialog = (idIfUpdate) => {
+  openIncomingDialog = (idIfUpdate) => {
     let dialogRef;
-    dialogRef = this._dialog.open(DialogPersonComponent, {
+    dialogRef = this._dialog.open(DialogIncomingComponent, {
       width: '90%',
       data: {
         id: idIfUpdate
@@ -121,11 +117,11 @@ export class PeopleComponent implements OnInit {
 
   onOutputFromTableData = (e) => {
     if (e.icon === 'add' || e.icon === 'Adicionar') {
-      this.openPersonDialog(undefined);
+      this.openIncomingDialog(undefined);
     }
 
     if (e.icon === 'edit') {
-      this.openPersonDialog(e.data['_id']);
+      this.openIncomingDialog(e.data['_id']);
     }
 
     if (e.icon === 'delete' || e.icon === 'Excluir') {

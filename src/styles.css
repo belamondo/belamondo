@@ -64,6 +64,13 @@ img {
     color: rgb(187, 16, 16);
 }
 
+.inside-card {
+    position: relative;
+    background: whitesmoke;
+    width: 80%;
+    margin-bottom: 10px;
+}
+
 .pointer {
     cursor: pointer;
 }
@@ -95,6 +102,10 @@ img {
     justify-content: center;
 }
 
+.subtext {
+    font-size: 10px;
+    margin-right: 10px;
+}
 
 @media screen and (max-width:480px){
 	.flex {
