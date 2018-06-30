@@ -24,6 +24,7 @@
           </mat-select>
         </mat-form-field>
 
+        <!--
         <div *ngFor="let field of fields; let i = index">
           <mat-form-field appearance="outline" style="width: 85%">
             <mat-label>{{field}}</mat-label>
@@ -33,6 +34,8 @@
             remove_circle
           </i>
         </div>
+        -->
+        <app-additional-field [params]="paramsToAdditionalField"></app-additional-field>
       </mat-card-content>
       
       <div class="button-container">

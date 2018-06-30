@@ -129,14 +129,16 @@ export class TableDataComponent implements OnInit {
 
     /* Enable button */
     if (check) { /* Enable */
-      this.params.header.actionIcon.map(element => {
-        for (const key in element) {
-          /* Enable button */
-          if (key === 'disabled') {
-            element.disabled = false;
+      if (this.dataSource.length > 0) {
+        this.params.header.actionIcon.map(element => {
+          for (const key in element) {
+            /* Enable button */
+            if (key === 'disabled') {
+              element.disabled = false;
+            }
           }
-        }
-      });
+        });
+      }
     } else { /* Disable */
       /* Check if all rows are not selected */
       let hasElementChecked = false;
@@ -160,11 +162,11 @@ export class TableDataComponent implements OnInit {
     }
   }
 
-  onTableDataOutput = (event, data) => {
+  onTableDataOutput = (event, data, icon) => {
     let object;
 
     object = {
-      icon: event.srcElement.innerText,
+      icon: icon,
       data: data
     };
 
@@ -203,7 +205,7 @@ export class TableDataComponent implements OnInit {
     this.source.forEach(object => {
       for (const key in object) {
         if (object.hasOwnProperty(key)) {
-          if (object[key]) {
+          if (object[key] && typeof object[key] === 'string') {
             if (object[key].match(new RegExp(this.tableSearchForm.value.search, 'gi'))) {
               this.dataTemp.push(object);
               break;

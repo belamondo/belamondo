@@ -40,7 +40,7 @@ export class DialogExpenseComponent implements OnInit {
   public title: string;
   public fields: any = [];
   public userData: any;
-  public paramsToTableData: any;
+  public paramsToAdditionalField: any;
   // Common properties: end
 
   constructor(
@@ -60,6 +60,11 @@ export class DialogExpenseComponent implements OnInit {
     });
 
     this.expenseFormInit();
+
+    /* Create a list of additional fields */
+    this.paramsToAdditionalField = {
+      fields: ['teste', 'testando']
+    };
   }
 
   expenseFormInit = () => {

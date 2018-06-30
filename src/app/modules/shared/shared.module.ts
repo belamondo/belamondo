@@ -30,6 +30,7 @@ import { TextMaskModule } from 'angular2-text-mask';
 /**
  * Components
  */
+import { AdditionalFieldComponent } from './components/additional-field/additional-field.component';
 import { DeleteConfirmComponent } from './components/delete-confirm/delete-confirm.component';
 import { DialogAddressComponent } from './components/dialog-address/dialog-address.component';
 import { DialogCompanyComponent } from './components/dialog-company/dialog-company.component';
@@ -51,6 +52,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     TextMaskModule,
     RouterModule
   ], exports: [
+    AdditionalFieldComponent,
     DeleteConfirmComponent,
     DialogAddressComponent,
     DialogCompanyComponent,
@@ -76,6 +78,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     CrudService,
     StrategicDataService,
   ], declarations: [
+    AdditionalFieldComponent,
     DeleteConfirmComponent,
     DialogAddressComponent,
     DialogCompanyComponent,
@@ -92,6 +95,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     TableDataComponent,
     TopbarMenuComponent,
   ], entryComponents: [
+    AdditionalFieldComponent,
     DeleteConfirmComponent,
     DialogAddressComponent,
     DialogCompanyComponent,
