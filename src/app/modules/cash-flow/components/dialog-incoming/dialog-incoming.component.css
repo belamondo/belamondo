@@ -1,0 +1,24 @@
+#sellingTableData {
+    width: 100%;
+    border: none;
+}
+
+#sellingTableData tr th:nth-child(1) { /*Tipo*/
+    width: 15%;
+    background: pink;
+}
+
+#sellingTableData tr th:nth-child(2) { /*Descrição*/
+    width: 60%;
+    background: yellow;
+}
+
+#sellingTableData tr th:nth-child(3) { /*Preço*/
+    width: 10%;
+    background: green;
+}
+
+#sellingTableData tr th:nth-child(4) { /*Quantidade*/
+    width: 15%;
+    background: red;
+}
