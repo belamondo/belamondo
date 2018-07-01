@@ -25,19 +25,10 @@
 					<input matInput placeholder="Unidade de medida" type="text" formControlName="unit">
 				</mat-form-field>
 
-				<div *ngFor="let field of fields; let i = index">
-					<mat-form-field appearance="outline" style="width: 85%">
-						<mat-label>{{field}}</mat-label>
-						<input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
-					</mat-form-field>
-					<i class="material-icons" style="cursor: pointer;" (click)="removeField(i)">
-						remove_circle
-					</i>
-				</div>
+				<app-additional-field [params]="paramsToAdditionalField" (changeAdditionalField)="onOutputFromAdditionalField($event)"></app-additional-field>
 			</mat-card-content>
 
 			<div class="button-container">
-				<button mat-raised-button type="button" (click)="addField()" class="button">Adicionar campo</button>
 				<button mat-raised-button [disabled]="productForm.invalid" class="button">{{submitButton}}</button>
 			</div>
 		</form>

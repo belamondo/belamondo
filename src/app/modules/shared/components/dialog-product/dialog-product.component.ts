@@ -37,9 +37,8 @@ export class DialogProductComponent implements OnInit {
   public submitToCreate: boolean;
   public submitToUpdate: boolean;
   public title: string;
-  public fields: any = [];
+  public paramsToAdditionalField: any;
   public userData: any;
-  public paramsToTableData: any;
   // Common properties: end
 
   constructor(
@@ -68,6 +67,11 @@ export class DialogProductComponent implements OnInit {
     });
 
     this.productFormInit();
+
+    /* Create a list of additional fields */
+    this.paramsToAdditionalField = {
+      fields: []
+    };
   }
 
   productFormInit = () => {
@@ -92,7 +96,7 @@ export class DialogProductComponent implements OnInit {
             /* Create form control if it is a additional field */
             if (key !== 'name' && key !== 'barcode' && key !== 'unit' && key !== '_id') {
               this.productForm.addControl(key, new FormControl(res[0][key]));
-              this.fields.push(key);
+              this.paramsToAdditionalField.fields.push(key);
             }
           }
         }
@@ -117,7 +121,7 @@ export class DialogProductComponent implements OnInit {
           objectToUpdate: this.productForm.value
         }).then(() => {
           formDirective.resetForm();
-          this.fields = [];
+          this.paramsToAdditionalField.fields = [];
 
           this._snackbar.open('Atualização feita com sucesso', '', {
             duration: 4000
@@ -132,7 +136,7 @@ export class DialogProductComponent implements OnInit {
         objectToCreate: this.productForm.value
       }).then(() => {
         formDirective.resetForm();
-        this.fields = [];
+        this.paramsToAdditionalField.fields = [];
 
         this._snackbar.open('Cadastro feito com sucesso', '', {
           duration: 4000
@@ -141,43 +145,17 @@ export class DialogProductComponent implements OnInit {
     }
   }
 
-  addField = () => {
-    const dialogRef = this.dialog.open(SubDialogProductComponent, {
-      height: '250px',
-      width: '600px',
-      data: { title: 'Adicionar campo', field: 'Nome do campo', buttonDescription: 'Adicionar' }
-    });
+  onOutputFromAdditionalField = (e) => {
+    if (e.method === 'add') {
+      this.productForm.addControl(e.value, new FormControl(null));
+    }
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.productForm.addControl(result, new FormControl(null));
-        this.fields.push(result);
-      }
-    });
+    if (e.method === 'remove') {
+      this.productForm.removeControl(e.value);
+    }
+
+    if (e.method === 'change') {
+      this.productForm.controls[e.field].setValue(e.value);
+    }
   }
-
-  removeField = (index) => {
-    this.productForm.removeControl(this.fields[index]);
-    this.fields.splice(index, 1);
-  }
-
-}
-
-/**
- * Sub Dialog
- */
-@Component({
-  selector: 'app-subdialog',
-  templateUrl: './subdialog.html',
-})
-export class SubDialogProductComponent {
-
-  constructor(
-    public dialogRef: MatDialogRef<SubDialogProductComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
 }

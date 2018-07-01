@@ -15,7 +15,6 @@ import {
   MAT_DIALOG_DATA,
   MatSnackBar
 } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
 
 /**
  * Services
@@ -38,7 +37,6 @@ export class DialogExpenseComponent implements OnInit {
   public submitToCreate: boolean;
   public submitToUpdate: boolean;
   public title: string;
-  public fields: any = [];
   public userData: any;
   public paramsToAdditionalField: any;
   // Common properties: end
@@ -63,7 +61,7 @@ export class DialogExpenseComponent implements OnInit {
 
     /* Create a list of additional fields */
     this.paramsToAdditionalField = {
-      fields: ['teste', 'testando']
+      fields: []
     };
   }
 
@@ -89,7 +87,7 @@ export class DialogExpenseComponent implements OnInit {
             /* Create form control if it is a additional field */
             if (key !== 'name' && key !== 'type' && key !== '_id') {
               this.expenseForm.addControl(key, new FormControl(expensesTypes[0][key]));
-              this.fields.push(key);
+              this.paramsToAdditionalField.fields.push(key);
             }
           }
         }
@@ -114,7 +112,7 @@ export class DialogExpenseComponent implements OnInit {
           objectToUpdate: this.expenseForm.value
         }).then(res => {
           formDirective.resetForm();
-          this.fields = [];
+          this.paramsToAdditionalField.fields = [];
 
           this._snackbar.open('Atualização feita com sucesso', '', {
             duration: 4000
@@ -129,7 +127,7 @@ export class DialogExpenseComponent implements OnInit {
         objectToCreate: this.expenseForm.value
       }).then(res => {
         formDirective.resetForm();
-        this.fields = [];
+        this.paramsToAdditionalField.fields = [];
 
         this._snackbar.open('Cadastro feito com sucesso', '', {
           duration: 4000
@@ -138,43 +136,18 @@ export class DialogExpenseComponent implements OnInit {
     }
   }
 
-  addField = () => {
-    const dialogRef = this.dialog.open(SubDialogExpenseComponent, {
-      height: '250px',
-      width: '600px',
-      data: { title: 'Adicionar campo', field: 'Nome do campo', buttonDescription: 'Adicionar' }
-    });
+  onOutputFromAdditionalField = (e) => {
+    if (e.method === 'add') {
+      this.expenseForm.addControl(e.value, new FormControl(null));
+    }
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.expenseForm.addControl(result, new FormControl(null));
-        this.fields.push(result);
-      }
-    });
-  }
+    if (e.method === 'remove') {
+      this.expenseForm.removeControl(e.value);
+    }
 
-  removeField = (index) => {
-    this.expenseForm.removeControl(this.fields[index]);
-    this.fields.splice(index, 1);
-  }
-
-}
-
-/**
- * Sub Dialog
- */
-@Component({
-  selector: 'app-subdialog',
-  templateUrl: './subdialog.html',
-})
-export class SubDialogExpenseComponent {
-
-  constructor(
-    public dialogRef: MatDialogRef<SubDialogExpenseComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
+    if (e.method === 'change') {
+      this.expenseForm.controls[e.field].setValue(e.value);
+    }
   }
 
 }

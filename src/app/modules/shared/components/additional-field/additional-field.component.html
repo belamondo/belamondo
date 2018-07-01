@@ -1,9 +1,11 @@
 <div *ngFor="let field of fields; let i = index">
   <mat-form-field appearance="outline" style="width: 85%">
     <mat-label>{{field}}</mat-label>
-    <input matInput placeholder="{{field}}" #additionalField type="text" (blur)="setAdditionalField(i, additionalField.value)">
+    <input matInput placeholder="{{field}}" #additionalField type="text" (blur)="setAdditionalField(i, field, additionalField.value)">
   </mat-form-field>
-  <i class="material-icons" style="cursor: pointer;" (click)="removeField(i)">
+  <i class="material-icons" style="cursor: pointer;" (click)="removeField(i, field)">
     remove_circle
   </i>
 </div>
+
+<button mat-raised-button type="button" (click)="addField()">Adicionar campo</button>

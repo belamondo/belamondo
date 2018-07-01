@@ -37,9 +37,8 @@ export class DialogServiceComponent implements OnInit {
   public submitToCreate: boolean;
   public submitToUpdate: boolean;
   public title: string;
-  public fields: any = [];
+  public paramsToAdditionalField: any;
   public userData: any;
-  public paramsToTableData: any;
   // Common properties: end
 
   constructor(
@@ -66,6 +65,11 @@ export class DialogServiceComponent implements OnInit {
     });
 
     this.serviceFormInit();
+
+    /* Create a list of additional fields */
+    this.paramsToAdditionalField = {
+      fields: []
+    };
   }
 
   serviceFormInit = () => {
@@ -90,7 +94,7 @@ export class DialogServiceComponent implements OnInit {
             /* Create form control if it is a additional field */
             if (key !== 'name' && key !== '_id') {
               this.serviceForm.addControl(key, new FormControl(res[0][key]));
-              this.fields.push(key);
+              this.paramsToAdditionalField.fields.push(key);
             }
           }
         }
@@ -115,7 +119,7 @@ export class DialogServiceComponent implements OnInit {
           objectToUpdate: this.serviceForm.value
         }).then(() => {
           formDirective.resetForm();
-          this.fields = [];
+          this.paramsToAdditionalField.fields = [];
 
           this._snackbar.open('Atualização feita com sucesso', '', {
             duration: 4000
@@ -132,7 +136,7 @@ export class DialogServiceComponent implements OnInit {
         objectToCreate: this.serviceForm.value
       }).then(() => {
         formDirective.resetForm();
-        this.fields = [];
+        this.paramsToAdditionalField.fields = [];
 
         this._snackbar.open('Cadastro feito com sucesso', '', {
           duration: 4000
@@ -141,43 +145,17 @@ export class DialogServiceComponent implements OnInit {
     }
   }
 
-  addField = () => {
-    const dialogRef = this._dialog.open(SubDialogServiceComponent, {
-      height: '250px',
-      width: '600px',
-      data: { title: 'Adicionar campo', field: 'Nome do campo', buttonDescription: 'Adicionar' }
-    });
+  onOutputFromAdditionalField = (e) => {
+    if (e.method === 'add') {
+      this.serviceForm.addControl(e.value, new FormControl(null));
+    }
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.serviceForm.addControl(result, new FormControl(null));
-        this.fields.push(result);
-      }
-    });
+    if (e.method === 'remove') {
+      this.serviceForm.removeControl(e.value);
+    }
+
+    if (e.method === 'change') {
+      this.serviceForm.controls[e.field].setValue(e.value);
+    }
   }
-
-  removeField = (index) => {
-    this.serviceForm.removeControl(this.fields[index]);
-    this.fields.splice(index, 1);
-  }
-
-}
-
-/**
- * Sub Dialog
- */
-@Component({
-  selector: 'app-subdialog',
-  templateUrl: './subdialog.html',
-})
-export class SubDialogServiceComponent {
-
-  constructor(
-    public dialogRef: MatDialogRef<SubDialogServiceComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
 }
