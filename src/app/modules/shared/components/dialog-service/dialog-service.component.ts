@@ -94,7 +94,7 @@ export class DialogServiceComponent implements OnInit {
             /* Create form control if it is a additional field */
             if (key !== 'name' && key !== '_id') {
               this.serviceForm.addControl(key, new FormControl(res[0][key]));
-              this.paramsToAdditionalField.fields.push(key);
+              this.paramsToAdditionalField.fields.push({field: key, value: res[0][key]});
             }
           }
         }

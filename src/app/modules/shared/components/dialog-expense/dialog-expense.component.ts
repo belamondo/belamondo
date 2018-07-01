@@ -77,17 +77,17 @@ export class DialogExpenseComponent implements OnInit {
 
       this._crud.readWithObservable({
         collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'expensesTypes', param],
-      }).subscribe(expensesTypes => {
-        this.expenseForm.patchValue(expensesTypes[0]);
+      }).subscribe(res => {
+        this.expenseForm.patchValue(res[0]);
 
         /* Check if has additionals fields */
-        if (Object.keys(expensesTypes[0]).length > 2) {
+        if (Object.keys(res[0]).length > 2) {
           // tslint:disable-next-line:forin
-          for (const key in expensesTypes[0]) {
+          for (const key in res[0]) {
             /* Create form control if it is a additional field */
             if (key !== 'name' && key !== 'type' && key !== '_id') {
-              this.expenseForm.addControl(key, new FormControl(expensesTypes[0][key]));
-              this.paramsToAdditionalField.fields.push(key);
+              this.expenseForm.addControl(key, new FormControl(res[0][key]));
+              this.paramsToAdditionalField.fields.push({field: key, value: res[0][key]});
             }
           }
         }
@@ -108,7 +108,9 @@ export class DialogExpenseComponent implements OnInit {
     if (this.submitToUpdate) {
       this._crud
         .update({
-          collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'expensesTypes', this.paramToSearch.replace(':', '')],
+          collectionsAndDocs: [
+            this.userData[0]['_userType'], this.userData[0]['_id'], 'expensesTypes', this.paramToSearch.replace(':', '')
+          ],
           objectToUpdate: this.expenseForm.value
         }).then(res => {
           formDirective.resetForm();
