@@ -63,8 +63,10 @@ export class DialogIncomingComponent implements OnInit {
   public services: any;
 
   public price: number;
+  public priceTotal: number;
   public sellingObject: any;
   public startSelling: boolean;
+  public lastPrice: number;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -200,9 +202,12 @@ export class DialogIncomingComponent implements OnInit {
       for (const key in this.products[index]) {
         if (this.products[index].hasOwnProperty(key)) {
           const e = this.products[index][key];
-          if (e.toLowerCase().includes(filterValue) && (index !== checkObjectIndex)) {
-            tempObject.push(this.products[index]);
-            checkObjectIndex = index;
+
+          if (typeof e === 'string') {
+            if (e.toLowerCase().includes(filterValue) && (index !== checkObjectIndex)) {
+              tempObject.push(this.products[index]);
+              checkObjectIndex = index;
+            }
           }
         }
       }
@@ -250,8 +255,10 @@ export class DialogIncomingComponent implements OnInit {
 
   onSelling = (event) => {
     this.sellingObject.push(event.option.value);
-    this.setPrice();
-    console.log(this.sellingObject);
+    this.sellingObject[this.sellingObject.length - 1]['quantity'] = 1;
+    this.sellingObject[this.sellingObject.length - 1]['discount'] = 0;
+
+    this.setTotalPrice();
   }
 
   incomingFormInit = () => {
@@ -300,7 +307,7 @@ export class DialogIncomingComponent implements OnInit {
           collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'incomings', this.data.id],
           objectToUpdate: this.incomingForm.value
         }).then(() => {
-          formDirective.resetForm();
+          this._dialog.closeAll();
           this.fields = [];
 
           this._snackbar.open('Atualização feita com sucesso', '', {
@@ -384,19 +391,6 @@ export class DialogIncomingComponent implements OnInit {
 
   }
 
-  setPrice = () => {
-    this.price = 0;
-    for (const key in this.sellingObject) {
-      if (this.sellingObject.hasOwnProperty(key)) {
-        if (key === 'price') {
-          this.price += this.sellingObject[key];
-        }
-      }
-    }
-
-    console.log(this.price);
-  }
-
   setProducts = () => {
     this._crud
     .readWithObservable({
@@ -416,6 +410,21 @@ export class DialogIncomingComponent implements OnInit {
       if (services.length > 0) {
         this.services = services;
       }
+    });
+  }
+
+  setQuantityAndDiscountToSellingObject = (index, quantity, discount) => {
+    this.sellingObject[index]['quantity'] = quantity;
+    this.sellingObject[index]['discount'] = discount;
+
+    this.setTotalPrice();
+  }
+
+  setTotalPrice = () => {
+    this.lastPrice = 0;
+
+    this.sellingObject.map(e => {
+      this.lastPrice += (e.quantity * e.price) * (1 - (e.discount / 100));
     });
   }
 }

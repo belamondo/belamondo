@@ -90,15 +90,23 @@
                 </th>
   
                 <th>
-                  Preço
+                  Preço unitário
                 </th>
   
                 <th>
                   Quantidade
                 </th>
+                
+                <th>
+                  Desconto
+                </th>
+
+                <th>
+                  Preço total
+                </th>
               </tr>
   
-              <tr *ngFor="let item of sellingObject">
+              <tr *ngFor="let item of sellingObject; let i = index;">
                 <td>
                   <span *ngIf="item.barcode">Produto</span>
                   <span *ngIf="!item.barcode">Serviço</span>
@@ -108,10 +116,31 @@
                   {{ item.name }}
                 </td>
   
-                <td></td>
+                <td> 
+                  {{ item.price }}
+                </td>
   
                 <td>
-                  <input type="text" value="1">
+                  <input type="text" value="1" #quantity (change)="setQuantityAndDiscountToSellingObject(i, this.quantity.value, this.discount.value)">
+                </td>
+
+                <td>
+                  <input type="text" value="0" #discount (change)="setQuantityAndDiscountToSellingObject(i, this.quantity.value, this.discount.value)">
+                </td>
+
+                <td>
+                  {{ (item.price * this.quantity.value) * (1 - (this.discount.value / 100)) }}
+                </td>
+              </tr>
+
+              <tr *ngIf="sellingObject.length > 1">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  {{ lastPrice }}
                 </td>
               </tr>
             </table>
