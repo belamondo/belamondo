@@ -4,21 +4,35 @@
 }
 
 #sellingTableData tr th:nth-child(1) { /*Tipo*/
-    width: 15%;
+    width: 10%;
     background: pink;
 }
 
 #sellingTableData tr th:nth-child(2) { /*Descrição*/
-    width: 60%;
+    width: 55%;
     background: yellow;
 }
 
-#sellingTableData tr th:nth-child(3) { /*Preço*/
+#sellingTableData tr th:nth-child(3) { /*Preço unitário*/
     width: 10%;
     background: green;
 }
 
 #sellingTableData tr th:nth-child(4) { /*Quantidade*/
-    width: 15%;
+    width: 5%;
     background: red;
+}
+
+#sellingTableData tr input {
+    width: 50%;
+}
+
+#sellingTableData tr th:nth-child(5) { /*Desconto por item*/
+    width: 10%;
+    background: greenyellow;
+}
+
+#sellingTableData tr th:nth-child(6) { /*Preço total*/
+    width: 10%;
+    background: blueviolet;
 }

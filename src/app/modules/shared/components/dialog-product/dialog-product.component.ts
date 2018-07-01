@@ -64,6 +64,7 @@ export class DialogProductComponent implements OnInit {
       name: new FormControl(null, Validators.required),
       barcode: new FormControl(null),
       unit: new FormControl(null),
+      price: new FormControl(0),
     });
 
     this.productFormInit();
@@ -94,7 +95,7 @@ export class DialogProductComponent implements OnInit {
           // tslint:disable-next-line:forin
           for (const key in res[0]) {
             /* Create form control if it is a additional field */
-            if (key !== 'name' && key !== 'barcode' && key !== 'unit' && key !== '_id') {
+            if (key !== 'price' && key !== 'name' && key !== 'barcode' && key !== 'unit' && key !== '_id') {
               this.productForm.addControl(key, new FormControl(res[0][key]));
               this.paramsToAdditionalField.fields.push(key);
             }
@@ -120,8 +121,7 @@ export class DialogProductComponent implements OnInit {
           collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'products', this.paramToSearch.replace(':', '')],
           objectToUpdate: this.productForm.value
         }).then(() => {
-          formDirective.resetForm();
-          this.paramsToAdditionalField.fields = [];
+          this.dialog.closeAll();
 
           this._snackbar.open('Atualização feita com sucesso', '', {
             duration: 4000

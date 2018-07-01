@@ -1,7 +1,8 @@
 /**
  * Documentação - instruções
  *
- * Passo 01: Insira no html a tag <app-additional-field [params]="paramsToAdditionalField" (changeAdditionalField)="onOutputFromAdditionalField($event)"></app-additional-field>
+ * Passo 01: Insira no html a tag <app-additional-field [params]="paramsToAdditionalField"
+ * (changeAdditionalField)="onOutputFromAdditionalField($event)"></app-additional-field>
  * Passo 02: Declare o parametro paramsToAdditionalField como public no ts | Ex.: public paramsToAdditionalField: any
  * Passo 03: Inicialize o parametro paramsToAdditionalField como um objeto com uma array (fields) vazia no ngOnInit | Ex.: { fields:[] }
  * Passo 04: Crie o método onOutputFromAdditionalField() no ts para adicionar, alterar e remover o formControl no formGroup

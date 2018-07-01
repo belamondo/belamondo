@@ -16,7 +16,7 @@
               <mat-label>Tipo de cliente*</mat-label>
               <mat-radio-button value="person">Pessoa</mat-radio-button>
               <mat-radio-button value="company">Empresa</mat-radio-button>
-              <mat-radio-button value="counter">Balcão</mat-radio-button>
+              <mat-radio-button value="counter" (change)="onClientChoice($event)">Balcão</mat-radio-button>
             </mat-radio-group>
   
             <mat-form-field appearance="outline" *ngIf="incomingForm.value.clientType === 'person' && people.length > 0">
@@ -90,15 +90,23 @@
                 </th>
   
                 <th>
-                  Preço
+                  Preço unitário
                 </th>
   
                 <th>
                   Quantidade
                 </th>
+                
+                <th>
+                  Desconto
+                </th>
+
+                <th>
+                  Preço total
+                </th>
               </tr>
   
-              <tr *ngFor="let item of sellingObject">
+              <tr *ngFor="let item of sellingObject; let i = index;">
                 <td>
                   <span *ngIf="item.barcode">Produto</span>
                   <span *ngIf="!item.barcode">Serviço</span>
@@ -108,10 +116,31 @@
                   {{ item.name }}
                 </td>
   
-                <td></td>
+                <td> 
+                  {{ item.price }}
+                </td>
   
                 <td>
-                  <input type="text" value="1">
+                  <input type="text" value="1" #quantity (change)="setQuantityAndDiscountToSellingObject(i, this.quantity.value, this.discount.value)">
+                </td>
+
+                <td>
+                  <input type="text" value="0" #discount (change)="setQuantityAndDiscountToSellingObject(i, this.quantity.value, this.discount.value)">
+                </td>
+
+                <td>
+                  {{ (item.price * this.quantity.value) * (1 - (this.discount.value / 100)) }}
+                </td>
+              </tr>
+
+              <tr *ngIf="sellingObject.length > 1">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  {{ lastPrice }}
                 </td>
               </tr>
             </table>
@@ -165,8 +194,10 @@
 <mat-dialog-actions>
   <div class="flex">
     <button mat-raised-button [disabled]="incomingForm.invalid || isDisabled" (click)="onIncomingFormSubmit(this.formDirective)" color="primary">
-      {{submitButton}}
+      {{ submitButton }}
     </button>
+
+    <button mat-raised-button (click)="onPayment();" color="accent" [disabled]="incomingForm.invalid || isDisabled">Pagar</button>
 
     <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
   </div>
