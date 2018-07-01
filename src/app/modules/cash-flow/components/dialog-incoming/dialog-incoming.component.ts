@@ -18,6 +18,11 @@ import {
 } from '@angular/material';
 
 /**
+ * Components
+ */
+import { DialogPaymentComponent } from './../dialog-payment/dialog-payment.component';
+
+/**
  * Rxjs
  */
 import { Observable } from 'rxjs';
@@ -57,15 +62,16 @@ export class DialogIncomingComponent implements OnInit {
   public products: any;
   public services: any;
 
+  public price: number;
   public sellingObject: any;
   public startSelling: boolean;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _crud: CrudService,
+    public _dialog: MatDialog,
     public _snackbar: MatSnackBar,
     private _strategicData: StrategicDataService,
-    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -91,29 +97,25 @@ export class DialogIncomingComponent implements OnInit {
     this.filteredCompanies = this.incomingForm.get('company').valueChanges
       .pipe(
         startWith(''),
-        map(value => typeof value === 'string' ? value : value['business_name']),
-        map(name => name ? this._companiesFilter(name) : this.companies.slice())
+        map(val => val.length >= 1 ? this._companiesFilter(val) : [])
       );
 
     this.filteredPeople = this.incomingForm.get('person').valueChanges
       .pipe(
         startWith(''),
-        map(value => typeof value === 'string' ? value : value['name']),
-        map(name => name ? this._peopleFilter(name) : this.people.slice())
+        map(val => val.length >= 1 ? this._peopleFilter(val) : [])
       );
 
     this.filteredProducts = this.incomingForm.get('product').valueChanges
       .pipe(
         startWith(''),
-        map(value => typeof value === 'string' ? value : value['name']),
-        map(name => name ? this._productsFilter(name) : this.products.slice())
+        map(val => val.length >= 1 ? this._productsFilter(val) : [])
       );
 
     this.filteredServices = this.incomingForm.get('service').valueChanges
       .pipe(
         startWith(''),
-        map(value => typeof value === 'string' ? value : value['name']),
-        map(name => name ? this._servicesFilter(name) : this.services.slice())
+        map(val => val.length >= 1 ? this._servicesFilter(val) : [])
       );
 
     this.companies = [];
@@ -137,6 +139,7 @@ export class DialogIncomingComponent implements OnInit {
     }
   }
 
+  // Autocomplete: start
   private _companiesFilter(value: string): string[] {
     const filterValue = value.toLowerCase();
     let checkObjectIndex, tempObject;
@@ -236,14 +239,18 @@ export class DialogIncomingComponent implements OnInit {
   displayService = (service) => {
     return service ? null : undefined;
   }
+  // Autocomplete: end
 
   onClientChoice = (event) => {
+    if (event.value && event.value === 'counter') {
+
+    }
     this.startSelling = true;
   }
 
   onSelling = (event) => {
     this.sellingObject.push(event.option.value);
-
+    this.setPrice();
     console.log(this.sellingObject);
   }
 
@@ -278,7 +285,7 @@ export class DialogIncomingComponent implements OnInit {
       this.submitToCreate = true;
       this.submitToUpdate = false;
       this.title = 'Cadastrar venda';
-      this.submitButton = 'Cadastrar';
+      this.submitButton = 'Salvar';
     }
 
     this.setClients();
@@ -333,6 +340,23 @@ export class DialogIncomingComponent implements OnInit {
   //   });
   // }
 
+  onPayment = () => {
+    if (this.data.id) {
+      this._dialog.open(DialogPaymentComponent, {
+        width: '90%',
+        data: {
+          id: this.data.id
+        }
+      });
+    } else {
+      this._dialog.open(DialogPaymentComponent, {
+        width: '90%',
+        data: {
+        }
+      });
+    }
+  }
+
   removeField = (index) => {
     this.incomingForm.removeControl(this.fields[index]);
     this.fields.splice(index, 1);
@@ -358,6 +382,19 @@ export class DialogIncomingComponent implements OnInit {
       });
     });
 
+  }
+
+  setPrice = () => {
+    this.price = 0;
+    for (const key in this.sellingObject) {
+      if (this.sellingObject.hasOwnProperty(key)) {
+        if (key === 'price') {
+          price += this.sellingObject[key];
+        }
+      }
+    }
+
+    console.log(this.price);
   }
 
   setProducts = () => {

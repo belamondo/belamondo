@@ -16,7 +16,7 @@
               <mat-label>Tipo de cliente*</mat-label>
               <mat-radio-button value="person">Pessoa</mat-radio-button>
               <mat-radio-button value="company">Empresa</mat-radio-button>
-              <mat-radio-button value="counter">Balcão</mat-radio-button>
+              <mat-radio-button value="counter" (change)="onClientChoice($event)">Balcão</mat-radio-button>
             </mat-radio-group>
   
             <mat-form-field appearance="outline" *ngIf="incomingForm.value.clientType === 'person' && people.length > 0">
@@ -165,8 +165,10 @@
 <mat-dialog-actions>
   <div class="flex">
     <button mat-raised-button [disabled]="incomingForm.invalid || isDisabled" (click)="onIncomingFormSubmit(this.formDirective)" color="primary">
-      {{submitButton}}
+      {{ submitButton }}
     </button>
+
+    <button mat-raised-button (click)="onPayment();" color="accent" [disabled]="incomingForm.invalid || isDisabled">Pagar</button>
 
     <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
   </div>

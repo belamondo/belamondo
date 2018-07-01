@@ -27,6 +27,7 @@ import { ServiceComponent } from './components/service/service.component';
  */
 import { CashFlowRoutingModule } from './cash-flow-routing.module';
 import { SharedModule } from './../shared/shared.module';
+import { DialogPaymentComponent } from './components/dialog-payment/dialog-payment.component';
 
 @NgModule({
   imports: [
@@ -48,11 +49,13 @@ import { SharedModule } from './../shared/shared.module';
     OutcomingComponent,
     DialogIncomingComponent,
     DialogOutcomingComponent,
+    DialogPaymentComponent,
   ],
   entryComponents: [
     DialogFormReportComponent,
     DialogIncomingComponent,
     DialogOutcomingComponent,
+    DialogPaymentComponent,
   ]
 })
 export class CashFlowModule { }
