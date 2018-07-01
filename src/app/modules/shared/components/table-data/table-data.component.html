@@ -46,11 +46,11 @@
 
           <td style="min-width: 2%; text-align: right;">
             <a *ngFor="let icon of params.list.actionIcon ; let i = index;">
-              <mat-icon [matTooltip]="icon.tooltip" *ngIf="icon.tooltip" (click)="onTableDataOutput($event, data)">
+              <mat-icon [matTooltip]="icon.tooltip" *ngIf="icon.tooltip" (click)="onTableDataOutput($event, data, icon.icon)">
                 {{icon.icon}}
               </mat-icon>
     
-              <mat-icon *ngIf="!icon.tooltip" (click)="onTableDataOutput($event, data)">
+              <mat-icon *ngIf="!icon.tooltip" (click)="onTableDataOutput($event, data, icon.icon)">
                 {{icon.icon}}
               </mat-icon>
             </a>
