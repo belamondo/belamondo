@@ -31,17 +31,17 @@ import { TextMaskModule } from 'angular2-text-mask';
 /**
  * Components
  */
-import { AdditionalFieldComponent } from './components/additional-field/additional-field.component';
+import { AdditionalFieldComponent, SubDialogComponent } from './components/additional-field/additional-field.component';
 import { DeleteConfirmComponent } from './components/delete-confirm/delete-confirm.component';
 import { DialogAddressComponent } from './components/dialog-address/dialog-address.component';
 import { DialogCompanyComponent } from './components/dialog-company/dialog-company.component';
 import { DialogContactComponent } from './components/dialog-contact/dialog-contact.component';
 import { DialogDocumentComponent } from './components/dialog-document/dialog-document.component';
-import { DialogExpenseComponent, SubDialogExpenseComponent } from './components/dialog-expense/dialog-expense.component';
+import { DialogExpenseComponent } from './components/dialog-expense/dialog-expense.component';
 import { DialogPersonComponent } from './components/dialog-person/dialog-person.component';
-import { DialogProductComponent, SubDialogProductComponent } from './components/dialog-product/dialog-product.component';
+import { DialogProductComponent } from './components/dialog-product/dialog-product.component';
 import { DialogRelationshipComponent } from './components/dialog-relationship/dialog-relationship.component';
-import { DialogServiceComponent, SubDialogServiceComponent } from './components/dialog-service/dialog-service.component';
+import { DialogServiceComponent } from './components/dialog-service/dialog-service.component';
 import { TableDataComponent } from './components/table-data/table-data.component';
 import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.component';
 
@@ -67,9 +67,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     MaterialModule,
     ReactiveFormsModule,
     RouterModule,
-    SubDialogExpenseComponent,
-    SubDialogProductComponent,
-    SubDialogServiceComponent,
+    SubDialogComponent,
     TableDataComponent,
     TextMaskModule,
     TopbarMenuComponent,
@@ -91,9 +89,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogProductComponent,
     DialogRelationshipComponent,
     DialogServiceComponent,
-    SubDialogExpenseComponent,
-    SubDialogProductComponent,
-    SubDialogServiceComponent,
+    SubDialogComponent,
     TableDataComponent,
     TopbarMenuComponent,
   ], entryComponents: [
@@ -108,9 +104,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogProductComponent,
     DialogRelationshipComponent,
     DialogServiceComponent,
-    SubDialogExpenseComponent,
-    SubDialogProductComponent,
-    SubDialogServiceComponent,
+    SubDialogComponent,
   ]
 })
 export class SharedModule { }

@@ -1,50 +1,49 @@
-<div class="spinner-container" *ngIf="!isStarted">
-	<mat-spinner></mat-spinner>
-</div>
+<h1 mat-dialog-title>{{title}}</h1>
+<mat-dialog-content>
+  <div *ngIf="!isStarted" class="container">
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  </div>
 
-<div class="flex">
-	<div *ngIf="isStarted" class="container">
-		<form [formGroup]="productForm" #formDirective="ngForm" (ngSubmit)="onProductFormSubmit(this.formDirective)">
-			<mat-card-header class="header">
-				<mat-card-title class="title">{{title}}</mat-card-title>
-			</mat-card-header>
+  <div class="flex">
+    <div *ngIf="isStarted" class="container">
+      <form [formGroup]="productForm" #formDirective="ngForm">
 
-			<mat-card-content>
-				<mat-form-field appearance="outline">
-					<mat-label>Nome</mat-label>
-					<input matInput placeholder="Nome do produto" type="text" formControlName="name" required>
-				</mat-form-field>
+        <mat-card-content>
+          <mat-form-field appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input matInput placeholder="Nome do produto" type="text" formControlName="name" required>
+          </mat-form-field>
 
-				<mat-form-field appearance="outline" class="flex" style="width: 60%;">
-					<mat-label>Código de barras</mat-label>
-					<input matInput placeholder="Código de barras" type="text" formControlName="barcode">
-				</mat-form-field>
+          <div class="flex">
+            <mat-form-field appearance="outline">
+              <mat-label>Código de barras</mat-label>
+              <input matInput placeholder="Código de barras" type="text" formControlName="barcode">
+            </mat-form-field>
 
-				<mat-form-field appearance="outline" class="flex" style="width: 35%;">
-					<mat-label>Unidade de medida</mat-label>
-					<input matInput placeholder="Unidade de medida" type="text" formControlName="unit">
-				</mat-form-field>
+            <mat-form-field appearance="outline" class="flex">
+              <mat-label>Unidade de medida</mat-label>
+              <input matInput placeholder="Unidade de medida" type="text" formControlName="unit">
+            </mat-form-field>
 
-				<mat-form-field appearance="outline" class="flex" style="width: 35%;">
-					<mat-label>Preço</mat-label>
-					<input matInput placeholder="Unidade de medida" type="text" formControlName="unit">
-				</mat-form-field>
+            <mat-form-field appearance="outline" class="flex">
+              <mat-label>Preço</mat-label>
+              <input matInput placeholder="Preço" type="text" formControlName="price">
+            </mat-form-field>
+          </div>
 
-				<div *ngFor="let field of fields; let i = index">
-					<mat-form-field appearance="outline" style="width: 85%">
-						<mat-label>{{field}}</mat-label>
-						<input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
-					</mat-form-field>
-					<i class="material-icons" style="cursor: pointer;" (click)="removeField(i)">
-						remove_circle
-					</i>
-				</div>
-			</mat-card-content>
+          <app-additional-field [params]="paramsToAdditionalField" (changeAdditionalField)="onOutputFromAdditionalField($event)"></app-additional-field>
+        </mat-card-content>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
 
-			<div class="button-container">
-				<button mat-raised-button type="button" (click)="addField()" class="button">Adicionar campo</button>
-				<button mat-raised-button [disabled]="productForm.invalid" class="button">{{submitButton}}</button>
-			</div>
-		</form>
-	</div>
-</div>
+<mat-dialog-actions>
+  <div class="flex">
+    <button mat-raised-button [disabled]="productForm.invalid" class="button" (click)="onProductFormSubmit(this.formDirective)">{{submitButton}}</button>
+
+    <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
+  </div>
+</mat-dialog-actions>

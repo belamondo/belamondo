@@ -389,7 +389,7 @@ export class DialogIncomingComponent implements OnInit {
     for (const key in this.sellingObject) {
       if (this.sellingObject.hasOwnProperty(key)) {
         if (key === 'price') {
-          price += this.sellingObject[key];
+          this.price += this.sellingObject[key];
         }
       }
     }
