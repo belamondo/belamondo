@@ -67,7 +67,7 @@ export class AdditionalFieldComponent implements OnInit {
 
         this.changeAdditionalField.emit(object);
 
-        this.fields.push(result);
+        this.fields.push({field: result, value: null});
       }
     });
   }
