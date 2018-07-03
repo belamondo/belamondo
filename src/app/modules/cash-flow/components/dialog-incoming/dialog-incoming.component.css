@@ -3,36 +3,49 @@
     border: none;
 }
 
+#sellingTableData tr:nth-child(1) {
+    border-bottom: solid 1px black;
+    font-weight: 900;
+}
+
+#sellingTableData th:nth-child(odd) {
+    background: rgb(61, 80, 165);
+    color: #fff;
+}
+
+#sellingTableData td:nth-child(odd) {
+    background: rgb(61, 80, 165);
+    color: #fff;
+}
+
 #sellingTableData tr th:nth-child(1) { /*Tipo*/
     width: 10%;
-    background: pink;
 }
 
 #sellingTableData tr th:nth-child(2) { /*Descrição*/
     width: 55%;
-    background: yellow;
 }
 
 #sellingTableData tr th:nth-child(3) { /*Preço unitário*/
     width: 10%;
-    background: green;
 }
 
 #sellingTableData tr th:nth-child(4) { /*Quantidade*/
     width: 5%;
-    background: red;
 }
 
 #sellingTableData tr input {
-    width: 50%;
+    border-style: none;
+    width: 50px;
+    right: 0;
+    position: absolute;
+    background: transparent;
 }
 
 #sellingTableData tr th:nth-child(5) { /*Desconto por item*/
     width: 10%;
-    background: greenyellow;
 }
 
 #sellingTableData tr th:nth-child(6) { /*Preço total*/
     width: 10%;
-    background: blueviolet;
 }

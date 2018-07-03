@@ -97,7 +97,10 @@ export class DialogProductComponent implements OnInit {
             /* Create form control if it is a additional field */
             if (key !== 'price' && key !== 'name' && key !== 'barcode' && key !== 'unit' && key !== '_id') {
               this.productForm.addControl(key, new FormControl(res[0][key]));
-              this.paramsToAdditionalField.fields.push(key);
+              this.paramsToAdditionalField.fields.push({
+                field: key,
+                value: res[0][key]
+              });
             }
           }
         }
