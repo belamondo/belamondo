@@ -3,7 +3,7 @@
     <mat-label>{{field.field}}</mat-label>
     <input matInput placeholder="{{field.field}}" #additionalField type="text" value="{{field.value}}" (blur)="setAdditionalField(i, field.field, additionalField.value)">
   </mat-form-field>
-  <i class="material-icons" style="cursor: pointer;" (click)="removeField(i, field)">
+  <i class="material-icons" style="cursor: pointer;" (click)="removeField(i, field.field)">
     remove_circle
   </i>
 </div>
