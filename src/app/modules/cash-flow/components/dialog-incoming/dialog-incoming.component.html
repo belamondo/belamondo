@@ -79,71 +79,81 @@
                 </mat-option>
             </mat-autocomplete>
             
-            <table *ngIf="sellingObject && sellingObject.length > 0" id="sellingTableData">
-              <tr>
-                <th>
-                  Tipo
-                </th>
-  
-                <th>
-                  Descrição
-                </th>
-  
-                <th>
-                  Preço unitário
-                </th>
-  
-                <th>
-                  Quantidade
-                </th>
-                
-                <th>
-                  Desconto
-                </th>
+            <div class="flex" id="sellingListHeader" *ngIf="sellingObject && sellingObject.length > 0">
+              <div>
+                Tipo
+              </div>
 
-                <th>
-                  Preço total
-                </th>
-              </tr>
-  
-              <tr *ngFor="let item of sellingObject; let i = index;">
-                <td>
-                  <span *ngIf="item.barcode">Produto</span>
-                  <span *ngIf="!item.barcode">Serviço</span>
-                </td>
-  
-                <td>
-                  {{ item.name }}
-                </td>
-  
-                <td> 
-                  {{ item.price }}
-                </td>
-  
-                <td>
-                  <input type="text" value="1" #quantity (change)="setQuantityAndDiscountToSellingObject(i, this.quantity.value, this.discount.value)">
-                </td>
+              <div>
+                Descrição
+              </div>
 
-                <td>
-                  <input type="text" value="0" #discount (change)="setQuantityAndDiscountToSellingObject(i, this.quantity.value, this.discount.value)">
-                </td>
+              <div>
+                Preço unitário
+              </div>
 
-                <td>
-                  {{ (item.price * this.quantity.value) * (1 - (this.discount.value / 100)) }}
-                </td>
-              </tr>
+              <div>
+                Quantidade
+              </div>
+              
+              <div>
+                Desconto
+              </div>
 
-              <tr *ngIf="sellingObject.length > 1">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                  {{ lastPrice }}
-                </td>
-              </tr>
-            </table>
+              <div>
+                Preço total
+              </div>
+
+              <div>
+
+              </div>
+            </div>
+
+            <div *ngFor="let item of sellingObject; let i = index;" class="flex" id="sellingListBody" [ngClass]="{'grey-row': i % 2 !== 0}">
+              <div>
+                <span *ngIf="item.barcode">Produto</span>
+                <span *ngIf="!item.barcode">Serviço</span>
+              </div>
+
+              <div>
+                {{ item.name }}
+              </div>
+
+              <div> 
+                {{ item.price ? item.price : 0 }}
+              </div>
+
+              <div>
+                <input type="text" value="1" #quantity (change)="setQuantityAndDiscountToSellingObject(i, this.quantity.value, this.discount.value)">
+              </div>
+
+              <div>
+                <input type="text" value="0" #discount (change)="setQuantityAndDiscountToSellingObject(i, this.quantity.value, this.discount.value)">
+              </div>
+
+              <div>
+                {{ ((item.price ? item.price : 0) * this.quantity.value) * (1 - (this.discount.value / 100)) }}
+              </div>
+
+              <div>
+                <a>
+                  <mat-icon (click)="removeItemFromObject(i)">close</mat-icon>
+                </a>
+                  
+              </div>
+            </div>
+
+            <div *ngIf="sellingObject.length > 0" class="flex" id="sellingListFooter">
+              <div>DESCONTO NA SOMA TOTAL</div>
+              <div>
+                  <input type="text" value="0" #discountOverTotal (change)="setDiscountOverTotal(this.discountOverTotal.value)">
+              </div>
+              <div></div>
+              <div>SOMA TOTAL</div>
+              <div>
+                {{ lastPrice }}
+              </div>
+            </div>
           </section>
   
           <!-- <mat-form-field appearance="outline">

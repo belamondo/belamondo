@@ -53,6 +53,7 @@ export class DialogIncomingComponent implements OnInit {
   public paramsToTableData: any;
   // Common properties: end
 
+  public discountOverTotal: number;
   public filteredCompanies: Observable<any[]>;
   public filteredPeople: Observable<any[]>;
   public filteredProducts: Observable<any[]>;
@@ -369,6 +370,11 @@ export class DialogIncomingComponent implements OnInit {
     this.fields.splice(index, 1);
   }
 
+  removeItemFromObject = (index) => {
+    this.sellingObject.splice(index, 1);
+    this.setTotalPrice();
+  }
+
   setClients = () => {
     this._crud
     .readWithObservable({
@@ -389,6 +395,12 @@ export class DialogIncomingComponent implements OnInit {
       });
     });
 
+  }
+
+  setDiscountOverTotal = (discountOverTotal) => {
+    this.discountOverTotal = discountOverTotal;
+
+    this.setTotalPrice();
   }
 
   setProducts = () => {
@@ -424,7 +436,14 @@ export class DialogIncomingComponent implements OnInit {
     this.lastPrice = 0;
 
     this.sellingObject.map(e => {
-      this.lastPrice += (e.quantity * e.price) * (1 - (e.discount / 100));
+      // tslint:disable-next-line:max-line-length
+      this.lastPrice += (e.quantity * (e.price ? e.price : 0)) * (1 - (e.discount / 100));
     });
+
+    if (this.discountOverTotal) {
+      this.lastPrice = this.lastPrice * (1 - (this.discountOverTotal / 100));
+    }
+
+    this.lastPrice = Math.round(this.lastPrice * 100) / 100;
   }
 }

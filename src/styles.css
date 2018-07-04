@@ -45,6 +45,10 @@ table-data {
     width: 100%;
 }
 
+a {
+    cursor: pointer;
+}
+
 video {
     width: 100%;
     height: auto;
