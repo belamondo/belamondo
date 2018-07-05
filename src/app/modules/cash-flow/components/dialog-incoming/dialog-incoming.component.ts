@@ -33,6 +33,7 @@ import { startWith, map } from 'rxjs/operators';
  */
 import { CrudService } from './../../../shared/services/firebase/crud.service';
 import { StrategicDataService } from './../../../shared/services/strategic-data.service';
+import { debug } from 'util';
 
 @Component({
   selector: 'app-dialog-incoming',
@@ -42,7 +43,9 @@ import { StrategicDataService } from './../../../shared/services/strategic-data.
 export class DialogIncomingComponent implements OnInit {
   // Common properties: start
   public incomingForm: FormGroup;
+  public isDisabled: boolean;
   public isStarted: boolean;
+  public objectToSubmit: any;
   public paramToSearch: any;
   public submitButton: string;
   public submitToCreate: boolean;
@@ -53,6 +56,7 @@ export class DialogIncomingComponent implements OnInit {
   public paramsToTableData: any;
   // Common properties: end
 
+  public clientData: any;
   public discountOverTotal: number;
   public filteredCompanies: Observable<any[]>;
   public filteredPeople: Observable<any[]>;
@@ -83,15 +87,11 @@ export class DialogIncomingComponent implements OnInit {
       sellingType: new FormControl(null, Validators.required),
       company: new FormControl(null),
       person: new FormControl(null),
-      quantity: new FormControl(null),
-      lost_quantity: new FormControl(null),
-      price: new FormControl(null),
-      payment: new FormControl(null),
-      payment_quantity: new FormControl(null),
       product: new FormControl(null),
       service: new FormControl(null),
-      date: new FormControl(null),
     });
+
+    this.isDisabled = false;
 
     this.sellingObject = [];
     this.startSelling = false;
@@ -165,6 +165,7 @@ export class DialogIncomingComponent implements OnInit {
   }
 
   displayCompany = (company) => {
+    this.clientData = company;
     return company ? company.business_name + ' - ' + company.cnpj : undefined;
   }
 
@@ -190,6 +191,7 @@ export class DialogIncomingComponent implements OnInit {
   }
 
   displayPerson = (person) => {
+    this.clientData = person;
     return person ? person.name + ' - ' + person.cpf : undefined;
   }
 
@@ -249,7 +251,7 @@ export class DialogIncomingComponent implements OnInit {
 
   onClientChoice = (event) => {
     if (event.value && event.value === 'counter') {
-
+      this.clientData = 'counter';
     }
     this.startSelling = true;
   }
@@ -264,30 +266,28 @@ export class DialogIncomingComponent implements OnInit {
 
   incomingFormInit = () => {
     if (this.data.id) {
+      console.log(this.data.id);
       this.paramToSearch = this.data.id;
       this.submitToCreate = false;
       this.submitToUpdate = true;
       this.title = 'Atualizar venda';
       this.submitButton = 'Atualizar';
 
-      const param = this.paramToSearch.replace(':', '');
-
       this._crud.readWithObservable({
-        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'incomings', param],
+        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'incomings', this.data.id],
       }).subscribe(res => {
-        this.incomingForm.patchValue(res[0]);
+        console.log(res);
+        this.incomingForm.get('clientType').setValue(res[0]['client_type']);
 
-        /* Check if has additionals fields */
-        if (Object.keys(res[0]).length > 2) {
-          // tslint:disable-next-line:forin
-          for (const key in res[0]) {
-            /* Create form control if it is a additional field */
-            if (key !== 'name' && key !== 'barcode' && key !== 'unit' && key !== '_id') {
-              this.incomingForm.addControl(key, new FormControl(res[0][key]));
-              this.fields.push(key);
-            }
-          }
+        if (res[0]['client_type'] === 'person') {
+          this.displayPerson(res[0]['client_data']);
         }
+
+        if (res[0]['client_type'] === 'company') {
+          this.displayCompany(res[0]['client_data']);
+        }
+
+        this.sellingObject = res[0]['selling_data'];
       });
     } else {
       this.submitToCreate = true;
@@ -318,17 +318,26 @@ export class DialogIncomingComponent implements OnInit {
     }
 
     if (this.submitToCreate) {
+      this.isDisabled = true;
+
+      this.objectToSubmit = {
+        client_type: this.incomingForm.get('clientType').value,
+        client_data: this.clientData,
+        selling_data: this.sellingObject,
+        selling_final_price: this.lastPrice,
+      };
+
       this._crud
       .create({
         collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'incomings'],
-        objectToCreate: this.incomingForm.value
+        objectToCreate: this.objectToSubmit
       }).then(() => {
-        formDirective.resetForm();
-        this.fields = [];
-
         this._snackbar.open('Cadastro feito com sucesso', '', {
           duration: 4000
         });
+
+        this._dialog.closeAll();
+        this.isDisabled = false;
       });
     }
   }

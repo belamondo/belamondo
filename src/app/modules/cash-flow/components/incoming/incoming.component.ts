@@ -54,9 +54,10 @@ export class IncomingComponent implements OnInit {
 
   setSourceToTableData = () => {
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userIncoming']
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'incomings']
     }).subscribe(res => {
       this.sourceToTableData = res;
+      console.log(res);
 
       this.makeList();
     });
@@ -80,13 +81,11 @@ export class IncomingComponent implements OnInit {
       },
       list: {
         show: [{
-          field: 'date',
-          header: 'Data',
-          sort: 'sort'
+          field: 'selling_final_price',
+          header: 'Preço total'
         }, {
-          field: 'receiver',
-          header: 'Cliente',
-          sort: 'sort'
+          field: '_id',
+          header: 'Identificador'
         }],
         actionIcon: [{
           icon: 'edit',

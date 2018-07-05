@@ -15,6 +15,7 @@ import {
 import {
   initializeApp
 } from 'firebase';
+import { StrategicDataService } from '../strategic-data.service';
 
 const _firestore = initializeApp({
   apiKey: 'AIzaSyBGXN1FkZjubMRWJ-KuAaAnpCTXlHFl9zw',
@@ -27,10 +28,12 @@ const _firestore = initializeApp({
 
 @Injectable()
 export class CrudService {
-
-  constructor() { }
+  private user: any;
+  constructor() {
+  }
 
   create = (params) => new Promise((resolve, reject) => {
+    this.user = JSON.parse(sessionStorage.getItem('user'));
     if (!params) {
       resolve({
         code: 'c-error-01',
@@ -71,6 +74,8 @@ export class CrudService {
       }
     }
 
+    stringCreatingFilter += '.doc("' + new Date().getTime() + '-' + this.user['uid'] + '")';
+
     if (params.where) {
       for (let lim = params.where.length, i = 0; i < lim; i++) {
         stringCreatingFilter += '.where("' + params.where[i][0] + '", "' + params.where[i][1] + '", "' + params.where[i][2] + '")';
@@ -80,8 +85,10 @@ export class CrudService {
     stringToFilter += stringCreatingFilter;
     functionToFilter = eval(stringToFilter);
 
+    params.objectToCreate['_created_at'] = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
+
     functionToFilter
-      .add(params.objectToCreate)
+      .set(params.objectToCreate)
       .catch(err => {
         return err;
       })
@@ -176,7 +183,7 @@ export class CrudService {
 
     stringToFilter += stringCreatingFilter;
     functionToFilter = eval(stringToFilter);
-    console.log(stringToFilter);
+    
     functionToFilter
     .onSnapshot(querySnapshot => {
       let snapshot;
@@ -335,7 +342,6 @@ export class CrudService {
 
     stringToFilter += stringCreatingFilter;
     functionToFilter = eval(stringToFilter);
-    console.log(stringToFilter);
 
     functionToFilter
       .set(params.objectToUpdate)
