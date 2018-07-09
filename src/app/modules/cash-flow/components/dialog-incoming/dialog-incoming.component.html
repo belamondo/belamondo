@@ -203,11 +203,11 @@
 
 <mat-dialog-actions>
   <div class="flex">
-    <button mat-raised-button [disabled]="incomingForm.invalid || isDisabled" (click)="onIncomingFormSubmit(this.formDirective)" color="primary">
+    <button mat-raised-button [disabled]="incomingForm.invalid || isDisabled || !sellingObject || sellingObject.length < 1" (click)="onIncomingFormSubmit(this.formDirective)" color="primary">
       {{ submitButton }}
     </button>
 
-    <button mat-raised-button (click)="onPayment();" color="accent" [disabled]="incomingForm.invalid || isDisabled">Pagar</button>
+    <button mat-raised-button (click)="onPayment();" color="accent" [disabled]="incomingForm.invalid || isDisabled || !sellingObject || sellingObject.length < 1">Pagar</button>
 
     <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
   </div>

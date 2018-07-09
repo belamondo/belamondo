@@ -84,7 +84,7 @@ export class DialogIncomingComponent implements OnInit {
   ngOnInit() {
     this.incomingForm = new FormGroup({
       clientType: new FormControl(null, Validators.required),
-      sellingType: new FormControl(null, Validators.required),
+      sellingType: new FormControl(null),
       company: new FormControl(null),
       person: new FormControl(null),
       product: new FormControl(null),
@@ -256,6 +256,10 @@ export class DialogIncomingComponent implements OnInit {
     this.startSelling = true;
   }
 
+  onClose(): void {
+    this._dialog.closeAll();
+  }
+
   onSelling = (event) => {
     this.sellingObject.push(event.option.value);
     this.sellingObject[this.sellingObject.length - 1]['quantity'] = 1;
@@ -276,18 +280,21 @@ export class DialogIncomingComponent implements OnInit {
       this._crud.readWithObservable({
         collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'incomings', this.data.id],
       }).subscribe(res => {
-        console.log(res);
+        this.startSelling = true;
+
         this.incomingForm.get('clientType').setValue(res[0]['client_type']);
 
         if (res[0]['client_type'] === 'person') {
-          this.displayPerson(res[0]['client_data']);
+          this.incomingForm.get('person').setValue(res[0]['client_data']);
         }
 
         if (res[0]['client_type'] === 'company') {
-          this.displayCompany(res[0]['client_data']);
+          this.incomingForm.get('company').setValue(res[0]['client_data']);
         }
 
         this.sellingObject = res[0]['selling_data'];
+
+        this.setTotalPrice();
       });
     } else {
       this.submitToCreate = true;
@@ -303,10 +310,18 @@ export class DialogIncomingComponent implements OnInit {
 
   onIncomingFormSubmit = (formDirective: FormGroupDirective) => {
     if (this.submitToUpdate) {
+      this.objectToSubmit = {
+        client_type: this.incomingForm.get('clientType').value,
+        client_data: this.clientData,
+        selling_data: this.sellingObject,
+        selling_final_price: this.lastPrice,
+      };
+
+      this.isDisabled = true;
       this._crud
         .update({
           collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'incomings', this.data.id],
-          objectToUpdate: this.incomingForm.value
+          objectToUpdate: this.objectToSubmit
         }).then(() => {
           this._dialog.closeAll();
           this.fields = [];
@@ -314,6 +329,8 @@ export class DialogIncomingComponent implements OnInit {
           this._snackbar.open('Atualização feita com sucesso', '', {
             duration: 4000
           });
+
+          this.isDisabled = false;
         });
     }
 
