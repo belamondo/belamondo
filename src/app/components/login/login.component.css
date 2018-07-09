@@ -1,10 +1,22 @@
+button {
+    font-size: small;
+    width: 100%;
+}
+
+form {
+    width: 100%;
+}
+
 mat-card {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 22em;
-    height: 37.5%;
+    width: 300px;
+    height: 250px;
     z-index: 1;
+
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22) !important;
+    font-size: small;
 }
 
 #background {
@@ -12,8 +24,24 @@ mat-card {
     align-items: center;
     justify-content: center;
     height: 100vh;
+
+    background: linear-gradient(to bottom, #263B89 0%, #7C7DD7 100%);
 }
 
 #background mat-form-field {
     display: block;
 }
+
+/* Responsive stuffs - start */
+
+/* Small devices (Smartphones, 425px and down) */
+@media only screen and (max-width: 425px) {
+    input {
+        font-size: 16px;
+    }
+
+    mat-card {
+        width: 80%;
+    }
+}
+/* Responsive stuffs - end */
