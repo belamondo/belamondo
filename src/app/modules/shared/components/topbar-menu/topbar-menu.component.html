@@ -1,5 +1,5 @@
 <div class="general-container" [class.is-mobile]="mobileQuery.matches">
-  <mat-toolbar *ngIf="isStarted" class="header-toolbar">
+  <mat-toolbar class="header-toolbar">
     <div id="header-content">
       <div>
         <button mat-icon-button (click)="snav.toggle()">
@@ -39,7 +39,7 @@
       [fixedTopGap]="options.top" [fixedBottomGap]="options.bottom">
       <mat-nav-list>
         <span class="app-title" (click)="_router.navigate(['/main'])">Belamondo</span><br />
-        <span class="app-name" (click)="_router.navigate(['/main'])">{{params.title}}</span> <hr />
+        <span class="app-name" (click)="_router.navigate(['/main'])">{{params.title}}</span>
         <!--
         <mat-card *ngIf="options.userCard">
           <span *ngIf="userData[0]?['_userType'] == 'people'">
@@ -67,7 +67,7 @@
         -->
         <ng-template ngFor let-view [ngForOf]="params.views" let-even="even" let-odd="odd" let-rowIndex="index">
           <a *ngIf="!view.expansionMenu" mat-list-item [routerLink]="view.link" routerLinkActive="active-link" (click)="mobile ? snav.close() : {}">
-            <mat-icon mat-list-icon>{{view.icon}}</mat-icon>
+            <mat-icon mat-list-icon class="menu-icon">{{view.icon}}</mat-icon>
             <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px;">{{view.name}}</span>
             <span mat-line style="font-size: small; color: gray;">{{view.description}}</span>
           </a>
@@ -75,7 +75,7 @@
           <mat-expansion-panel *ngIf="view.expansionMenu" class="panel">
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <mat-icon mat-list-icon style="margin-right: 20px;">{{view.icon}}</mat-icon>
+                <mat-icon mat-list-icon style="margin-right: 20px;" class="menu-icon">{{view.icon}}</mat-icon>
                 <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px;">{{view.name}}</span>
                 <span mat-line style="font-size: small; color: gray;">{{view.description}}</span>
               </mat-panel-title>
