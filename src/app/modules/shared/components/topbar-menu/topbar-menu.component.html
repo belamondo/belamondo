@@ -1,4 +1,4 @@
-<div class="general-container" [class.is-mobile]="mobileQuery.matches">
+<div class="general-container" [class.is-mobile]="mobileQuery.matches" *ngIf="isStarted">
   <mat-toolbar class="header-toolbar">
     <div id="header-content">
       <div>

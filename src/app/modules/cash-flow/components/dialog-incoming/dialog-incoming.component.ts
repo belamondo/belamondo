@@ -1,4 +1,3 @@
-import { element } from 'protractor';
 import {
   Component,
   OnInit,
@@ -33,7 +32,6 @@ import { startWith, map } from 'rxjs/operators';
  */
 import { CrudService } from './../../../shared/services/firebase/crud.service';
 import { StrategicDataService } from './../../../shared/services/strategic-data.service';
-import { debug } from 'util';
 
 @Component({
   selector: 'app-dialog-incoming',
@@ -233,9 +231,12 @@ export class DialogIncomingComponent implements OnInit {
       for (const key in this.services[index]) {
         if (this.services[index].hasOwnProperty(key)) {
           const e = this.services[index][key];
-          if (e.toLowerCase().includes(filterValue) && (index !== checkObjectIndex)) {
-            tempObject.push(this.services[index]);
-            checkObjectIndex = index;
+
+          if (typeof e === 'string') {
+            if (e.toLowerCase().includes(filterValue) && (index !== checkObjectIndex)) {
+              tempObject.push(this.services[index]);
+              checkObjectIndex = index;
+            }
           }
         }
       }

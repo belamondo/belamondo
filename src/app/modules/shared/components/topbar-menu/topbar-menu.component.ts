@@ -82,7 +82,6 @@ export class TopbarMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this._strategicData.userData$);
     if (!this._strategicData.userData$ && !this.userData) {
       this._strategicData.setUserData()
       .then(userData => {
