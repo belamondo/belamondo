@@ -33,7 +33,6 @@ export class CrudService {
   }
 
   create = (params) => new Promise((resolve, reject) => {
-    this.user = JSON.parse(sessionStorage.getItem('user'));
     if (!params) {
       resolve({
         code: 'c-error-01',
@@ -42,6 +41,10 @@ export class CrudService {
 
       return false;
     }
+    this.user = JSON.parse(sessionStorage.getItem('user'));
+
+    let stringToFilter, stringCreatingFilter, functionToFilter, objectId, collectionsAndDocs,
+    stringCreatingFilterToLog, queryToLog, logId, functionToLog;
 
     if (!params.collectionsAndDocs) {
       resolve({
@@ -61,20 +64,20 @@ export class CrudService {
       return false;
     }
 
-    let stringToFilter, stringCreatingFilter, functionToFilter;
-
-    stringToFilter = '_firestore';
+    objectId = new Date().getTime() + '-' + this.user['uid'];
+    stringToFilter = '_firestore.doc("';
     stringCreatingFilter = '';
 
     for (let lim = params.collectionsAndDocs.length, i = 0; i < lim; i++) {
-      if ((i === 0) || (i % 2 === 0)) {
-        stringCreatingFilter += '.collection("' + params.collectionsAndDocs[i] + '")';
-      } else {
-        stringCreatingFilter += '.doc("' + params.collectionsAndDocs[i] + '")';
-      }
+      stringCreatingFilter += params.collectionsAndDocs[i] + '/';
     }
 
-    stringCreatingFilter += '.doc("' + new Date().getTime() + '-' + this.user['uid'] + '")';
+
+    stringCreatingFilter =  stringCreatingFilter + objectId;
+
+    collectionsAndDocs =  stringCreatingFilter;
+
+    stringCreatingFilter =  stringCreatingFilter + '")';
 
     if (params.where) {
       for (let lim = params.where.length, i = 0; i < lim; i++) {
@@ -83,9 +86,10 @@ export class CrudService {
     }
 
     stringToFilter += stringCreatingFilter;
+
     functionToFilter = eval(stringToFilter);
 
-    params.objectToCreate['_created_at'] = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
+    queryToLog = stringToFilter;
 
     functionToFilter
       .set(params.objectToCreate)
@@ -93,7 +97,24 @@ export class CrudService {
         return err;
       })
       .then(res => {
-        resolve(res);
+        logId = new Date().getTime() + '-' + this.user['uid'];
+
+        stringCreatingFilterToLog = '_firestore.doc("' + collectionsAndDocs + '/_log/' + logId + '")';
+
+        functionToLog = eval(stringCreatingFilterToLog);
+
+        functionToLog
+        .set({
+          _objectSet: params.objectToCreate,
+          _usedPath: queryToLog,
+          _timestamp: new Date().getTime(),
+          _user: this.user['uid']
+        });
+
+        resolve({
+          _id: objectId,
+          _data: params.objectToCreate
+        });
       });
   })
 
@@ -135,7 +156,10 @@ export class CrudService {
     functionToFilter = eval(stringToFilter);
 
     functionToFilter
-      .delete()
+      .update({
+        _deleted_at: new Date().toJSON().slice(0, 10).replace(/-/g, '/'),
+        _user: this.user['uid']
+      })
       .then(res => {
         resolve(res);
       });
@@ -183,7 +207,7 @@ export class CrudService {
 
     stringToFilter += stringCreatingFilter;
     functionToFilter = eval(stringToFilter);
-    
+
     functionToFilter
     .onSnapshot(querySnapshot => {
       let snapshot;
@@ -307,7 +331,10 @@ export class CrudService {
         message: 'Minimum params required'
       });
     }
-    let stringToFilter, stringCreatingFilter, functionToFilter;
+    this.user = JSON.parse(sessionStorage.getItem('user'));
+
+    let stringToFilter, stringCreatingFilter, functionToFilter, collectionsAndDocs,
+    stringCreatingFilterToLog, queryToLog, logId, functionToLog;
 
     if (!params.collectionsAndDocs) {
       resolve({
@@ -323,16 +350,16 @@ export class CrudService {
       });
     }
 
-    stringToFilter = '_firestore';
+    stringToFilter = '_firestore.doc("';
     stringCreatingFilter = '';
 
     for (let lim = params.collectionsAndDocs.length, i = 0; i < lim; i++) {
-      if ((i === 0) || (i % 2 === 0)) {
-        stringCreatingFilter += '.collection("' + params.collectionsAndDocs[i] + '")';
-      } else {
-        stringCreatingFilter += '.doc("' + params.collectionsAndDocs[i] + '")';
-      }
+      stringCreatingFilter += params.collectionsAndDocs[i] + '/';
     }
+
+    collectionsAndDocs =  stringCreatingFilter;
+
+    stringCreatingFilter +=  stringCreatingFilter.slice(stringCreatingFilter.length - 1, 1) + '")';
 
     if (params.where) {
       for (let lim = params.where.length, i = 0; i < lim; i++) {
@@ -343,9 +370,25 @@ export class CrudService {
     stringToFilter += stringCreatingFilter;
     functionToFilter = eval(stringToFilter);
 
+    queryToLog = stringToFilter;
+
     functionToFilter
       .set(params.objectToUpdate)
       .then(res => {
+        logId = new Date().getTime() + '-' + this.user['uid'];
+
+        stringCreatingFilterToLog = '_firestore.doc("' + collectionsAndDocs + '_log/' + logId + '")';
+
+        functionToLog = eval(stringCreatingFilterToLog);
+
+        functionToLog
+        .set({
+          _objectSet: params.objectToUpdate,
+          _usedPath: queryToLog,
+          _timestamp: new Date().getTime(),
+          _user: this.user['uid']
+        });
+
         resolve(res);
       });
   })

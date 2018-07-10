@@ -1,20 +1,73 @@
 <h1 mat-dialog-title>{{title}}</h1>
-<mat-dialog-content>
-  <div *ngIf="!isStarted" class="container">
-    <div class="spinner-container">
-      <mat-spinner></mat-spinner>
+<form [formGroup]="paymentForm" #formDirective="ngForm">
+  <mat-dialog-content>
+    <div *ngIf="!isStarted" class="container">
+      <div class="spinner-container">
+        <mat-spinner></mat-spinner>
+      </div>
     </div>
-  </div>
-  
-  <div class="flex">
-    <div *ngIf="isStarted" class="container">
-      
-    </div>
-  </div>
-</mat-dialog-content>
 
-<mat-dialog-actions>
-  <div class="flex">
-    
-  </div>
-</mat-dialog-actions>
+    <div class="flex">
+      <div *ngIf="isStarted" class="container">
+
+        <mat-card-content>
+          <div class="flex">            
+            <mat-form-field appearance="outline">
+              <mat-label>Forma de pagamento</mat-label>
+              <mat-select placeholder="Escolha a forma de pagamento" formControlName="type" required>
+                <mat-option value="ticket unique">Boleto único</mat-option>
+                <mat-option value="ticket financed">Boleto - Parcelado</mat-option>
+                <mat-option value="card at sight">Cartão - À vista</mat-option>
+                <mat-option value="card financed">Cartão - Parcelado</mat-option>
+                <mat-option value="cash at sight">Dinheiro - À vista</mat-option>
+                <mat-option value="cash financed">Dinheiro - Parcelado</mat-option>
+              </mat-select>
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline">
+              <mat-label>Montante</mat-label>
+              <input matInput placeholder="Quantia a pagar" type="text" formControlName="amount" required>
+            </mat-form-field>
+          </div>
+
+          <div class="flex" *ngIf="paymentForm.value.type === 'ticket unique'">
+            <mat-form-field appearance="outline">
+              <mat-label>Data de pagamento</mat-label>
+              <input matInput placeholder="Digite data para pagamento" formControlName="birthday" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}">
+            </mat-form-field>
+          </div>
+
+          <div class="flex" *ngIf="paymentForm.value.type === 'ticket financed'">
+            Ticket financed
+          </div>
+
+          <div class="flex" *ngIf="paymentForm.value.type === 'card at sight'">
+            Card at sight
+          </div>
+
+          <div class="flex" *ngIf="paymentForm.value.type === 'card financed'">
+            Card financed
+          </div>
+
+          <div class="flex" *ngIf="paymentForm.value.type === 'cash at sight'">
+            Cash at sight
+          </div>
+
+          <div class="flex" *ngIf="paymentForm.value.type === 'cash financed'">
+            Cash financed
+          </div>
+
+          <app-additional-field [params]="paramsToAdditionalField" (changeAdditionalField)="onOutputFromAdditionalField($event)"></app-additional-field>
+        </mat-card-content>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <div class="flex">
+      <button mat-raised-button [disabled]="paymentForm.invalid" class="button" (click)="onProductFormSubmit(this.formDirective)">{{submitButton}}</button>
+
+      <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
+    </div>
+  </mat-dialog-actions>
+</form>

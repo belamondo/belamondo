@@ -19,19 +19,30 @@ import {
 /**
  * Components
  */
-import { DialogPaymentComponent } from './../dialog-payment/dialog-payment.component';
+import {
+  DialogPaymentComponent
+} from './../dialog-payment/dialog-payment.component';
 
 /**
  * Rxjs
  */
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import {
+  Observable
+} from 'rxjs';
+import {
+  startWith,
+  map
+} from 'rxjs/operators';
 
 /**
  * Services
  */
-import { CrudService } from './../../../shared/services/firebase/crud.service';
-import { StrategicDataService } from './../../../shared/services/strategic-data.service';
+import {
+  CrudService
+} from './../../../shared/services/firebase/crud.service';
+import {
+  StrategicDataService
+} from './../../../shared/services/strategic-data.service';
 
 @Component({
   selector: 'app-dialog-incoming',
@@ -56,10 +67,10 @@ export class DialogIncomingComponent implements OnInit {
 
   public clientData: any;
   public discountOverTotal: number;
-  public filteredCompanies: Observable<any[]>;
-  public filteredPeople: Observable<any[]>;
-  public filteredProducts: Observable<any[]>;
-  public filteredServices: Observable<any[]>;
+  public filteredCompanies: Observable < any[] > ;
+  public filteredPeople: Observable < any[] > ;
+  public filteredProducts: Observable < any[] > ;
+  public filteredServices: Observable < any[] > ;
   public companies: any;
   public people: any;
   public products: any;
@@ -77,7 +88,7 @@ export class DialogIncomingComponent implements OnInit {
     public _dialog: MatDialog,
     public _snackbar: MatSnackBar,
     private _strategicData: StrategicDataService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.incomingForm = new FormGroup({
@@ -131,12 +142,12 @@ export class DialogIncomingComponent implements OnInit {
       this.incomingFormInit();
     } else {
       this._strategicData
-      .setUserData()
-      .then(userData => {
-        this.userData = userData;
+        .setUserData()
+        .then(userData => {
+          this.userData = userData;
 
-        this.incomingFormInit();
-      });
+          this.incomingFormInit();
+        });
     }
   }
 
@@ -346,17 +357,17 @@ export class DialogIncomingComponent implements OnInit {
       };
 
       this._crud
-      .create({
-        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'incomings'],
-        objectToCreate: this.objectToSubmit
-      }).then(() => {
-        this._snackbar.open('Cadastro feito com sucesso', '', {
-          duration: 4000
-        });
+        .create({
+          collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'incomings'],
+          objectToCreate: this.objectToSubmit
+        }).then(() => {
+          this._snackbar.open('Cadastro feito com sucesso', '', {
+            duration: 4000
+          });
 
-        this._dialog.closeAll();
-        this.isDisabled = false;
-      });
+          this._dialog.closeAll();
+          this.isDisabled = false;
+        });
     }
   }
 
@@ -380,15 +391,34 @@ export class DialogIncomingComponent implements OnInit {
       this._dialog.open(DialogPaymentComponent, {
         width: '90%',
         data: {
-          id: this.data.id
+          id: this.data.id,
+          lastPrice: this.lastPrice
         }
       });
     } else {
-      this._dialog.open(DialogPaymentComponent, {
-        width: '90%',
-        data: {
-        }
-      });
+      this.isDisabled = true;
+
+      this.objectToSubmit = {
+        client_type: this.incomingForm.get('clientType').value,
+        client_data: this.clientData,
+        selling_data: this.sellingObject,
+        selling_final_price: this.lastPrice,
+      };
+
+      this._crud
+        .create({
+          collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'incomings'],
+          objectToCreate: this.objectToSubmit
+        }).then(res => {
+          console.log(res);
+          this._snackbar.open('Cadastro feito com sucesso', '', {
+            duration: 4000
+          });
+
+          this.data.id = res['_id'];
+          this.onPayment();
+          this.isDisabled = false;
+        });
     }
   }
 
@@ -404,23 +434,23 @@ export class DialogIncomingComponent implements OnInit {
 
   setClients = () => {
     this._crud
-    .readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userPeople']
-    }).subscribe(people => {
-      if (people.length > 0) {
-        this.people = people;
-      }
-      this._crud
       .readWithObservable({
-        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userCompanies']
-      }).subscribe(companies => {
-        if (companies.length > 0) {
-          this.companies = companies;
+        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userPeople']
+      }).subscribe(people => {
+        if (people.length > 0) {
+          this.people = people;
         }
+        this._crud
+          .readWithObservable({
+            collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'userCompanies']
+          }).subscribe(companies => {
+            if (companies.length > 0) {
+              this.companies = companies;
+            }
 
-        this.isStarted = true;
+            this.isStarted = true;
+          });
       });
-    });
 
   }
 
@@ -432,24 +462,24 @@ export class DialogIncomingComponent implements OnInit {
 
   setProducts = () => {
     this._crud
-    .readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'products']
-    }).subscribe(products => {
-      if (products.length > 0) {
-        this.products = products;
-      }
-    });
+      .readWithObservable({
+        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'products']
+      }).subscribe(products => {
+        if (products.length > 0) {
+          this.products = products;
+        }
+      });
   }
 
   setServices = () => {
     this._crud
-    .readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'services']
-    }).subscribe(services => {
-      if (services.length > 0) {
-        this.services = services;
-      }
-    });
+      .readWithObservable({
+        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'services']
+      }).subscribe(services => {
+        if (services.length > 0) {
+          this.services = services;
+        }
+      });
   }
 
   setQuantityAndDiscountToSellingObject = (index, quantity, discount) => {

@@ -19,14 +19,29 @@ import {
 /**
  * Rxjs
  */
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import {
+  Observable
+} from 'rxjs';
+import {
+  startWith,
+  map
+} from 'rxjs/operators';
 
 /**
  * Services
  */
-import { CrudService } from './../../../shared/services/firebase/crud.service';
-import { StrategicDataService } from './../../../shared/services/strategic-data.service';
+import {
+  CrudService
+} from './../../../shared/services/firebase/crud.service';
+import {
+  StrategicDataService
+} from './../../../shared/services/strategic-data.service';
+
+/**
+ * Third party
+ */
+
+import { createAutoCorrectedDatePipe } from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 
 @Component({
   selector: 'app-dialog-payment',
@@ -48,26 +63,33 @@ export class DialogPaymentComponent implements OnInit {
   public userData: any;
   public paramsToTableData: any;
   // Common properties: end
+
+  public autoCorrectedDatePipe: any;
+  public mask: any;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _crud: CrudService,
     public _dialog: MatDialog,
     public _snackbar: MatSnackBar,
     private _strategicData: StrategicDataService,
-  ) { }
+  ) {}
 
 
-  ngOnInit() {
+  ngOnInit() { console.log(this.data)
     this.paymentForm = new FormGroup({
-      clientType: new FormControl(null, Validators.required),
-      sellingType: new FormControl(null),
+      type: new FormControl(null, Validators.required),
+      amount: new FormControl(this.data.lastPrice, Validators.required),
       company: new FormControl(null),
       person: new FormControl(null),
       product: new FormControl(null),
       service: new FormControl(null),
     });
-
+    this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
     this.isDisabled = false;
+    this.mask = {
+      date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
+    };
 
     if (this._strategicData.userData$) {
       this.userData = this._strategicData.userData$;
@@ -75,32 +97,33 @@ export class DialogPaymentComponent implements OnInit {
       this.paymentFormInit();
     } else {
       this._strategicData
-      .setUserData()
-      .then(userData => {
-        this.userData = userData;
+        .setUserData()
+        .then(userData => {
+          this.userData = userData;
 
-        this.paymentFormInit();
-      });
+          this.paymentFormInit();
+        });
     }
   }
 
   paymentFormInit = () => {
-    if (this.data.id) {
-      this.paramToSearch = this.data.id;
-      this.submitToCreate = false;
-      this.submitToUpdate = true;
-      this.title = 'Atualizar venda';
-      this.submitButton = 'Atualizar';
+    this.paramToSearch = this.data.id;
 
-      this._crud.readWithObservable({
-        collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'payments', this.data.id],
-      }).subscribe(res => {
-      });
-    } else {
-      this.submitToCreate = true;
-      this.submitToUpdate = false;
-      this.title = 'Cadastrar pagamento';
-      this.submitButton = 'Salvar';
-    }
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'incomings', this.data.id],
+    }).subscribe(res => {
+      this.isStarted = true;
+      if (res[0]['payment']) {
+        this.submitToCreate = false;
+        this.submitToUpdate = true;
+        this.title = 'Atualizar pagamento';
+        this.submitButton = 'Atualizar';
+      } else {
+        this.submitToCreate = true;
+        this.submitToUpdate = false;
+        this.title = 'Cadastrar pagamento';
+        this.submitButton = 'Salvar';
+      }
+    });
   }
 }

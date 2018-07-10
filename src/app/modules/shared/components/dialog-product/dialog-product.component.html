@@ -1,15 +1,14 @@
 <h1 mat-dialog-title>{{title}}</h1>
-<mat-dialog-content>
-  <div *ngIf="!isStarted" class="container">
-    <div class="spinner-container">
-      <mat-spinner></mat-spinner>
+<form [formGroup]="productForm" #formDirective="ngForm">
+  <mat-dialog-content>
+    <div *ngIf="!isStarted" class="container">
+      <div class="spinner-container">
+        <mat-spinner></mat-spinner>
+      </div>
     </div>
-  </div>
 
-  <div class="flex">
-    <div *ngIf="isStarted" class="container">
-      <form [formGroup]="productForm" #formDirective="ngForm">
-
+    <div class="flex">
+      <div *ngIf="isStarted" class="container">
         <mat-card-content>
           <mat-form-field appearance="outline">
             <mat-label>Nome</mat-label>
@@ -35,15 +34,15 @@
 
           <app-additional-field [params]="paramsToAdditionalField" (changeAdditionalField)="onOutputFromAdditionalField($event)"></app-additional-field>
         </mat-card-content>
-      </form>
+      </div>
     </div>
-  </div>
-</mat-dialog-content>
+  </mat-dialog-content>
 
-<mat-dialog-actions>
-  <div class="flex">
-    <button mat-raised-button [disabled]="productForm.invalid" class="button" (click)="onProductFormSubmit(this.formDirective)">{{submitButton}}</button>
+  <mat-dialog-actions>
+    <div class="flex">
+      <button mat-raised-button [disabled]="productForm.invalid" class="button" (click)="onProductFormSubmit(this.formDirective)">{{submitButton}}</button>
 
-    <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
-  </div>
-</mat-dialog-actions>
+      <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
+    </div>
+  </mat-dialog-actions>
+</form>

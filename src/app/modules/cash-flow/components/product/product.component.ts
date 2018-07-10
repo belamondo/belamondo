@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import {
   MatDialog,
+  MatSnackBar
 } from '@angular/material';
 
 /**
@@ -33,6 +34,7 @@ export class ProductComponent implements OnInit {
   constructor(
     private _dialog: MatDialog,
     private _crud: CrudService,
+    public _snackbar: MatSnackBar,
     private _strategicData: StrategicDataService
   ) { }
 
@@ -121,9 +123,22 @@ export class ProductComponent implements OnInit {
     }
 
     if (e.icon === 'delete' || e.icon === 'Excluir') {
+      let countDeletions, item;
+      countDeletions = 0;
+
       e.data.forEach(element => {
         if (element['checked']) {
-          console.log(element);
+          this._crud
+          .delete({
+            collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'products', element['_id']]
+          }).then(() => {
+            countDeletions ++;
+            (countDeletions > 1) ? item = ' ítens apagados' : item = ' item apagado';
+
+            this._snackbar.open(countDeletions + item + ' com sucesso', '', {
+              duration: 4000
+            });
+          });
         }
       });
     }
