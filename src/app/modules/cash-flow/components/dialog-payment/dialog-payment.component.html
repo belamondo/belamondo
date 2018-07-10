@@ -33,7 +33,8 @@
           <div class="flex" *ngIf="paymentForm.value.type === 'ticket unique'">
             <mat-form-field appearance="outline">
               <mat-label>Data de pagamento</mat-label>
-              <input matInput placeholder="Digite data para pagamento" formControlName="birthday" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}">
+              <input matInput placeholder="Digite data para pagamento" formControlName="date" 
+              [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}" [value]="date">
             </mat-form-field>
           </div>
 

@@ -41,7 +41,7 @@ import {
  * Third party
  */
 
-import { createAutoCorrectedDatePipe } from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
+import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 
 @Component({
   selector: 'app-dialog-payment',
@@ -65,6 +65,7 @@ export class DialogPaymentComponent implements OnInit {
   // Common properties: end
 
   public autoCorrectedDatePipe: any;
+  public date: string;
   public mask: any;
 
   constructor(
@@ -76,14 +77,15 @@ export class DialogPaymentComponent implements OnInit {
   ) {}
 
 
-  ngOnInit() { console.log(this.data)
+  ngOnInit() {
+    let tempDate = new Date().toJSON().slice(0, 10).replace(/-/g, '/').split('/');
+
+    this.date = tempDate[2] + '/' + tempDate[1] + '/' + tempDate[0];
+
     this.paymentForm = new FormGroup({
       type: new FormControl(null, Validators.required),
       amount: new FormControl(this.data.lastPrice, Validators.required),
-      company: new FormControl(null),
-      person: new FormControl(null),
-      product: new FormControl(null),
-      service: new FormControl(null),
+      date: new FormControl(null)
     });
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
     this.isDisabled = false;
