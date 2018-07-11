@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{title}}</h1>
+<h1 mat-dialog-title class="title">{{title}}</h1>
 <mat-dialog-content>
   <div *ngIf="!isStarted" class="container">
     <div class="spinner-container">
@@ -10,16 +10,15 @@
     <div *ngIf="isStarted" class="container">
       <form [formGroup]="incomingForm" #formDirective="ngForm">
         <mat-card-content>
-          <section id="client">
-
+          <section id="client" class="sectionWithColor">
+            <div class="label">Tipo de cliente</div>
             <mat-radio-group formControlName="clientType">
-              <mat-label>Tipo de cliente*</mat-label>
-              <mat-radio-button value="person">Pessoa</mat-radio-button>
-              <mat-radio-button value="company">Empresa</mat-radio-button>
-              <mat-radio-button value="counter" (change)="onClientChoice($event)">Balcão</mat-radio-button>
+              <mat-radio-button value="person" class="radioButton">Pessoa</mat-radio-button>
+              <mat-radio-button value="company" class="radioButton">Empresa</mat-radio-button>
+              <mat-radio-button value="counter" (change)="onClientChoice($event)" class="radioButton">Balcão</mat-radio-button>
             </mat-radio-group>
   
-            <mat-form-field appearance="outline" *ngIf="incomingForm.value.clientType === 'person' && people.length > 0">
+            <mat-form-field class="formField" appearance="outline" *ngIf="incomingForm.value.clientType === 'person' && people.length > 0">
               <mat-label>Cliente</mat-label>
               <input matInput 
               placeholder="Escolha o cliente" 
@@ -32,7 +31,7 @@
                 </mat-option>
             </mat-autocomplete>
   
-            <mat-form-field appearance="outline" *ngIf="incomingForm.value.clientType === 'company' && companies.length > 0">
+            <mat-form-field class="formField" appearance="outline" *ngIf="incomingForm.value.clientType === 'company' && companies.length > 0">
                 <mat-label>Cliente</mat-label>
                 <input matInput 
                 placeholder="Escolha o cliente" 
@@ -46,14 +45,14 @@
             </mat-autocomplete>
           </section>
 
-          <section id="selling" *ngIf="startSelling">
+          <section id="selling" *ngIf="startSelling" class="section">
             <mat-radio-group formControlName="sellingType">
-              <mat-label>Tipo de venda *</mat-label>
-              <mat-radio-button value="product">Produto</mat-radio-button>
-              <mat-radio-button value="service">Serviço</mat-radio-button>
+              <div class="label">Tipo de venda</div>
+              <mat-radio-button value="product" class="radioButton">Produto</mat-radio-button>
+              <mat-radio-button value="service" class="radioButton">Serviço</mat-radio-button>
             </mat-radio-group>
             
-            <mat-form-field appearance="outline" *ngIf="incomingForm.value.sellingType === 'product' && products.length > 0">
+            <mat-form-field class="formField" appearance="outline" *ngIf="incomingForm.value.sellingType === 'product' && products.length > 0">
               <mat-label>Produto</mat-label>
               <input matInput 
               placeholder="Escolha o produto" 
@@ -66,7 +65,7 @@
                 </mat-option>
             </mat-autocomplete>
   
-            <mat-form-field appearance="outline" *ngIf="incomingForm.value.sellingType === 'service' && services.length > 0">
+            <mat-form-field class="formField" appearance="outline" *ngIf="incomingForm.value.sellingType === 'service' && services.length > 0">
               <mat-label>Serviço</mat-label>
               <input matInput 
               placeholder="Escolha o serviço" 

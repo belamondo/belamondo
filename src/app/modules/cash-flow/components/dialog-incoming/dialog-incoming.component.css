@@ -133,7 +133,41 @@
     color: rgb(248, 143, 143);
 }
 
+.container {
+    margin-top: 10px;
+}
+
+.formField {
+    width: 80% !important;
+}
+
 .grey-row {
     background: #CFD8DC;
 }
 
+.label {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 32px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    margin-bottom: 15px;
+}
+
+.radioButton {
+    margin-bottom: 15px;
+}
+
+.section {
+    padding: 15px 0px 15px 50px;
+    margin-left: -25px;
+}
+
+.sectionWithColor {
+    background: rgb(243, 243, 243);
+    padding: 15px 0px 15px 50px;
+    margin-left: -25px;
+}
+
+.title {
+    margin-bottom: 0px;
+}
