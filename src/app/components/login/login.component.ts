@@ -40,7 +40,8 @@ export class LoginComponent implements OnInit {
       user: this.loginForm.get('user').value,
       password: this.loginForm.get('password').value,
       loginMode: 'emailAndPassword',
-      navigateTo: '/main'
+      navigateTo: '/main',
+      navigateToProfile: '/main/profile_choice'
     };
 
     this._auth

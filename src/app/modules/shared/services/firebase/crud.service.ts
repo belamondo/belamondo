@@ -23,7 +23,8 @@ const _firestore = initializeApp({
   databaseURL: 'https://quickstart-belamondo.firebaseio.com',
   projectId: 'quickstart-belamondo',
   storageBucket: 'quickstart-belamondo.appspot.com',
-  messagingSenderId: '506374782568'
+  messagingSenderId: '506374782568',
+  timestampsInSnapshots: true
 }, 'database').firestore();
 
 @Injectable()
@@ -41,6 +42,7 @@ export class CrudService {
 
       return false;
     }
+
     this.user = JSON.parse(sessionStorage.getItem('user'));
 
     let stringToFilter, stringCreatingFilter, functionToFilter, objectId, collectionsAndDocs,
@@ -91,6 +93,8 @@ export class CrudService {
 
     queryToLog = stringToFilter;
 
+    params.objectToCreate['_deleted_at'] = 0;
+
     functionToFilter
       .set(params.objectToCreate)
       .catch(err => {
@@ -105,10 +109,7 @@ export class CrudService {
 
         functionToLog
         .set({
-          _objectSet: params.objectToCreate,
-          _usedPath: queryToLog,
-          _timestamp: new Date().getTime(),
-          _user: this.user['uid']
+          _objectSet: params.objectToCreate
         });
 
         resolve({
@@ -132,6 +133,8 @@ export class CrudService {
         message: 'Required param: collection'
       });
     }
+
+    this.user = JSON.parse(sessionStorage.getItem('user'));
 
     let stringToFilter, stringCreatingFilter, functionToFilter;
 
@@ -157,7 +160,7 @@ export class CrudService {
 
     functionToFilter
       .update({
-        _deleted_at: new Date().toJSON().slice(0, 10).replace(/-/g, '/'),
+        _deleted_at: new Date().getTime(),
         _user: this.user['uid']
       })
       .then(res => {
@@ -218,7 +221,9 @@ export class CrudService {
           object = doc.data();
           object['_id'] = doc.id;
 
-          snapshot.push(object);
+          if (object && object['_deleted_at'] === 0) {
+            snapshot.push(object);
+          }
         });
       } else {
         let object;
@@ -228,7 +233,9 @@ export class CrudService {
           object['_id'] = querySnapshot.id;
         }
 
-        snapshot.push(object);
+        if (object && object['_deleted_at'] === 0) {
+          snapshot.push(object);
+        }
       }
 
       observer.next(snapshot);
@@ -290,8 +297,9 @@ export class CrudService {
           let object;
           object = doc.data();
           object['_id'] = doc.id;
-
-          result.push(object);
+          if (object && object['_deleted_at'] === 0) {
+            result.push(object);
+          }
         });
       } else {
         let object;
@@ -301,7 +309,9 @@ export class CrudService {
           object['_id'] = querySnapshot.id;
         }
 
-        result.push(object);
+        if (object && object['_deleted_at'] === 0) {
+          result.push(object);
+        }
       }
 
       // IF sessionStorage flow AND something found on firestore AND sessionStorage length is lower than 401
@@ -372,6 +382,8 @@ export class CrudService {
 
     queryToLog = stringToFilter;
 
+    params.objectToUpdate['_deleted_at'] = 0;
+
     functionToFilter
       .set(params.objectToUpdate)
       .then(res => {
@@ -383,10 +395,7 @@ export class CrudService {
 
         functionToLog
         .set({
-          _objectSet: params.objectToUpdate,
-          _usedPath: queryToLog,
-          _timestamp: new Date().getTime(),
-          _user: this.user['uid']
+          _objectSet: params.objectToUpdate
         });
 
         resolve(res);

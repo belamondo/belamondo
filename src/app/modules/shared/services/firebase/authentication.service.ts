@@ -38,7 +38,8 @@ const _authentication = initializeApp({
   databaseURL: 'https://quickstart-belamondo.firebaseio.com',
   projectId: 'quickstart-belamondo',
   storageBucket: 'quickstart-belamondo.appspot.com',
-  messagingSenderId: '506374782568'
+  messagingSenderId: '506374782568',
+  timestampsInSnapshots: true
 }, 'auth').auth();
 
 @Injectable()
@@ -127,6 +128,8 @@ export class AuthenticationService {
           .then(user => {
             if (user[0]) {
               this._router.navigate([params.navigateTo]);
+            } else {
+              this._router.navigate([params.navigateToProfile]);
             }
           });
         } else {
@@ -154,7 +157,7 @@ export class AuthenticationService {
           message: 'Parâmetro obrigatório: navigateTo'
         });
       }
-      console.log(this._strategicData.userData$);
+
       _authentication.signOut();
       this._strategicData.emptyAllData();
       sessionStorage.clear();

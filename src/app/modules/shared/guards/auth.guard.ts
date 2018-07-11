@@ -39,20 +39,23 @@ export class AuthGuard implements CanActivate {
   ): Observable < boolean > | Promise < boolean > | boolean {
     this._auth.setUser()
       .then(resUser => {
-        let userAssigned = true,
-          userType = "";
+        let userAssigned,
+        userType;
 
-        //Check if loggedin before get in module
+        userAssigned = true;
+        userType = '';
+
+        // Check if loggedin before get in module
         if (!resUser || !resUser['id']) {
           this._router.navigate(['/']);
 
           this._snackbar.open('Você precisa logar para entrar.', '', {
             duration: 4000
-          })
+          });
 
           return false;
         }
-      })
+      });
 
     return true;
   }
