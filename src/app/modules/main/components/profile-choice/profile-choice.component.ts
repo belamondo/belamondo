@@ -207,7 +207,6 @@ export class ProfileChoiceComponent implements OnInit {
   }
 
   onPeopleFormSubmit = () => {
-
     this._crud.readWithObservable({
       collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']]
     }).subscribe(resPeople => {
@@ -224,7 +223,7 @@ export class ProfileChoiceComponent implements OnInit {
           collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']],
           objectToUpdate: this.peopleForm.value
         }).then(res => {
-          this._router.navigate(['/main/dashboard']);
+          window.location.replace('http://localhost:4200/main/dashboard');
 
           this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
             duration: 4000
@@ -241,7 +240,7 @@ export class ProfileChoiceComponent implements OnInit {
       collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']]
     }).subscribe(resCompanies => {
       if (resCompanies && resCompanies['length'] > 0) {
-        this._router.navigate(['/main/dashboard']);
+        window.location.replace('http://localhost:4200/main/dashboard');
 
         this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
           duration: 4000
@@ -253,11 +252,12 @@ export class ProfileChoiceComponent implements OnInit {
           collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']],
           objectToUpdate: this.companiesForm.value
         }).then(res => {
-          this._router.navigate(['/main/dashboard']);
-
           this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
             duration: 4000
           });
+
+          this._router.navigate(['/system']);
+          this._router.navigate(['/main']);
 
           return true;
         });

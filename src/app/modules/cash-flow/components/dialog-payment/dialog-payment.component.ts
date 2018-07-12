@@ -67,6 +67,7 @@ export class DialogPaymentComponent implements OnInit {
   public autoCorrectedDatePipe: any;
   public date: string;
   public mask: any;
+  public quotas: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -85,7 +86,9 @@ export class DialogPaymentComponent implements OnInit {
     this.paymentForm = new FormGroup({
       type: new FormControl(null, Validators.required),
       amount: new FormControl(this.data.lastPrice, Validators.required),
-      date: new FormControl(null)
+      date: new FormControl(null),
+      quota_number: new FormControl(null),
+      is_equal_quota: new FormControl(null)
     });
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
     this.isDisabled = false;
@@ -127,5 +130,9 @@ export class DialogPaymentComponent implements OnInit {
         this.submitButton = 'Salvar';
       }
     });
+  }
+
+  setQuotasArray = () => {
+    this.quotas = Array(this.paymentForm.value.quota_number).fill(0).map((x, i) => i);
   }
 }
