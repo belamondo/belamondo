@@ -43,7 +43,7 @@ export class SystemGuard implements CanActivate {
     this._auth.setUser()
       .then(res => {
         if (!res || !res['id']) {
-          this._router.navigate(['/']);
+          this._router.navigate(['/main']);
 
           this._snackbar.open('Você precisa logar para entrar.', '', {
             duration: 4000
