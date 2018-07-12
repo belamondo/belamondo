@@ -1,6 +1,6 @@
-<div class="general-container" [class.is-mobile]="mobileQuery.matches">
+<div class="general-container" [class.is-mobile]="mobileQuery.matches" *ngIf="isStarted">
   <mat-toolbar class="header-toolbar">
-    <div id="header-content">
+    <div id="header-content" *ngIf="!isProfileChoice">
       <div>
         <button mat-icon-button (click)="snav.toggle()">
           <mat-icon>menu</mat-icon>
@@ -11,82 +11,58 @@
         <span *ngIf="userData[0]['_userType'] === 'people'" style="font-size: small">
           {{userData[0]['name'].split(' ')[0]}}
         </span>
-  
+        
         <span *ngIf="userData[0]['_userType'] === 'companies'" style="font-size: small">
           {{userData[0]['business_name']}}
         </span>
-
+        
         <mat-menu #appMenu="matMenu" yPosition="below">
           <a mat-menu-item routerLink="" class="menu-item">Almoxarifado</a>
           <a mat-menu-item routerLink="/crm" class="menu-item">CRM</a>
           <a mat-menu-item routerLink="/cash-flow" class="menu-item">Fluxo de caixa</a>
           <a mat-menu-item routerLink="/system" class="menu-item">Sistema</a>
         </mat-menu>
-
+        
         <button *ngIf="params.views" mat-icon-button [matMenuTriggerFor]="appMenu">
           <mat-icon>view_module</mat-icon>
         </button>
-
+        
         <button mat-icon-button (click)="logout()">
           <mat-icon>exit_to_app</mat-icon>
         </button>
       </div>
     </div>
   </mat-toolbar>
-
+  
   <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
     <mat-sidenav #snav [opened]="options.opened" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="options.fixed"
-      [fixedTopGap]="options.top" [fixedBottomGap]="options.bottom">
-      <mat-nav-list>
-        <span class="app-title" (click)="_router.navigate(['/main'])">Belamondo</span><br />
-        <span class="app-name" (click)="_router.navigate(['/main'])">{{params.title}}</span>
-        <!--
-        <mat-card *ngIf="options.userCard">
-          <span *ngIf="userData[0]?['_userType'] == 'people'">
-            {{user?.name.split(' ')[0]}}
-          </span>
+    [fixedTopGap]="options.top" [fixedBottomGap]="options.bottom">
+    <mat-nav-list>
+      <span class="app-title" (click)="_router.navigate(['/main'])">Belamondo</span><br />
+      <span class="app-name" (click)="_router.navigate(['/main'])">{{params.title}}</span>
 
-          <span *ngIf="userData[0]?['_userType'] == 'companies'">
-            {{user?.business_name}}
-          </span>
-          <div>
-            <a routerLink="/user">
-              <mat-icon mat-list-icon>person</mat-icon>
-            </a>
-            <a routerLink="/settings">
-              <mat-icon>settings</mat-icon>
-            </a>
-            <a href="https://www.google.com/">
-              <mat-icon>help</mat-icon>
-            </a>
-            <a class="pointer" (click)="logout()">
-              <mat-icon>settings_power</mat-icon>
-            </a>
-          </div>
-        </mat-card>
-        -->
-        <ng-template ngFor let-view [ngForOf]="params.views" let-even="even" let-odd="odd" let-rowIndex="index">
-          <a *ngIf="!view.expansionMenu" mat-list-item [routerLink]="view.link" routerLinkActive="active-link" (click)="mobile ? snav.close() : {}">
-            <mat-icon mat-list-icon class="menu-icon">{{view.icon}}</mat-icon>
-            <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px;">{{view.name}}</span>
-            <span mat-line style="font-size: small; color: gray;">{{view.description}}</span>
-          </a>
-
-          <mat-expansion-panel *ngIf="view.expansionMenu" class="panel">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <mat-icon mat-list-icon style="margin-right: 20px;" class="menu-icon">{{view.icon}}</mat-icon>
-                <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px;">{{view.name}}</span>
-                <span mat-line style="font-size: small; color: gray;">{{view.description}}</span>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
+      <ng-template ngFor let-view [ngForOf]="params.views" let-even="even" let-odd="odd" let-rowIndex="index">
+        <a *ngIf="!view.expansionMenu" mat-list-item [routerLink]="view.link" routerLinkActive="active-link" (click)="mobile ? snav.close() : {}">
+          <mat-icon mat-list-icon class="menu-icon">{{view.icon}}</mat-icon>
+          <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px;">{{view.name}}</span>
+          <span mat-line style="font-size: small; color: gray;">{{view.description}}</span>
+        </a>
+        
+        <mat-expansion-panel *ngIf="view.expansionMenu" class="panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon mat-list-icon style="margin-right: 20px;" class="menu-icon">{{view.icon}}</mat-icon>
+              <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px;">{{view.name}}</span>
+              <span mat-line style="font-size: small; color: gray;">{{view.description}}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
           
-            <ng-template ngFor let-subMenu [ngForOf]="view.subMenus" let-even="even" let-odd="odd" let-rowIndex="index">
-              <a mat-list-item [routerLink]="subMenu.link" routerLinkActive="active-link" (click)="mobile ? snav.close() : {}">
-                <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px; margin-top: 10px; margin-left: 20px">{{subMenu.name}}</span>
+          <ng-template ngFor let-subMenu [ngForOf]="view.subMenus" let-even="even" let-odd="odd" let-rowIndex="index">
+            <a mat-list-item [routerLink]="subMenu.link" routerLinkActive="active-link" (click)="mobile ? snav.close() : {}">
+              <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px; margin-top: 10px; margin-left: 20px">{{subMenu.name}}</span>
               </a>
             </ng-template>
-          
+            
           </mat-expansion-panel>
         </ng-template>
         

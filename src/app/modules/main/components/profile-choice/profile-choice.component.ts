@@ -194,7 +194,7 @@ export class ProfileChoiceComponent implements OnInit {
   checkCompanyExistence = (cnpj) => {
     if (!this.companiesForm.get('cnpj').errors) {
       this._crud.readWithObservable({
-        collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['user']['uid']],
+        collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']],
         where: ['cnpj', '==', cnpj]
       }).subscribe(res => {
         console.log(res);
@@ -209,7 +209,7 @@ export class ProfileChoiceComponent implements OnInit {
   onPeopleFormSubmit = () => {
 
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['user']['uid']]
+      collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']]
     }).subscribe(resPeople => {
       if (resPeople['length'] > 0) {
         this._router.navigate(['/main/dashboard']);
@@ -221,7 +221,7 @@ export class ProfileChoiceComponent implements OnInit {
         return false;
       } else {
         this._crud.update({
-          collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['user']['uid']],
+          collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']],
           objectToUpdate: this.peopleForm.value
         }).then(res => {
           this._router.navigate(['/main/dashboard']);
@@ -238,7 +238,7 @@ export class ProfileChoiceComponent implements OnInit {
 
   onCompaniesFormSubmit = () => {
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['user']['uid']]
+      collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']]
     }).subscribe(resCompanies => {
       if (resCompanies && resCompanies['length'] > 0) {
         this._router.navigate(['/main/dashboard']);
@@ -250,7 +250,7 @@ export class ProfileChoiceComponent implements OnInit {
         return false;
       } else {
         this._crud.update({
-          collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['user']['uid']],
+          collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']],
           objectToUpdate: this.companiesForm.value
         }).then(res => {
           this._router.navigate(['/main/dashboard']);

@@ -46,7 +46,7 @@ export class DialogProductComponent implements OnInit {
     private _crud: CrudService,
     public _snackbar: MatSnackBar,
     private _strategicData: StrategicDataService,
-    public dialog: MatDialog
+    public _dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -117,6 +117,10 @@ export class DialogProductComponent implements OnInit {
     }
   }
 
+  onClose(): void {
+    this._dialog.closeAll();
+  }
+
   onProductFormSubmit = (formDirective: FormGroupDirective) => {
     if (this.submitToUpdate) {
       this._crud
@@ -124,7 +128,7 @@ export class DialogProductComponent implements OnInit {
           collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'products', this.paramToSearch.replace(':', '')],
           objectToUpdate: this.productForm.value
         }).then(() => {
-          this.dialog.closeAll();
+          this._dialog.closeAll();
 
           this._snackbar.open('Atualização feita com sucesso', '', {
             duration: 4000

@@ -2,7 +2,8 @@ import {
   Component,
   OnInit,
   ChangeDetectorRef,
-  Input
+  Input,
+  OnChanges
 } from '@angular/core';
 import {
   MediaMatcher,
@@ -25,8 +26,9 @@ import { StrategicDataService } from '../../services/strategic-data.service';
   templateUrl: './topbar-menu.component.html',
   styleUrls: ['./topbar-menu.component.css']
 })
-export class TopbarMenuComponent implements OnInit {
+export class TopbarMenuComponent implements OnInit, OnChanges {
   public isStarted: boolean;
+  public isProfileChoice: boolean;
   private _mobileQueryListener: () => void;
   public mobileQuery: MediaQueryList;
   public mobile = (typeof window !== 'undefined') ?
@@ -74,6 +76,16 @@ export class TopbarMenuComponent implements OnInit {
     });
   }
 
+  ngOnChanges() {
+    let checkIfProfileChoice;
+    checkIfProfileChoice = this._router.url.split('/');
+    this.isProfileChoice = false;
+
+    if (checkIfProfileChoice[checkIfProfileChoice.length - 1] === 'profile_choice') {
+      this.isProfileChoice = true;
+    }
+  }
+
   // tslint:disable-next-line:use-life-cycle-interface
   ngOnDestroy(): void {
     this
@@ -82,7 +94,6 @@ export class TopbarMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this._strategicData.userData$);
     if (!this._strategicData.userData$ && !this.userData) {
       this._strategicData.setUserData()
       .then(userData => {
