@@ -31,6 +31,7 @@ import {
 import {
   ValidateCpf
 } from '../../../shared/validators/cpf.validator';
+import { ValidateUniqueValue } from '../../../shared/validators/unique-value.validator';
 
 @Component({
   selector: 'app-profile-choice',
@@ -66,31 +67,8 @@ export class ProfileChoiceComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.mask = {
-      cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/ ],
-      date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
-      zip: [/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/],
-      phone: ['(', /\d/, /\d/, ')', ' ' , /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
-      cell_phone: ['(', /\d/, /\d/, ')', ' ' , /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
-      cnpj: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]
-    };
-
-    this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
-
-    this.addressesObject = [];
-
-    this.documentsObject = [];
-
-    this.contactsObject = [];
-    // this.contacts = this._strategicData.contacts$;
-
     this.isStarted = false;
-
-    this.mask = {
-      cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/],
-      date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
-      cnpj: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]
-    };
+    this.user = JSON.parse(sessionStorage.getItem('user'));
 
     this.profileChoiceForm = new FormGroup({
       description: new FormControl(null)
@@ -103,12 +81,52 @@ export class ProfileChoiceComponent implements OnInit {
     });
 
     this.companiesForm = new FormGroup({
-      cnpj: new FormControl(null, [Validators.required, ValidateCnpj]),
+      cnpj: new FormControl(null, [Validators.required, ValidateCnpj, ValidateUniqueValue(null, [['companies'], 'cnpj'], this._crud)]),
       business_name: new FormControl(null, Validators.required),
       company_name: new FormControl(null)
     });
+    this.mask = {
+      cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/],
+      date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
+      zip: [/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/],
+      phone: ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
+      cell_phone: ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
+      cnpj: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]
+    };
 
-    this.user = JSON.parse(sessionStorage.getItem('user'));
+    this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
+
+    this.addressesObject = [];
+
+    this.documentsObject = [];
+
+    this.contactsObject = [];
+    // this.contacts = this._strategicData.contacts$;
+
+
+    this.mask = {
+      cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/],
+      date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
+      cnpj: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]
+    };
+  }
+
+  checkUserExistence = () => {
+    this._crud.readWithObservable({
+      collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']]
+    }).subscribe(resCompanies => { console.log(resCompanies);
+      if (resCompanies['length'] > 0) {
+        window.location.replace('http://localhost:4200/main/dashboard');
+
+        this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
+          duration: 4000
+        });
+
+        return false;
+      } else {
+      }
+      this.isStarted = true;
+    });
   }
 
   addAddress = () => {
@@ -191,17 +209,6 @@ export class ProfileChoiceComponent implements OnInit {
     this.documentsObject.splice(i, 1);
   }
 
-  checkCompanyExistence = (cnpj) => {
-    if (!this.companiesForm.get('cnpj').errors) {
-      this._crud.readWithObservable({
-        collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']],
-        where: ['cnpj', '==', cnpj]
-      }).subscribe(res => {
-        console.log(res);
-      });
-    }
-  }
-
   onBirthdayChange = (event) => {
     this.peopleForm.get('birthday').setValue(event.targetElement.value);
   }
@@ -236,32 +243,16 @@ export class ProfileChoiceComponent implements OnInit {
   }
 
   onCompaniesFormSubmit = () => {
-    this._crud.readWithObservable({
-      collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']]
-    }).subscribe(resCompanies => {
-      if (resCompanies && resCompanies['length'] > 0) {
-        window.location.replace('http://localhost:4200/main/dashboard');
+    this._crud.update({
+      collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']],
+      objectToUpdate: this.companiesForm.value
+    }).then(res => {
+      this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
+        duration: 4000
+      });
 
-        this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
-          duration: 4000
-        });
-
-        return false;
-      } else {
-        this._crud.update({
-          collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']],
-          objectToUpdate: this.companiesForm.value
-        }).then(res => {
-          this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
-            duration: 4000
-          });
-
-          this._router.navigate(['/system']);
-          this._router.navigate(['/main']);
-
-          return true;
-        });
-      }
+      this._router.navigate(['/system']);
+      this._router.navigate(['/main']);
     });
   }
 }

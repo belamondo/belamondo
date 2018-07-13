@@ -7,11 +7,11 @@ import {
   FormGroup,
   FormControl,
   Validators,
-  FormGroupDirective
+  FormGroupDirective,
+  FormArray
 } from '@angular/forms';
 import {
   MatDialog,
-  MatDialogRef,
   MAT_DIALOG_DATA,
   MatSnackBar
 } from '@angular/material';
@@ -79,8 +79,9 @@ export class DialogPaymentComponent implements OnInit {
 
 
   ngOnInit() {
-    let tempDate = new Date().toJSON().slice(0, 10).replace(/-/g, '/').split('/');
+    let tempDate;
 
+    tempDate = new Date().toJSON().slice(0, 10).replace(/-/g, '/').split('/');
     this.date = tempDate[2] + '/' + tempDate[1] + '/' + tempDate[0];
 
     this.paymentForm = new FormGroup({
@@ -90,6 +91,10 @@ export class DialogPaymentComponent implements OnInit {
       quota_number: new FormControl(null),
       is_equal_quota: new FormControl(null)
     });
+
+    this.quotas = new FormArray([
+      new FormControl()
+    ]);
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
     this.isDisabled = false;
     this.mask = {
@@ -132,7 +137,23 @@ export class DialogPaymentComponent implements OnInit {
     });
   }
 
-  setQuotasArray = () => {
-    this.quotas = Array(this.paymentForm.value.quota_number).fill(0).map((x, i) => i);
+  setQuotasArray = (e) => {
+    let quotas;
+    this.quotas = [];
+
+    quotas = this.paymentForm.value.quota_number;
+
+    if (!isNaN(e.key)) {
+      if (this.paymentForm.value.quota_number) {
+        for (let i = 0; i < quotas; i++) {
+          this.quotas.push({
+            value: this.paymentForm.value.amount / quotas,
+            quota: i + 1,
+            date: new Date()
+          });
+        }
+      }
+    }
+    // this.quotas = Array(this.paymentForm.value.quota_number).fill(0).map((x, i) => i);
   }
 }

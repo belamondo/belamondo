@@ -1,8 +1,8 @@
 <mat-card class="container">
   <form [formGroup]="profileChoiceForm" (ngSubmit)="onProfileChoiceFormSubmit()">
     <mat-card-title>Tipo de usuário</mat-card-title>
-
-    <mat-radio-group formControlName="description">
+    
+    <mat-radio-group formControlName="description" (change)="checkUserExistence()">
       <mat-radio-button value="animals">Animal</mat-radio-button>
       <mat-radio-button value="companies">Empresa</mat-radio-button>
       <mat-radio-button value="entities">Entidade</mat-radio-button>
@@ -10,104 +10,137 @@
     </mat-radio-group>
   </form>
 </mat-card>
-<!--FORM DE PESSOA-->
-<mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'people'">
-  <form [formGroup]="peopleForm" (ngSubmit)="onPeopleFormSubmit()">
-    <mat-card-title>Perfil de pessoa</mat-card-title>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Nome</mat-label>
-      <mat-icon matPrefix>people</mat-icon>
-      <input matInput placeholder="Digite seu nome" type="text" formControlName="name" required>
-    </mat-form-field>
-
-    <div class="flex">
-      <mat-radio-group formControlName="gender">
-        <mat-label>Gênero *</mat-label>
-        <mat-radio-button value="Masculino">Masculino</mat-radio-button>
-        <mat-radio-button value="Feminino">Feminino</mat-radio-button>
-      </mat-radio-group>
-
+<div *ngIf="isStarted">
+  <!--FORM DE PESSOA-->
+  <mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'people'">
+    <form [formGroup]="peopleForm" (ngSubmit)="onPeopleFormSubmit()">
+      <mat-card-title>Perfil de pessoa</mat-card-title>
+  
       <mat-form-field appearance="outline">
-        <mat-label>Nascimento</mat-label>
-        <input matInput placeholder="Digite ou clique no ícone" formControlName="birthday" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}"
-          required>
+        <mat-label>Nome</mat-label>
+        <mat-icon matPrefix>people</mat-icon>
+        <input matInput placeholder="Digite seu nome" type="text" formControlName="name" required>
       </mat-form-field>
-    </div>
-
-    <button mat-raised-button>Cadastrar</button>
-  </form>
-</mat-card>
-<!--FORM DE ANIMAL-->
-<mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'animals'">
-  Formulário de animal
-</mat-card>
-<!--FORM DE EMPRESA-->
-<mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'companies'">
-  <form [formGroup]="companiesForm" (ngSubmit)="onCompaniesFormSubmit()">
-    <mat-card-title>Perfil de empresa</mat-card-title>
-
-    <mat-form-field appearance="outline" id="cpf">
-      <mat-label>CNPJ</mat-label>
-      <input matInput placeholder="Digite ser CNPJ" type="text" formControlName="cnpj" (keyup)="checkCompanyExistence(companiesForm.value.cnpj)"
-        [textMask]="{mask: mask.cnpj}" required>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Nome fantasia</mat-label>
-      <input matInput placeholder="Digite o nome fantasia do cliente" type="text" formControlName="business_name" required>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Razão social</mat-label>
-      <input matInput placeholder="Digite a razão social do cliente" type="text" formControlName="company_name" required>
-    </mat-form-field>
-
-    <div class="flex">
-      <section id="document">
-        <button mat-raised-button type="button" (click)="addDocument()">Adicionar documento</button>
-        <mat-card-content *ngIf="documentsObject.length > 0">
-          <mat-card-header>
-            <mat-card-subtitle>Documentos adicionados</mat-card-subtitle>
-          </mat-card-header>
-
-          <mat-card *ngFor="let document of documentsObject; let i = index;">
-            <div class="flex">
-              <section>
-                {{document.type}} - {{document.value}}
-                <div *ngIf="document.makingDate != '' || document.validityDate != ''">
-                  <div>
-                    <span *ngIf="document.makingDate != ''" class="subtext">Emissão: {{document.makingDate}}</span>
-                    <span *ngIf="document.validityDate != ''" class="subtext">Validade: {{document.validityDate}}</span>
+  
+      <div class="flex">
+        <mat-radio-group formControlName="gender">
+          <mat-label>Gênero *</mat-label>
+          <mat-radio-button value="Masculino">Masculino</mat-radio-button>
+          <mat-radio-button value="Feminino">Feminino</mat-radio-button>
+        </mat-radio-group>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Nascimento</mat-label>
+          <input matInput placeholder="Digite ou clique no ícone" formControlName="birthday" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}"
+            required>
+        </mat-form-field>
+      </div>
+  
+      <button mat-raised-button>Cadastrar</button>
+    </form>
+  </mat-card>
+  <!--FORM DE ANIMAL-->
+  <mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'animals'">
+    Formulário de animal
+  </mat-card>
+  <!--FORM DE EMPRESA-->
+  <mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'companies'">
+    <form [formGroup]="companiesForm" (ngSubmit)="onCompaniesFormSubmit()">
+      <mat-card-title>Perfil de empresa</mat-card-title>
+  
+      <mat-form-field appearance="outline" id="cpf">
+        <mat-label>CNPJ</mat-label>
+        <input matInput placeholder="Digite ser CNPJ" type="text" formControlName="cnpj"
+          [textMask]="{mask: mask.cnpj}" required>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline">
+        <mat-label>Nome fantasia</mat-label>
+        <input matInput placeholder="Digite o nome fantasia do cliente" type="text" formControlName="business_name" required>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline">
+        <mat-label>Razão social</mat-label>
+        <input matInput placeholder="Digite a razão social do cliente" type="text" formControlName="company_name" required>
+      </mat-form-field>
+  
+      <div class="flex">
+        <section id="document">
+          <button mat-raised-button type="button" (click)="addDocument()">Adicionar documento</button>
+          <mat-card-content *ngIf="documentsObject.length > 0">
+            <mat-card-header>
+              <mat-card-subtitle>Documentos adicionados</mat-card-subtitle>
+            </mat-card-header>
+  
+            <mat-card *ngFor="let document of documentsObject; let i = index;">
+              <div class="flex">
+                <section>
+                  {{document.type}} - {{document.value}}
+                  <div *ngIf="document.makingDate != '' || document.validityDate != ''">
+                    <div>
+                      <span *ngIf="document.makingDate != ''" class="subtext">Emissão: {{document.makingDate}}</span>
+                      <span *ngIf="document.validityDate != ''" class="subtext">Validade: {{document.validityDate}}</span>
+                    </div>
                   </div>
-                </div>
-              </section>
-
-              <section class="action-icon">
-                <a (click)="deleteDocument(i)">
-                  <mat-icon>delete</mat-icon>
-                </a>
-              </section>
-            </div>
-          </mat-card>
-        </mat-card-content>
-      </section>
-
-      <section id="contact">
-        <button mat-raised-button type="button" (click)="addContact()">Adicionar contato</button>
-        <mat-card-content *ngIf="contactsObject.length > 0">
+                </section>
+  
+                <section class="action-icon">
+                  <a (click)="deleteDocument(i)">
+                    <mat-icon>delete</mat-icon>
+                  </a>
+                </section>
+              </div>
+            </mat-card>
+          </mat-card-content>
+        </section>
+  
+        <section id="contact">
+          <button mat-raised-button type="button" (click)="addContact()">Adicionar contato</button>
+          <mat-card-content *ngIf="contactsObject.length > 0">
+            <mat-card-header>
+              <mat-card-subtitle>Contatos adicionados</mat-card-subtitle>
+            </mat-card-header>
+  
+            <mat-card *ngFor="let contact of contactsObject; let i = index;">
+              <div class="flex">
+                <section>
+                  {{contact.type}} - {{contact.value}}
+                </section>
+  
+                <section class="action-icon">
+                  <a (click)="deleteContact(i)">
+                    <mat-icon>delete</mat-icon>
+                  </a>
+                </section>
+              </div>
+            </mat-card>
+          </mat-card-content>
+        </section>
+  
+  
+        <!-- <section class="checkbox">
+              <mat-label>Checkboxes</mat-label>
+              <mat-checkbox>Checked</mat-checkbox>
+              <mat-checkbox>Indeterminate</mat-checkbox>
+            </section> -->
+      </div>
+  
+      <section id="address">
+        <button mat-raised-button type="button" (click)="addAddress()">Adicionar endereço</button>
+        <mat-card-content *ngIf="addressesObject.length > 0">
           <mat-card-header>
             <mat-card-subtitle>Contatos adicionados</mat-card-subtitle>
           </mat-card-header>
-
-          <mat-card *ngFor="let contact of contactsObject; let i = index;">
+  
+          <mat-card *ngFor="let address of addressesObject; let i = index;">
             <div class="flex">
               <section>
-                {{contact.type}} - {{contact.value}}
+                {{address.type}} - {{address.value}}
               </section>
-
+  
               <section class="action-icon">
-                <a (click)="deleteContact(i)">
+                <a (click)="deleteAddress(i)">
                   <mat-icon>delete</mat-icon>
                 </a>
               </section>
@@ -115,42 +148,12 @@
           </mat-card>
         </mat-card-content>
       </section>
-
-
-      <!-- <section class="checkbox">
-            <mat-label>Checkboxes</mat-label>
-            <mat-checkbox>Checked</mat-checkbox>
-            <mat-checkbox>Indeterminate</mat-checkbox>
-          </section> -->
-    </div>
-
-    <section id="address">
-      <button mat-raised-button type="button" (click)="addAddress()">Adicionar endereço</button>
-      <mat-card-content *ngIf="addressesObject.length > 0">
-        <mat-card-header>
-          <mat-card-subtitle>Contatos adicionados</mat-card-subtitle>
-        </mat-card-header>
-
-        <mat-card *ngFor="let address of addressesObject; let i = index;">
-          <div class="flex">
-            <section>
-              {{address.type}} - {{address.value}}
-            </section>
-
-            <section class="action-icon">
-              <a (click)="deleteAddress(i)">
-                <mat-icon>delete</mat-icon>
-              </a>
-            </section>
-          </div>
-        </mat-card>
-      </mat-card-content>
-    </section>
-
-    <button mat-raised-button [color]="primary">Cadastrar</button>
-  </form>
-</mat-card>
-<!--FORM DE ENTIDADE-->
-<mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'entities'">
-  Formulário de entidade
-</mat-card>
+  
+      <button mat-raised-button [color]="primary">Cadastrar</button>
+    </form>
+  </mat-card>
+  <!--FORM DE ENTIDADE-->
+  <mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'entities'">
+    Formulário de entidade
+  </mat-card>
+</div>
