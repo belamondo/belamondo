@@ -42,15 +42,15 @@
             <div class="flex">              
               <mat-form-field appearance="outline">
                 <mat-label>Número de parcelas</mat-label>
-                <input type="number" matInput placeholder="Digite número de parcelas" formControlName="quota_number" (keyup)="setQuotasArray()">
+                <input type="number" matInput placeholder="Digite número de parcelas" formControlName="quota_number" (keyup)="setQuotasArray($event)">
               </mat-form-field>
             </div>
 
-            <div>
+            <!-- <div>
               <div class="flex" *ngFor="let quota of quotas; let i = index;">
                 {{ i }}
               </div>
-            </div>
+            </div> -->
           </div>
 
           <div class="flex" *ngIf="paymentForm.value.type === 'card at sight'">
