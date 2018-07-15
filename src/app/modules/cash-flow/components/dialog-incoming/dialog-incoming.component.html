@@ -46,7 +46,7 @@
               <mat-radio-button value="service" class="radioButton">Serviço</mat-radio-button>
             </mat-radio-group>
 
-            <mat-form-field appearance="outline" *ngIf="incomingForm.value.sellingType === 'product' && products.length > 0">
+            <mat-form-field appearance="outline" class="formField" *ngIf="incomingForm.value.sellingType === 'product' && products.length > 0">
               <mat-label>Produto</mat-label>
               <input matInput placeholder="Escolha o produto" type="text" formControlName="product" [matAutocomplete]="autoProduct">
             </mat-form-field>
@@ -56,7 +56,7 @@
               </mat-option>
             </mat-autocomplete>
 
-            <mat-form-field appearance="outline" *ngIf="incomingForm.value.sellingType === 'service' && services.length > 0">
+            <mat-form-field appearance="outline" class="formField" *ngIf="incomingForm.value.sellingType === 'service' && services.length > 0">
               <mat-label>Serviço</mat-label>
               <input matInput placeholder="Escolha o serviço" type="text" formControlName="service" [matAutocomplete]="autoService">
             </mat-form-field>
@@ -66,79 +66,76 @@
               </mat-option>
             </mat-autocomplete>
 
-            <div class="flex" id="sellingListHeader" *ngIf="sellingObject && sellingObject.length > 0">
-              <div>
-                Tipo
-              </div>
+            <div class="listOrderContainer">
+              <div class="listOrder">
+                <div class="flex" id="sellingListHeader" *ngIf="sellingObject && sellingObject.length > 0">
+                  <div>
+                    Descrição
+                  </div>
 
-              <div>
-                Descrição
-              </div>
+                  <div>
+                    R$
+                  </div>
 
-              <div>
-                Preço unitário
-              </div>
+                  <div>
+                    Qtd
+                  </div>
 
-              <div>
-                Quantidade
-              </div>
+                  <div>
+                    Desconto
+                  </div>
 
-              <div>
-                Desconto
-              </div>
+                  <div>
+                    Total
+                  </div>
 
-              <div>
-                Preço total
-              </div>
+                  <div>
 
-              <div>
+                  </div>
+                </div>
 
-              </div>
-            </div>
+                <div *ngFor="let item of sellingObject; let i = index;" class="flex" id="sellingListBody">
+                  <div>
+                    {{ item.name }}
+                  </div>
 
-            <div *ngFor="let item of sellingObject; let i = index;" class="flex" id="sellingListBody" [ngClass]="{'grey-row': i % 2 !== 0}">
-              <div>
-                <span *ngIf="item.barcode">Produto</span>
-                <span *ngIf="!item.barcode">Serviço</span>
-              </div>
+                  <div>
+                    {{ item.price ? item.price : 0 }}
+                  </div>
 
-              <div>
-                {{ item.name }}
-              </div>
+                  <div>
+                    <input type="text" value="1" #quantity (change)="setQuantityAndDiscountToSellingObject(i, this.quantity.value, this.discount.value)">
+                  </div>
 
-              <div>
-                {{ item.price ? item.price : 0 }}
-              </div>
+                  <div>
+                    <input type="text" value="0" #discount (change)="setQuantityAndDiscountToSellingObject(i, this.quantity.value, this.discount.value)">
+                  </div>
 
-              <div>
-                <input type="text" value="1" #quantity (change)="setQuantityAndDiscountToSellingObject(i, this.quantity.value, this.discount.value)">
-              </div>
+                  <div>
+                    {{ ((item.price ? item.price : 0) * this.quantity.value) * (1 - (this.discount.value / 100)) }}
+                  </div>
 
-              <div>
-                <input type="text" value="0" #discount (change)="setQuantityAndDiscountToSellingObject(i, this.quantity.value, this.discount.value)">
-              </div>
+                  <div>
+                    <a>
+                      <mat-icon (click)="removeItemFromObject(i)" style="font-size: small;">close</mat-icon>
+                    </a>
 
-              <div>
-                {{ ((item.price ? item.price : 0) * this.quantity.value) * (1 - (this.discount.value / 100)) }}
-              </div>
+                  </div>
+                </div>
 
-              <div>
-                <a>
-                  <mat-icon (click)="removeItemFromObject(i)">close</mat-icon>
-                </a>
-
-              </div>
-            </div>
-
-            <div *ngIf="sellingObject.length > 0" class="flex" id="sellingListFooter">
-              <div>DESCONTO NA SOMA TOTAL</div>
-              <div>
-                <input type="text" value="0" #discountOverTotal (change)="setDiscountOverTotal(this.discountOverTotal.value)">
-              </div>
-              <div></div>
-              <div>SOMA TOTAL</div>
-              <div>
-                {{ lastPrice }}
+                <div *ngIf="sellingObject.length > 0" class="flex" id="sellingListFooter" style="border-top: solid 1px black;">
+                  <div>Desconto Geral (%)</div>
+                  <div>
+                    <input type="text" value="0" #discountOverTotal (change)="setDiscountOverTotal(this.discountOverTotal.value)">
+                  </div>
+                  <div></div>
+                </div>
+                <div *ngIf="sellingObject.length > 0" class="flex" id="sellingListFooter">
+                  <div>Total Geral</div>
+                  <div>
+                    {{ lastPrice }}
+                  </div>
+                </div>
               </div>
             </div>
           </section>
