@@ -11,8 +11,8 @@
       <div *ngIf="isStarted" class="container">
 
         <mat-card-content>
-          <div class="flex">            
-            <mat-form-field appearance="outline">
+          <div class="flex">
+            <mat-form-field>
               <mat-label>Forma de pagamento</mat-label>
               <mat-select placeholder="Escolha a forma de pagamento" formControlName="type" required>
                 <mat-option value="ticket unique">Boleto único</mat-option>
@@ -23,34 +23,45 @@
                 <mat-option value="cash financed">Dinheiro - Parcelado</mat-option>
               </mat-select>
             </mat-form-field>
-  
-            <mat-form-field appearance="outline">
+
+            <mat-form-field>
               <mat-label>Montante</mat-label>
               <input matInput placeholder="Quantia a pagar" type="text" formControlName="amount" required>
             </mat-form-field>
           </div>
 
           <div class="flex" *ngIf="paymentForm.value.type === 'ticket unique'">
-            <mat-form-field appearance="outline">
+            <mat-form-field>
               <mat-label>Data de pagamento</mat-label>
-              <input matInput placeholder="Digite data para pagamento" formControlName="date" 
-              [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}" [value]="date">
+              <input matInput placeholder="Digite data para pagamento" formControlName="date" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}"
+                [value]="date">
             </mat-form-field>
           </div>
 
           <div *ngIf="paymentForm.value.type === 'ticket financed'">
-            <div class="flex">              
-              <mat-form-field appearance="outline">
+            <div class="flex">
+              <mat-form-field>
                 <mat-label>Número de parcelas</mat-label>
                 <input type="number" matInput placeholder="Digite número de parcelas" formControlName="quota_number" (keyup)="setQuotasArray($event)">
               </mat-form-field>
             </div>
 
-            <!-- <div>
+            <div *ngIf="paymentForm.value.quota_number > 0" formmArrayName="quotas">
               <div class="flex" *ngFor="let quota of quotas; let i = index;">
-                {{ i }}
+                <div>{{ quota.quota }}</div>
+
+                <mat-form-field>
+                  <mat-label>Valor</mat-label>
+                  <input matInput placeholder="Valor" [value]="quota.value">
+                  <span matPrefix>R$&nbsp;</span>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>Data</mat-label>
+                  <input matInput placeholder="Data" [value]="quota.date | formatDateDmy">
+                </mat-form-field>
               </div>
-            </div> -->
+            </div>
           </div>
 
           <div class="flex" *ngIf="paymentForm.value.type === 'card at sight'">

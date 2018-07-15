@@ -9,7 +9,7 @@
   <div class="flex">
     <div *ngIf="isStarted" class="container">
       <form [formGroup]="relationshipForm" #formDirective="ngForm">
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Relacionamento</mat-label>
           <input matInput placeholder="Tipo de relacionamento" type="text" formControlName="relationship" required>
         </mat-form-field>

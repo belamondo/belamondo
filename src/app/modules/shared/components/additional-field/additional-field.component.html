@@ -1,5 +1,5 @@
 <div *ngFor="let field of fields; let i = index" class="flex">
-  <mat-form-field appearance="outline" style="width: 85%">
+  <mat-form-field style="width: 85%">
     <mat-label>{{field.field}}</mat-label>
     <input matInput placeholder="{{field.field}}" #additionalField type="text" value="{{field.value}}" (blur)="setAdditionalField(i, field.field, additionalField.value)">
   </mat-form-field>

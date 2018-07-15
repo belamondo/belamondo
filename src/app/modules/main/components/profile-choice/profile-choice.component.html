@@ -17,7 +17,7 @@
     <form [formGroup]="peopleForm" (ngSubmit)="onPeopleFormSubmit()">
       <mat-card-title>Perfil de pessoa</mat-card-title>
   
-      <mat-form-field appearance="outline">
+      <mat-form-field>
         <mat-label>Nome</mat-label>
         <mat-icon matPrefix>people</mat-icon>
         <input matInput placeholder="Digite seu nome" type="text" formControlName="name" required>
@@ -30,7 +30,7 @@
           <mat-radio-button value="Feminino">Feminino</mat-radio-button>
         </mat-radio-group>
   
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Nascimento</mat-label>
           <input matInput placeholder="Digite ou clique no ícone" formControlName="birthday" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}"
             required>
@@ -49,18 +49,18 @@
     <form [formGroup]="companiesForm" (ngSubmit)="onCompaniesFormSubmit()">
       <mat-card-title>Perfil de empresa</mat-card-title>
   
-      <mat-form-field appearance="outline" id="cpf">
+      <mat-form-field id="cpf">
         <mat-label>CNPJ</mat-label>
         <input matInput placeholder="Digite ser CNPJ" type="text" formControlName="cnpj"
           [textMask]="{mask: mask.cnpj}" required>
       </mat-form-field>
   
-      <mat-form-field appearance="outline">
+      <mat-form-field>
         <mat-label>Nome fantasia</mat-label>
         <input matInput placeholder="Digite o nome fantasia do cliente" type="text" formControlName="business_name" required>
       </mat-form-field>
   
-      <mat-form-field appearance="outline">
+      <mat-form-field>
         <mat-label>Razão social</mat-label>
         <input matInput placeholder="Digite a razão social do cliente" type="text" formControlName="company_name" required>
       </mat-form-field>

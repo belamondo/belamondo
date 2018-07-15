@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Adicionar contato</h2>
 <form [formGroup]="contactForm">  
   <div class="flex">  
-    <mat-form-field appearance="outline">
+    <mat-form-field>
       <mat-select placeholder="Tipo de contato *" formControlName="type" (selectionChange)="contactNameToMask()">
         <mat-option *ngFor="let contact of contacts" [value]="contact.name">
           {{ contact.name }}
@@ -9,12 +9,12 @@
       </mat-select>
     </mat-form-field>
   
-    <mat-form-field appearance="outline" *ngIf="mask[contactMask]">
+    <mat-form-field *ngIf="mask[contactMask]">
       <mat-label>Valor</mat-label>
       <input matInput placeholder="Identificador do contato" type="text" formControlName="value" required [textMask]="{mask: mask[contactMask]}">
     </mat-form-field>
 
-    <mat-form-field appearance="outline" *ngIf="!mask[contactMask]">
+    <mat-form-field *ngIf="!mask[contactMask]">
       <mat-label>Valor</mat-label>
       <input matInput placeholder="Identificador do contato" type="text" formControlName="value" required>
     </mat-form-field>

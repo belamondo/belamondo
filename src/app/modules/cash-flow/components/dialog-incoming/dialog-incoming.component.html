@@ -19,7 +19,7 @@
               <mat-radio-button value="counter" (change)="onClientChoice($event)">Balcão</mat-radio-button>
             </mat-radio-group>
 
-            <mat-form-field appearance="outline" *ngIf="incomingForm.value.clientType === 'person' && people.length > 0">
+            <mat-form-field *ngIf="incomingForm.value.clientType === 'person' && people.length > 0">
               <mat-label>Cliente</mat-label>
               <input matInput placeholder="Escolha o cliente" type="text" formControlName="person" [matAutocomplete]="autoClientPerson">
             </mat-form-field>
@@ -29,7 +29,7 @@
               </mat-option>
             </mat-autocomplete>
 
-            <mat-form-field appearance="outline" *ngIf="incomingForm.value.clientType === 'company' && companies.length > 0">
+            <mat-form-field *ngIf="incomingForm.value.clientType === 'company' && companies.length > 0">
               <mat-label>Cliente</mat-label>
               <input matInput placeholder="Escolha o cliente" type="text" formControlName="company" [matAutocomplete]="autoClientCompany">
             </mat-form-field>
@@ -47,7 +47,7 @@
               <mat-radio-button value="service">Serviço</mat-radio-button>
             </mat-radio-group>
 
-            <mat-form-field appearance="outline" *ngIf="incomingForm.value.sellingType === 'product' && products.length > 0">
+            <mat-form-field *ngIf="incomingForm.value.sellingType === 'product' && products.length > 0">
               <mat-label>Produto</mat-label>
               <input matInput placeholder="Escolha o produto" type="text" formControlName="product" [matAutocomplete]="autoProduct">
             </mat-form-field>
@@ -57,7 +57,7 @@
               </mat-option>
             </mat-autocomplete>
 
-            <mat-form-field appearance="outline" *ngIf="incomingForm.value.sellingType === 'service' && services.length > 0">
+            <mat-form-field *ngIf="incomingForm.value.sellingType === 'service' && services.length > 0">
               <mat-label>Serviço</mat-label>
               <input matInput placeholder="Escolha o serviço" type="text" formControlName="service" [matAutocomplete]="autoService">
             </mat-form-field>
@@ -144,13 +144,13 @@
             </div>
           </section>
 
-          <!-- <mat-form-field appearance="outline">
+          <!-- <mat-form-field>
             <mat-label>Perdas</mat-label>
             <input matInput placeholder="Quantidade perdida" type="number" formControlName="lost_quantity">
           </mat-form-field> -->
 
           <!-- <section id="payment">
-            <mat-form-field appearance="outline" style="width: 70%; margin-right: 2%;">
+            <mat-form-field style="width: 70%; margin-right: 2%;">
               <mat-label>Forma de pagamento</mat-label>
               <mat-select placeholder="Escolha a forma de pagamento" formControlName="payment" required>
                 <mat-option value="cash">À vista</mat-option>
@@ -159,12 +159,12 @@
               </mat-select>
             </mat-form-field>
     
-            <mat-form-field appearance="outline" style="width: 22%">
+            <mat-form-field style="width: 22%">
               <mat-label>Qtd</mat-label>
               <input matInput placeholder="Qtd" type="number" formControlName="payment_quantity">
             </mat-form-field>
     
-            <mat-form-field appearance="outline">
+            <mat-form-field>
               <mat-label>Data</mat-label>
               <input matInput [matDatepicker]="picker" placeholder="Data do lançamento" formControlName="date">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -172,7 +172,7 @@
             </mat-form-field>
     
             <div *ngFor="let field of fields; let i = index">
-              <mat-form-field appearance="outline" style="width: 85%">
+              <mat-form-field style="width: 85%">
                 <mat-label>{{field}}</mat-label>
                 <input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
               </mat-form-field>

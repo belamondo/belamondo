@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Adicionar endereço</h2>
 <form [formGroup]="addressForm">
   <div class="flex">    
-    <mat-form-field appearance="outline" id="zip">
+    <mat-form-field id="zip">
       <mat-label>CEP</mat-label>
       <input matInput placeholder="Digite o CEP" type="text" formControlName="zip" [textMask]="{mask: mask['zip']}"
         required>
@@ -9,41 +9,41 @@
   </div>
 
   <div class="flex">
-    <mat-form-field appearance="outline">
+    <mat-form-field>
       <mat-label>Endereço</mat-label>
       <input matInput placeholder="Digite o endereço" type="text" formControlName="address" required>
     </mat-form-field>
   </div>
 
   <div class="flex">
-    <mat-form-field appearance="outline">
+    <mat-form-field>
       <mat-label>Número</mat-label>
       <input matInput placeholder="Digite o número" type="text" formControlName="number" required>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field>
       <mat-label>Bairro</mat-label>
       <input matInput placeholder="Digite o bairro" type="text" formControlName="district" required>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field>
       <mat-label>Complemento</mat-label>
       <input matInput placeholder="Digite o complemento" type="complement" formControlName="complement" required>
     </mat-form-field>
   </div>
 
   <div class="flex">
-    <mat-form-field appearance="outline">
+    <mat-form-field>
       <mat-label>Estado</mat-label>
       <input matInput placeholder="Digite o estado" type="text" formControlName="state" required>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field>
       <mat-label>Cidade</mat-label>
       <input matInput placeholder="Digite a cidade" type="text" formControlName="city" required>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field>
       <mat-label>País</mat-label>
       <input matInput placeholder="Digite o país" type="text" formControlName="country" required>
     </mat-form-field>

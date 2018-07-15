@@ -16,6 +16,11 @@ import { AuthGuard } from './guards/auth.guard';
 import { MaterialModule } from './material.module';
 
 /**
+ * Pipes
+ */
+import { FormatDateDmyPipe } from './pipes/format-date-dmy.pipe';
+
+/**
  * Services
  */
 import { AuthenticationService } from './services/firebase/authentication.service';
@@ -64,6 +69,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogProductComponent,
     DialogRelationshipComponent,
     DialogServiceComponent,
+    FormatDateDmyPipe,
     MaterialModule,
     ReactiveFormsModule,
     RouterModule,
@@ -89,6 +95,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogProductComponent,
     DialogRelationshipComponent,
     DialogServiceComponent,
+    FormatDateDmyPipe,
     SubDialogComponent,
     TableDataComponent,
     TopbarMenuComponent,

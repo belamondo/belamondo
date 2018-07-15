@@ -77,7 +77,6 @@ export class DialogPaymentComponent implements OnInit {
     private _strategicData: StrategicDataService,
   ) {}
 
-
   ngOnInit() {
     let tempDate;
 
@@ -89,12 +88,14 @@ export class DialogPaymentComponent implements OnInit {
       amount: new FormControl(this.data.lastPrice, Validators.required),
       date: new FormControl(null),
       quota_number: new FormControl(null),
-      is_equal_quota: new FormControl(null)
+      is_equal_quota: new FormControl(null),
+      quotas: new FormArray([
+       new FormControl(null), // value
+       new FormControl(null), // date
+       new FormControl(null) // quota index
+      ])
     });
 
-    this.quotas = new FormArray([
-      new FormControl()
-    ]);
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
     this.isDisabled = false;
     this.mask = {
@@ -114,6 +115,10 @@ export class DialogPaymentComponent implements OnInit {
           this.paymentFormInit();
         });
     }
+  }
+
+  onClose = () => {
+    this._dialog.closeAll();
   }
 
   paymentFormInit = () => {
@@ -146,10 +151,13 @@ export class DialogPaymentComponent implements OnInit {
     if (!isNaN(e.key)) {
       if (this.paymentForm.value.quota_number) {
         for (let i = 0; i < quotas; i++) {
+          let date;
+          date = new Date();
+          date.setMonth(date.getMonth() + i);
           this.quotas.push({
             value: this.paymentForm.value.amount / quotas,
             quota: i + 1,
-            date: new Date()
+            date: date
           });
         }
       }

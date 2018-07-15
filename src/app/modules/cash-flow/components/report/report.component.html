@@ -50,7 +50,7 @@
         
         <mat-card-content>
 
-          <mat-form-field appearance="outline">
+          <mat-form-field>
             <mat-label>Data</mat-label>
             <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="date">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -60,50 +60,50 @@
             -->
           </mat-form-field>
           
-          <mat-form-field appearance="outline">
+          <mat-form-field>
             <mat-label>Valor em caixa inicial</mat-label>
             <input matInput placeholder="Valor em caixa inicial" type="float" formControlName="dailyInitialValue" (blur)="calculateDailyFinalValue($event)">
           </mat-form-field>
           
           <hr>
-          <mat-form-field appearance="outline">
+          <mat-form-field>
             <mat-label>Total das vendas</mat-label>
             <input matInput type="float" formControlName="dailySales" readonly="true">
           </mat-form-field>
 
-          <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
+          <mat-form-field style="width: 90%; margin-left: 10%">
             <mat-label>Vendas à vista</mat-label>
             <input matInput type="float" formControlName="dailyCashSales" readonly="true">
           </mat-form-field>
 
-          <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
+          <mat-form-field style="width: 90%; margin-left: 10%">
             <mat-label>Vendas à prazo</mat-label>
             <input matInput type="float" formControlName="dailyFinancedSales" readonly="true">
           </mat-form-field>
 
           <hr>
-          <mat-form-field appearance="outline">
+          <mat-form-field>
             <mat-label>Total das despesas</mat-label>
             <input matInput type="float" formControlName="dailyExpenses" readonly="true">
           </mat-form-field>
 
-          <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
+          <mat-form-field style="width: 90%; margin-left: 10%">
             <mat-label>Despesas administrativas</mat-label>
             <input matInput type="float" formControlName="dailyAdmExpenses" readonly="true">
           </mat-form-field>
 
-          <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
+          <mat-form-field style="width: 90%; margin-left: 10%">
             <mat-label>Custos fixos</mat-label>
             <input matInput type="float" formControlName="dailyFixedCosts" readonly="true">
           </mat-form-field>
 
-          <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
+          <mat-form-field style="width: 90%; margin-left: 10%">
             <mat-label>Custos variáveis</mat-label>
             <input matInput type="float" formControlName="dailyVariableCosts" readonly="true">
           </mat-form-field>
 
           <hr>
-          <mat-form-field appearance="outline">
+          <mat-form-field>
             <mat-label>Valor em caixa final</mat-label>
             <input matInput placeholder="Valor em caixa final" type="float" formControlName="dailyFinalValue" readonly="true">
           </mat-form-field>
@@ -134,14 +134,14 @@
         </button>
 
         <div style="text-align: center; margin-top: 20px;">
-          <mat-form-field appearance="outline" style="width: 45%;">
+          <mat-form-field style="width: 45%;">
             <mat-label>Data inicial</mat-label>
             <input matInput [matDatepicker]="tipicker" placeholder="Data inicial" formControlName="tidate">
             <mat-datepicker-toggle matSuffix [for]="tipicker"></mat-datepicker-toggle>
             <mat-datepicker #tipicker></mat-datepicker>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" style="width: 45%">
+          <mat-form-field style="width: 45%">
             <mat-label>Data final</mat-label>
             <input matInput [matDatepicker]="tepicker" placeholder="Data final" formControlName="tedate">
             <mat-datepicker-toggle matSuffix [for]="tepicker"></mat-datepicker-toggle>

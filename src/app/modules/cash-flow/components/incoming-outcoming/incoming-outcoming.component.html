@@ -24,7 +24,7 @@
 
       <hr>
       <mat-card-content>
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Receita/Despesa</mat-label>
           <mat-select placeholder="Escolha a modalidade do lançamento" formControlName="modality" required>
             <mat-option value="outcoming" (click)="getListOfTypes('outcoming')">Despesa</mat-option>
@@ -32,7 +32,7 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Lançamento</mat-label>
           <mat-select placeholder="Escolha qual o lançamento" formControlName="type" required>
             <mat-option *ngFor="let type of types" [value]="type._id">
@@ -41,7 +41,7 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Cliente/Fornecedor</mat-label>
           <mat-select placeholder="Qual o cliente/fornecedor" formControlName="receiver">
             <mat-option *ngFor="let receiver of receivers" [value]="receiver">
@@ -50,22 +50,22 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Qtd</mat-label>
           <input matInput placeholder="Qtd vendida" type="number" formControlName="qtd">
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Perdas</mat-label>
           <input matInput placeholder="Qtd perdida" type="number" formControlName="lostQtd">
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Valor</mat-label>
           <input matInput placeholder="Valor do lançamento" type="float" formControlName="price" required>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" style="width: 70%; margin-right: 2%;">
+        <mat-form-field style="width: 70%; margin-right: 2%;">
           <mat-label>Forma de pagamento</mat-label>
           <mat-select placeholder="Escolha a forma de pagamento" formControlName="payment" required>
             <mat-option value="cash">À vista</mat-option>
@@ -74,12 +74,12 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" style="width: 22%">
+        <mat-form-field style="width: 22%">
           <mat-label>Qtd</mat-label>
           <input matInput placeholder="Qtd" type="number" formControlName="paymentQtd">
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Data</mat-label>
           <input matInput [matDatepicker]="picker" placeholder="Data do lançamento" formControlName="date">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -87,7 +87,7 @@
         </mat-form-field>
 
         <div *ngFor="let field of fields; let i = index">
-          <mat-form-field appearance="outline" style="width: 85%">
+          <mat-form-field style="width: 85%">
             <mat-label>{{field}}</mat-label>
             <input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
           </mat-form-field>

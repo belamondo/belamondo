@@ -14,7 +14,7 @@
   
       <form [formGroup]="companyForm" #formDirective="ngForm">
         <mat-card-content>
-          <mat-form-field appearance="outline" id="cnpj">
+          <mat-form-field id="cnpj">
             <mat-label>CNPJ</mat-label>
             <input matInput placeholder="Digite o CNPJ do cliente" type="text" formControlName="cnpj" (keyup)="checkCompanyExistence(companyForm.value.cnpj)"
               [textMask]="{mask: mask.cnpj}" required>
@@ -25,12 +25,12 @@
           </mat-error>
           
           <section *ngIf="formEnabled || data.id">
-            <mat-form-field appearance="outline">
+            <mat-form-field>
               <mat-label>Nome fantasia</mat-label>
               <input matInput placeholder="Digite o nome fantasia do cliente" type="text" formControlName="business_name" required>
             </mat-form-field>
     
-            <mat-form-field appearance="outline">
+            <mat-form-field>
               <mat-label>Razão social</mat-label>
               <input matInput placeholder="Digite a razão social do cliente" type="text" formControlName="company_name">
             </mat-form-field>
