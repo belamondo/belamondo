@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { MatDatepickerIntl, MatSnackBar, MatDialog } from '@angular/material';
+import { MatDatepickerIntl, MatSnackBar, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 
 /**
  * Components
@@ -31,7 +31,7 @@ import {
 import {
   ValidateCpf
 } from './../../../shared/validators/cpf.validator';
-import { ValidateUniqueValue } from './../../../shared/validators/unique-value.validator';
+import { ValidateRequired } from '../../../shared/validators/required.validator';
 
 @Component({
   selector: 'app-dialog-client-module',
@@ -39,13 +39,20 @@ import { ValidateUniqueValue } from './../../../shared/validators/unique-value.v
   styleUrls: ['./dialog-client-module.component.css']
 })
 export class DialogClientModuleComponent implements OnInit {
+  // Common properties: start
   public companiesForm: FormGroup;
   public clientModuleForm: FormGroup;
-  public isStarted: boolean;
   public peopleForm: FormGroup;
-  public title: string;
-
+  public isDisabled: boolean;
+  public isStarted: boolean;
   public mask: any;
+  public paramToSearch: any;
+  public submitButton: string;
+  public submitToCreate: boolean;
+  public submitToUpdate: boolean;
+  public title: string;
+  public userData: any;
+  // Common properties: end
 
   public autoCorrectedDatePipe: any;
   public addressesObject: any;
@@ -58,6 +65,7 @@ export class DialogClientModuleComponent implements OnInit {
   public user: any;
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private _auth: AuthenticationService,
     private _crud: CrudService,
     private _dialog: MatDialog,
@@ -83,7 +91,7 @@ export class DialogClientModuleComponent implements OnInit {
     });
 
     this.companiesForm = new FormGroup({
-      cnpj: new FormControl(null, [Validators.required, ValidateCnpj, ValidateUniqueValue(null, [['companies'], 'cnpj'], this._crud)]),
+      cnpj: new FormControl(null, [ValidateRequired, ValidateCnpj]),
       business_name: new FormControl(null, Validators.required),
       company_name: new FormControl(null)
     });
@@ -111,106 +119,48 @@ export class DialogClientModuleComponent implements OnInit {
     };
   }
 
-  checkUserExistence = () => {
-    this._crud.readWithObservable({
-      collectionsAndDocs: [this.clientModuleForm.get('description').value, this.user['uid']]
-    }).subscribe(resCompanies => { console.log(resCompanies);
-      if (resCompanies['length'] > 0) {
-        this._router.navigate(['/main/dashboard']);
+  clientModuleFormInit = () => {
+    if (this.data.id) {
+      this.submitToCreate = false;
+      this.submitToUpdate = true;
+      this.title = 'Atualizar módulo de cliente';
+      this.submitButton = 'Atualizar';
 
-        this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
-          duration: 4000
+      this._crud
+        .readWithObservable({
+          collectionsAndDocs: [
+            'modulesPermissions',
+            this.userData[0]['_id'],
+            this.data.id
+          ]
+        }).subscribe(res => {
+          this.clientModuleForm.patchValue(res[0]);
+
+          this.isStarted = true;
         });
+    } else {
+      this.submitToCreate = true;
+      this.submitToUpdate = false;
+      this.title = 'Cadastrar módulo de cliente';
+      this.submitButton = 'Cadastrar';
 
-        return false;
-      } else {
-      }
       this.isStarted = true;
-    });
+    }
   }
 
-  addAddress = () => {
-    let dialogRef;
+  cnpjExistence = () => {
+    let cnpj;
 
-    dialogRef = this._dialog.open(DialogAddressComponent, {
-      height: '500px',
-      width: '800px',
-      data: {
-        mask: this.mask,
-        autoCorrectedDatePipe: this.autoCorrectedDatePipe
-      }
-    });
+    cnpj = this.companiesForm.value.cnpj.replace(/[^\d]+/g, '');
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.addressesObject.push(result);
-      }
-    });
-  }
-
-  deleteAddress = (i) => {
-    this.addressesObject.splice(i, 1);
-  }
-
-  addContact = () => {
-    let dialogRef;
-    dialogRef = this._dialog.open(DialogContactComponent, {
-      height: '250px',
-      width: '800px',
-      data: {
-        contacts: this.contacts,
-        mask: this.mask
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.contacts.forEach(element => {
-          if (element.mask === result.type) {
-            result.type = element.name;
-          }
-        });
-
-        this.contactsObject.push(result);
-      }
-    });
-  }
-
-  deleteContact = (i) => {
-    this.contactsObject.splice(i, 1);
-  }
-
-  addDocument = () => {
-    let dialogRef;
-    dialogRef = this._dialog.open(DialogDocumentComponent, {
-      height: '320px',
-      width: '800px',
-      data: {
-        documents: this.documents,
-        mask: this.mask,
-        autoCorrectedDatePipe: this.autoCorrectedDatePipe
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.documents.forEach(element => {
-          if (element.mask === result.type) {
-            result.type = element.name;
-          }
-        });
-
-        this.documentsObject.push(result);
-      }
-    });
-  }
-
-  deleteDocument = (i) => {
-    this.documentsObject.splice(i, 1);
-  }
-
-  onBirthdayChange = (event) => {
-    this.peopleForm.get('birthday').setValue(event.targetElement.value);
+    if (!this.companiesForm.get('cnpj').errors && cnpj.length === 14) { console.log(156);
+      this._crud.readWithPromise({
+        collectionsAndDocs: ['companies'],
+        where: [['cnpj', '==', this.companiesForm.value.cnpj]]
+      }).then(res => {
+        console.log(res[0]);
+      });
+    }
   }
 
   onPeopleFormSubmit = () => {

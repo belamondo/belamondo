@@ -1,40 +1,23 @@
 <h1 mat-dialog-title>{{title}}</h1>
-<form [formGroup]="clientModuleForm" (ngSubmit)="onProfileChoiceFormSubmit()">
-  <div class="label">Tipo de cliente</div>
-  <mat-radio-group formControlName="description" (change)="checkUserExistence()">
-    <mat-radio-button value="animals">Animal</mat-radio-button>
-    <mat-radio-button value="companies">Empresa</mat-radio-button>
-    <mat-radio-button value="entities">Entidade</mat-radio-button>
-    <mat-radio-button value="people">Pessoa</mat-radio-button>
-  </mat-radio-group>
-</form>
 
-<div *ngIf="isStarted">
+<mat-dialog-content>
+  <form [formGroup]="clientModuleForm">
+    <div class="label">Tipo de cliente</div>
+    
+    <mat-radio-group formControlName="description" (change)="clientModuleForm.get('description').setValue(clientModuleForm.get('description').value)">
+      <mat-radio-button value="animals">Animal</mat-radio-button>
+      <mat-radio-button value="companies">Empresa</mat-radio-button>
+      <mat-radio-button value="entities">Entidade</mat-radio-button>
+      <mat-radio-button value="people">Pessoa</mat-radio-button>
+    </mat-radio-group>
+  </form>
   <!--FORM DE PESSOA-->
   <form [formGroup]="peopleForm" (ngSubmit)="onPeopleFormSubmit()" *ngIf="clientModuleForm.get('description').value === 'people'">
-    <div class="label">Perfil de pessoa</div>
-
-    <mat-form-field>
-      <mat-label>Nome</mat-label>
-      <mat-icon matPrefix>people</mat-icon>
-      <input matInput placeholder="Digite seu nome" type="text" formControlName="name" required>
+    <div class="label">Pessoa</div>
+    <mat-form-field id="cpf">
+      <mat-label>CNPJ</mat-label>
+      <input matInput placeholder="Digite seu CNPJ" type="text" formControlName="cnpj" [textMask]="{mask: mask.cnpj}" required>
     </mat-form-field>
-
-    <div class="flex">
-      <mat-radio-group formControlName="gender">
-        <mat-label>Gênero *</mat-label>
-        <mat-radio-button value="Masculino">Masculino</mat-radio-button>
-        <mat-radio-button value="Feminino">Feminino</mat-radio-button>
-      </mat-radio-group>
-
-      <mat-form-field>
-        <mat-label>Nascimento</mat-label>
-        <input matInput placeholder="Digite ou clique no ícone" formControlName="birthday" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}"
-          required>
-      </mat-form-field>
-    </div>
-
-    <button mat-raised-button>Cadastrar</button>
   </form>
   <!--FORM DE ANIMAL-->
   <form [formGroup]="animalsForm" (ngSubmit)="onAnimalsFormSubmit()" *ngIf="clientModuleForm.get('description').value === 'animals'">
@@ -42,17 +25,27 @@
   </form>
   <!--FORM DE EMPRESA-->
   <form [formGroup]="companiesForm" (ngSubmit)="onCompaniesFormSubmit()" *ngIf="clientModuleForm.get('description').value === 'companies'">
-    <div class="label">Perfil de empresa</div>
+    <div class="label">Empresa</div>
 
     <mat-form-field id="cpf">
       <mat-label>CNPJ</mat-label>
-      <input matInput placeholder="Digite ser CNPJ" type="text" formControlName="cnpj" [textMask]="{mask: mask.cnpj}" required>
-    </mat-form-field>
+      <input matInput placeholder="Digite seu CNPJ" type="text" formControlName="cnpj" [textMask]="{mask: mask.cnpj}" (keyup)="cnpjExistence()" required>
 
-    <button mat-raised-button [color]="primary">Cadastrar</button>
+      <mat-error *ngIf="companiesForm.get('cnpj').touched && companiesForm.get('cnpj').errors">{{companiesForm.get('cnpj').errors.message}}</mat-error>
+    </mat-form-field>
   </form>
   <!--FORM DE ENTIDADE-->
-  <form [formGroup]="companiesForm" (ngSubmit)="onEntitiesFormSubmit()" *ngIf="clientModuleForm.get('description').value === 'entities'">
+  <!-- <form [formGroup]="companiesForm" (ngSubmit)="onEntitiesFormSubmit()" *ngIf="clientModuleForm.get('description').value === 'entities'">
     Formulário de entidade
-  </form>
-</div>
+  </form> -->
+</mat-dialog-content>
+
+<!-- <mat-dialog-actions>
+  <div class="flex">
+    <button mat-raised-button [disabled]="personForm.invalid || isDisabled" (click)="onPersonFormSubmit(this.formDirective)" color="primary">
+      {{submitButton}}
+    </button>
+
+    <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
+  </div>
+</mat-dialog-actions> -->
