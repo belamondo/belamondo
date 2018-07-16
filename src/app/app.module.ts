@@ -8,6 +8,7 @@ import { MatTableModule, MatPaginatorModule, MatSortModule, MAT_DATE_LOCALE } fr
  */
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
+import { ProfileChoiceComponent } from './components/profile-choice/profile-choice.component';
 
 /**
  * Modules
@@ -26,7 +27,8 @@ import { AppRoutingModule } from './app-routing.module';
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    ProfileChoiceComponent
   ],
   imports: [
     AppRoutingModule,

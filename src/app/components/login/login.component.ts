@@ -34,14 +34,15 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onLoginSubmit = () => { 
+  onLoginSubmit = () => {
+    let params;
     this.disabled = true;
-    let params = {
+    params = {
       user: this.loginForm.get('user').value,
       password: this.loginForm.get('password').value,
       loginMode: 'emailAndPassword',
       navigateTo: '/main',
-      navigateToProfile: '/main/profile_choice'
+      navigateToProfile: '/profile-choice'
     };
 
     this._auth
@@ -49,11 +50,11 @@ export class LoginComponent implements OnInit {
     .then(res => {
       setTimeout(() => {
         this.disabled = false;
-      }, 3000)
+      }, 3000);
     }).catch( rej => {
       setTimeout(() => {
         this.disabled = false;
-      }, 3000)
+      }, 3000);
     });
   }
 }

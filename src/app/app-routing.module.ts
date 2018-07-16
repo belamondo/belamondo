@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
  * Components
  */
 import { LoginComponent } from './components/login/login.component';
+import { ProfileChoiceComponent } from './components/profile-choice/profile-choice.component';
 
 /**
  * Guards
@@ -12,6 +13,7 @@ import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './modules/shared/guards/auth.guard';
 import { CashFlowGuard } from './modules/shared/guards/cash-flow.guard';
 import { CrmGuard } from './modules/shared/guards/crm.guard';
+import { ProfileChoiceGuard } from './modules/shared/guards/profile-choice.guard';
 import { SystemGuard } from './modules/shared/guards/system.guard';
 
 /**
@@ -25,6 +27,10 @@ const routes: Routes = [{
 }, {
   path: 'login',
   component: LoginComponent
+}, {
+  path: 'profile-choice',
+  component: ProfileChoiceComponent,
+  canActivate: [ProfileChoiceGuard]
 }, {
   path: 'main',
   loadChildren: './modules/main/main.module#MainModule',
@@ -41,7 +47,7 @@ const routes: Routes = [{
   path: 'system',
   loadChildren: './modules/system/system.module#SystemModule',
   canActivate: [SystemGuard]
-},];
+}];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

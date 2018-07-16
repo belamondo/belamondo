@@ -37,7 +37,7 @@ export class ProfileChoiceGuard implements CanActivate {
           return false;
         }
 
-        if (this._strategicData.userData$) {
+        if (this._strategicData && this._strategicData.userData$[0]) {
           this._router.navigate(['/main/dashboard']);
 
           this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {

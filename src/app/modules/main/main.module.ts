@@ -14,7 +14,6 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DialogInviationComponent } from './components/invitation/dialog-inviation.component';
 import { InvitationComponent } from './components/invitation/invitation.component';
 import { MainComponent } from './main.component';
-import { ProfileChoiceComponent } from './components/profile-choice/profile-choice.component';
 import { PlaygroundComponent } from './components/playground/playground.component';
 
 @NgModule({
@@ -28,7 +27,6 @@ import { PlaygroundComponent } from './components/playground/playground.componen
     InvitationComponent,
     MainComponent,
     PlaygroundComponent,
-    ProfileChoiceComponent,
     DialogInviationComponent,
   ],
   entryComponents: [

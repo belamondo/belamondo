@@ -12,60 +12,59 @@
 
 #sellingListHeader {
     border-bottom: solid 1px black;
-    font-weight: 900;
-    background: #455A64;
-    color: #fff;
-    text-align: left;
-    padding-right: 1%;
+    background: rgb(243, 243, 243);
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: small;
 }
 
-#sellingListHeader div:nth-child(1) { /*Tipo*/
-    width: 10%;
-}
-
-#sellingListHeader div:nth-child(2) { /*Descrição*/
+#sellingListHeader div:nth-child(1) { /*Descrição*/
     width: 40%;
 }
 
-#sellingListHeader div:nth-child(3) { /*Preço unitário*/
+#sellingListHeader div:nth-child(2) { /*Preço unitário*/
+    width: 15%;
+}
+
+#sellingListHeader div:nth-child(3) { /*Quantidade*/
     width: 10%;
 }
 
-#sellingListHeader div:nth-child(4) { /*Quantidade*/
-    width: 10%;
+#sellingListHeader div:nth-child(4) { /*Desconto por item*/
+    width: 15%;
 }
 
-#sellingListHeader div:nth-child(5) { /*Desconto por item*/
-    width: 10%;
+#sellingListHeader div:nth-child(5) { /*Preço total*/
+    width: 15%;
 }
 
-#sellingListHeader div:nth-child(6) { /*Preço total*/
-    width: 10%;
-}
-
-#sellingListHeader div:nth-child(7) { /*Remover item*/
-    width: 4%;
+#sellingListHeader div:nth-child(6) { /*Remover item*/
+    width: 5%;
 }
 
 #sellingListBody {
-    color: #000;
-    text-align: left;
-    padding-right: 1%;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: small;
 }
 
-#sellingListBody div:nth-child(1) { /*Tipo*/
-    width: 10%;
+#sellingListBody:hover {
+    background: rgb(243, 243, 243);
 }
 
-#sellingListBody div:nth-child(2) { /*Descrição*/
+#sellingListBody div:nth-child(1) { /*Descrição*/
     width: 40%;
 }
 
-#sellingListBody div:nth-child(3) { /*Preço unitário*/
-    width: 10%;
+#sellingListBody div:nth-child(2) { /*Preço unitário*/
+    width: 15%;
 }
 
-#sellingListBody div:nth-child(4) { /*Quantidade*/
+#sellingListBody div:nth-child(3) { /*Quantidade*/
     width: 10%;
 }
 
@@ -74,66 +73,101 @@
     width: 50px;
     right: 0;
     background: transparent;
+    text-align: center;
 }
 
-#sellingListBody div:nth-child(5) { /*Desconto por item*/
-    width: 10%;
+#sellingListBody div:nth-child(4) { /*Desconto por item*/
+    width: 15%;
 }
 
-#sellingListBody div:nth-child(6) { /*Preço total*/
-    width: 10%;
+#sellingListBody div:nth-child(5) { /*Preço total*/
+    width: 15%;
 }
 
-#sellingListBody div:nth-child(7) { /*Remover item*/
-    width: 4%;
+#sellingListBody div:nth-child(6) { /*Remover item*/
+    width: 5%;
 }
 
 #sellingListFooter {
-    background: #455A64;
-    color: #fff;
-    text-align: left;
-    padding-right: 1%;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: bold;
+    font-size: small;
 }
 
 #sellingListFooter div:nth-child(1) { /*Desconto no total*/
-    width: 45%;
-    font-size: 20px;
-    font-weight: 900;
+    width: 80%;
+    text-align: right;
 }
 
 #sellingListFooter div:nth-child(2) { /*Input de desconto no total*/
-    width: 5%;
+    width: 15%;
 }
 
 #sellingListFooter div input {
     border-style: none;
     width: 50px;
-    right: 0;
-    background: transparent;
-    color:rgb(201, 197, 0);
-    font-size: 20px;
-    font-weight: 900;
+    text-align: center;
 }
 
 #sellingListFooter div:nth-child(3) { /*espaço*/
-    width: 10%;
+    width: 5%;
 }
 
 #sellingListFooter div:nth-child(4) { /*Legenda de soma dos preços totais*/
-    width: 25%;
-    font-size: 20px;
-    font-weight: 900;
+    width: 80%;
 }
 
 #sellingListFooter div:nth-child(5) { /*Soma dos preços totais*/
     width: 15%;
-    font-size: 20px;
-    font-weight: 900;
-    text-align: right;
-    color: rgb(248, 143, 143);
+}
+
+.container {
+    margin-top: 10px;
+}
+
+.formField {
+    width: 90% !important;
 }
 
 .grey-row {
     background: #CFD8DC;
 }
 
+.label {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 32px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    margin-bottom: 15px;
+}
+
+.listOrder {
+    float: left;
+    width: 100%;
+}
+
+.listOrderContainer {
+    width: 90%;
+}
+
+.radioButton {
+    margin-bottom: 15px;
+}
+
+.section {
+    padding: 15px 0px 15px 50px;
+    margin-left: -25px;
+}
+
+.sectionWithColor {
+    background: rgb(243, 243, 243);
+    padding: 15px 0px 15px 50px;
+    margin-left: -25px;
+}
+
+.title {
+    margin-bottom: 0px;
+}
