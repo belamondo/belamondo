@@ -95,7 +95,7 @@ export class DialogProductComponent implements OnInit {
           // tslint:disable-next-line:forin
           for (const key in res[0]) {
             /* Create form control if it is a additional field */
-            if (key !== 'price' && key !== 'name' && key !== 'barcode' && key !== 'unit' && key !== '_id') {
+            if (key !== 'price' && key !== 'name' && key !== 'barcode' && key !== 'unit' && key !== '_id' && key !== '_deleted_at') {
               this.productForm.addControl(key, new FormControl(res[0][key]));
               this.paramsToAdditionalField.fields.push({
                 field: key,

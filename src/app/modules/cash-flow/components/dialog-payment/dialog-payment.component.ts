@@ -126,12 +126,12 @@ export class DialogPaymentComponent implements OnInit {
       if (res[0]['payment']) {
         this.submitToCreate = false;
         this.submitToUpdate = true;
-        this.title = 'Atualizar pagamento';
+        this.title = 'Forma de Pagamento';
         this.submitButton = 'Atualizar';
       } else {
         this.submitToCreate = true;
         this.submitToUpdate = false;
-        this.title = 'Cadastrar pagamento';
+        this.title = 'Forma de Pagamento';
         this.submitButton = 'Salvar';
       }
     });

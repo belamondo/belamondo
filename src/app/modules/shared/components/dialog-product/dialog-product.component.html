@@ -10,23 +10,23 @@
     <div class="flex">
       <div *ngIf="isStarted" class="container">
         <mat-card-content>
-          <mat-form-field appearance="outline">
+          <mat-form-field>
             <mat-label>Nome</mat-label>
             <input matInput placeholder="Nome do produto" type="text" formControlName="name" required>
           </mat-form-field>
 
           <div class="flex">
-            <mat-form-field appearance="outline">
+            <mat-form-field>
               <mat-label>Código de barras</mat-label>
               <input matInput placeholder="Código de barras" type="text" formControlName="barcode">
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="flex">
+            <mat-form-field class="flex">
               <mat-label>Unidade de medida</mat-label>
               <input matInput placeholder="Unidade de medida" type="text" formControlName="unit">
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="flex">
+            <mat-form-field class="flex">
               <mat-label>Preço</mat-label>
               <input matInput placeholder="Preço" type="text" formControlName="price">
             </mat-form-field>

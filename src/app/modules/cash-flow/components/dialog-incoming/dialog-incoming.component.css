@@ -11,6 +11,7 @@
 }
 
 #sellingListHeader {
+    margin-top: 15px;
     border-bottom: solid 1px black;
     background: rgb(243, 243, 243);
     text-align: center;

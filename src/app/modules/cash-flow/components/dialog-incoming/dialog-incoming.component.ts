@@ -389,7 +389,7 @@ export class DialogIncomingComponent implements OnInit {
   onPayment = () => {
     if (this.data.id) {
       this._dialog.open(DialogPaymentComponent, {
-        width: '90%',
+        width: '800px',
         data: {
           id: this.data.id,
           lastPrice: this.lastPrice

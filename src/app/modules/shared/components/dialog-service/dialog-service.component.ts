@@ -62,6 +62,7 @@ export class DialogServiceComponent implements OnInit {
 
     this.serviceForm = new FormGroup({
       name: new FormControl(null, Validators.required),
+      price: new FormControl(null, Validators.required),
     });
 
     this.serviceFormInit();
@@ -92,7 +93,7 @@ export class DialogServiceComponent implements OnInit {
           // tslint:disable-next-line:forin
           for (const key in res[0]) {
             /* Create form control if it is a additional field */
-            if (key !== 'name' && key !== '_id') {
+            if (key !== 'name' && key !== '_id' && key !== '_deleted_at' && key !== 'price') {
               this.serviceForm.addControl(key, new FormControl(res[0][key]));
               this.paramsToAdditionalField.fields.push({field: key, value: res[0][key]});
             }
