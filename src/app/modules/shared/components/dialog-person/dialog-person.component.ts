@@ -150,6 +150,7 @@ export class DialogPersonComponent implements OnInit {
   }
 
   clientFormInit = () => {
+    console.log(this.data);
     if (this.data.id) {
       this.submitToCreate = false;
       this.submitToUpdate = true;
@@ -350,10 +351,9 @@ export class DialogPersonComponent implements OnInit {
 
   checkPersonExistence = (cpf) => {
     if (!this.personForm.get('cpf').errors) {
-      let cpf = this.personForm.get('cpf').value;
       this.cpfToSearch =  cpf.replace(/.-/, '');
 
-      if ((this.cpfToSearch.length > 13) && (this.cpfToSearch !== this.cpfToSearchCheck)) {
+      if ((this.cpfToSearch.length > 10) && (this.cpfToSearch !== this.cpfToSearchCheck)) {
         this._crud
         .readWithPromise({
           collectionsAndDocs: [

@@ -21,16 +21,20 @@ export class SystemComponent implements OnInit {
         name: 'Painel inicial',
         icon: 'home',
         link: ['dashboard']
-      },{
+      }, {
         name: 'Cadastro de produto',
         icon: 'build',
         link: ['product']
-      },{
+      }, {
         name: 'Cadastro de serviço',
         icon: 'shopping_cart',
         link: ['service']
+      }, {
+        name: 'Módulos para clientes',
+        icon: 'view_module',
+        link: ['client-module']
       }]
-    }
+    };
   }
 
 }
