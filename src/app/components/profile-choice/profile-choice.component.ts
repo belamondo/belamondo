@@ -5,17 +5,17 @@ import { MatDatepickerIntl, MatSnackBar, MatDialog } from '@angular/material';
 /**
  * Components
  */
-import { DialogAddressComponent } from './../../../shared/components/dialog-address/dialog-address.component';
-import { DialogContactComponent } from '../../../shared/components/dialog-contact/dialog-contact.component';
-import { DialogDocumentComponent } from '../../../shared/components/dialog-document/dialog-document.component';
+import { DialogAddressComponent } from './../../modules/shared/components/dialog-address/dialog-address.component';
+import { DialogContactComponent } from './../../modules/shared/components/dialog-contact/dialog-contact.component';
+import { DialogDocumentComponent } from './../../modules/shared/components/dialog-document/dialog-document.component';
 
 /**
  * Services
  */
-import { AuthenticationService } from '../../../shared/services/firebase/authentication.service';
-import { CrudService } from '../../../shared/services/firebase/crud.service';
+import { AuthenticationService } from './../../modules/shared/services/firebase/authentication.service';
+import { CrudService } from './../../modules/shared/services/firebase/crud.service';
 import { Router } from '@angular/router';
-import { StrategicDataService } from '../../../shared/services/strategic-data.service';
+import { StrategicDataService } from './../../modules/shared/services/strategic-data.service';
 
 /**
  * Third party
@@ -27,11 +27,11 @@ import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrect
  */
 import {
   ValidateCnpj
-} from '../../../shared/validators/cnpj.validator';
+} from './../../modules/shared/validators/cnpj.validator';
 import {
   ValidateCpf
-} from '../../../shared/validators/cpf.validator';
-import { ValidateUniqueValue } from '../../../shared/validators/unique-value.validator';
+} from './../../modules/shared/validators/cpf.validator';
+import { ValidateUniqueValue } from './../../modules/shared/validators/unique-value.validator';
 
 @Component({
   selector: 'app-profile-choice',
@@ -101,8 +101,6 @@ export class ProfileChoiceComponent implements OnInit {
     this.documentsObject = [];
 
     this.contactsObject = [];
-    // this.contacts = this._strategicData.contacts$;
-
 
     this.mask = {
       cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/],
@@ -116,7 +114,7 @@ export class ProfileChoiceComponent implements OnInit {
       collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']]
     }).subscribe(resCompanies => { console.log(resCompanies);
       if (resCompanies['length'] > 0) {
-        window.location.replace('http://localhost:4200/main/dashboard');
+        this._router.navigate(['/main/dashboard']);
 
         this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
           duration: 4000
@@ -243,15 +241,20 @@ export class ProfileChoiceComponent implements OnInit {
   }
 
   onCompaniesFormSubmit = () => {
+    console.log(this.profileChoiceForm.get('description').value, this.user['uid']);
+    console.log(this.companiesForm.value);
+
     this._crud.update({
       collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']],
       objectToUpdate: this.companiesForm.value
+    }).catch(err => {
+      console.log(err);
+      return false;
     }).then(res => {
       this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
         duration: 4000
       });
 
-      this._router.navigate(['/system']);
       this._router.navigate(['/main']);
     });
   }

@@ -14,7 +14,7 @@
   
       <form [formGroup]="personForm" #formDirective="ngForm">
         <mat-card-content>
-          <mat-form-field appearance="outline" id="cpf">
+          <mat-form-field id="cpf">
             <mat-label>CPF</mat-label>
             <input matInput placeholder="Digite o CPF do cliente" type="text" formControlName="cpf" (keyup)="checkPersonExistence(personForm.value.cpf)"
               [textMask]="{mask: mask.cpf}" required>
@@ -25,7 +25,7 @@
           </mat-error>
           
           <section *ngIf="formEnabled || data.id">
-            <mat-form-field appearance="outline">
+            <mat-form-field>
               <mat-label>Nome</mat-label>
               <input matInput placeholder="Digite o nome do cliente" type="text" formControlName="name" required>
             </mat-form-field>
@@ -37,7 +37,7 @@
                 <mat-radio-button value="Feminino">Feminino</mat-radio-button>
               </mat-radio-group>
     
-              <mat-form-field appearance="outline">
+              <mat-form-field>
                 <mat-label>Nascimento</mat-label>
                 <input matInput placeholder="Digite o aniversário do cliente" formControlName="birthday" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}">
               </mat-form-field>

@@ -13,23 +13,23 @@
 
       <hr>
       <mat-card-content>
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Nome</mat-label>
           <input matInput placeholder="Nome do produto" type="text" formControlName="name" required>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Código de barras</mat-label>
           <input matInput placeholder="Código de barras" type="text" formControlName="barcode">
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Unidade de medida</mat-label>
           <input matInput placeholder="Unidade de medida" type="text" formControlName="unit">
         </mat-form-field>
 
         <div *ngFor="let field of fields; let i = index">
-          <mat-form-field appearance="outline" style="width: 85%">
+          <mat-form-field style="width: 85%">
             <mat-label>{{field}}</mat-label>
             <input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
           </mat-form-field>

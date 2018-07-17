@@ -8,7 +8,7 @@
   <h2 mat-dialog-title>Adicionar documento</h2>
   <form [formGroup]="documentForm">
     <div class="flex">
-      <mat-form-field appearance="outline">
+      <mat-form-field>
         <mat-select placeholder="Tipo de documento *" formControlName="type" (selectionChange)="documentNameToMask()">
           <mat-option *ngFor="let document of documents" [value]="document.name">
             {{ document.name }}
@@ -16,24 +16,24 @@
         </mat-select>
       </mat-form-field>
       
-      <mat-form-field appearance="outline" *ngIf="mask[documentMask]">
+      <mat-form-field *ngIf="mask[documentMask]">
         <mat-label>Valor</mat-label>
         <input matInput placeholder="Identificador do documento" type="text" formControlName="value" required [textMask]="{mask: mask[documentMask]}">
       </mat-form-field>
 
-      <mat-form-field appearance="outline" *ngIf="!mask[documentMask]">
+      <mat-form-field *ngIf="!mask[documentMask]">
         <mat-label>Valor</mat-label>
         <input matInput placeholder="Identificador do documento" type="text" formControlName="value" required>
       </mat-form-field>
     </div>
     
     <div class="flex">
-      <mat-form-field appearance="outline">
+      <mat-form-field>
         <mat-label>Data de emissão</mat-label>
         <input matInput placeholder="Digite data" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}" formControlName="makingDate">
       </mat-form-field>
     
-      <mat-form-field appearance="outline">
+      <mat-form-field>
         <mat-label>Data de validade</mat-label>
         <input matInput placeholder="Digite data" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}" formControlName="validityDate">
       </mat-form-field>

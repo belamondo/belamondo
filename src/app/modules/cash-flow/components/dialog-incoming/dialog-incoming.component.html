@@ -192,7 +192,7 @@
 
       <button mat-raised-button (click)="onPayment();" [disabled]="incomingForm.invalid || isDisabled || !sellingObject || sellingObject.length < 1">Forma de pgto</button>
 
-      <button mat-raised-button (click)="onClose();">Fechar</button>
+      <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
     </div>
   </mat-dialog-actions>
 </form>

@@ -13,13 +13,13 @@
 
       <hr>
       <mat-card-content>
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Descrição</mat-label>
           <input matInput placeholder="Descrição dos serviços" type="text" formControlName="name" required>
         </mat-form-field>
 
         <div *ngFor="let field of fields; let i = index">
-          <mat-form-field appearance="outline" style="width: 85%">
+          <mat-form-field style="width: 85%">
             <mat-label>{{field}}</mat-label>
             <input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
           </mat-form-field>

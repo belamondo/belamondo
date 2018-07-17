@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Fazer convite</h2>
 <form [formGroup]="invitationForm" #formDirective="ngForm" (ngSubmit)="onInvitationFormSubmit(this.formDirective)">  
   <div class="flex">  
-    <mat-form-field appearance="outline">
+    <mat-form-field>
       <mat-label>E-mail</mat-label>
       <input matInput placeholder="Email" type="text" formControlName="email" required>
     </mat-form-field>
