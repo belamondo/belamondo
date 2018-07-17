@@ -3,7 +3,7 @@
 <mat-dialog-content>
   <form [formGroup]="clientModuleForm">
     <div class="label">Tipo de cliente</div>
-    
+
     <mat-radio-group formControlName="description" (change)="clientModuleForm.get('description').setValue(clientModuleForm.get('description').value)">
       <mat-radio-button value="animals">Animal</mat-radio-button>
       <mat-radio-button value="companies">Empresa</mat-radio-button>
@@ -12,7 +12,7 @@
     </mat-radio-group>
   </form>
   <!--FORM DE PESSOA-->
-  <form [formGroup]="peopleForm" (ngSubmit)="onPeopleFormSubmit()" *ngIf="clientModuleForm.get('description').value === 'people'">
+  <form [formGroup]="peopleForm" *ngIf="clientModuleForm.get('description').value === 'people'">
     <div class="label">Pessoa</div>
     <mat-form-field id="cpf">
       <mat-label>CNPJ</mat-label>
@@ -20,19 +20,36 @@
     </mat-form-field>
   </form>
   <!--FORM DE ANIMAL-->
-  <form [formGroup]="animalsForm" (ngSubmit)="onAnimalsFormSubmit()" *ngIf="clientModuleForm.get('description').value === 'animals'">
+  <form [formGroup]="animalsForm" *ngIf="clientModuleForm.get('description').value === 'animals'">
     Formulário de animal
   </form>
   <!--FORM DE EMPRESA-->
-  <form [formGroup]="companiesForm" (ngSubmit)="onCompaniesFormSubmit()" *ngIf="clientModuleForm.get('description').value === 'companies'">
+  <form [formGroup]="companiesForm" *ngIf="clientModuleForm.get('description').value === 'companies'">
     <div class="label">Empresa</div>
 
     <mat-form-field id="cpf">
       <mat-label>CNPJ</mat-label>
-      <input matInput placeholder="Digite seu CNPJ" type="text" formControlName="cnpj" [textMask]="{mask: mask.cnpj}" (keyup)="cnpjExistence()" required>
+      <input matInput placeholder="Digite seu CNPJ" type="text" formControlName="cnpj" [textMask]="{mask: mask.cnpj}" (keyup)="cnpjExistence()"
+        required>
 
       <mat-error *ngIf="companiesForm.get('cnpj').touched && companiesForm.get('cnpj').errors">{{companiesForm.get('cnpj').errors.message}}</mat-error>
     </mat-form-field>
+
+    <div *ngIf="company">
+      <div>
+        {{ company.business_name }}
+      </div>
+
+      <mat-form-field>
+        <mat-select placeholder="Módulos" formControlName="modules" multiple required>
+          <mat-option *ngFor="let module of modules" value="module">
+            {{module}}
+          </mat-option>
+        </mat-select>
+
+        <mat-error *ngIf="companiesForm.get('modules').touched && companiesForm.get('modules').errors">{{companiesForm.get('modules').errors.message}}</mat-error>
+      </mat-form-field>
+    </div>
   </form>
   <!--FORM DE ENTIDADE-->
   <!-- <form [formGroup]="companiesForm" (ngSubmit)="onEntitiesFormSubmit()" *ngIf="clientModuleForm.get('description').value === 'entities'">
@@ -40,12 +57,22 @@
   </form> -->
 </mat-dialog-content>
 
-<!-- <mat-dialog-actions>
-  <div class="flex">
-    <button mat-raised-button [disabled]="personForm.invalid || isDisabled" (click)="onPersonFormSubmit(this.formDirective)" color="primary">
+<mat-dialog-actions>
+  <div class="flex" *ngIf="clientModuleForm.get('description').value === 'companies'">
+    <button mat-raised-button [disabled]="companiesForm.invalid || isDisabled" (click)="onCompaniesFormSubmit(this.formDirective)"
+      color="primary">
       {{submitButton}}
     </button>
 
     <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
   </div>
-</mat-dialog-actions> -->
+
+  <div class="flex" *ngIf="clientModuleForm.get('description').value === 'people'">
+    <button mat-raised-button [disabled]="peopleForm.invalid || isDisabled" (click)="onPeopleFormSubmit(this.formDirective)"
+      color="primary">
+      {{submitButton}}
+    </button>
+
+    <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
+  </div>
+</mat-dialog-actions>

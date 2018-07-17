@@ -54,14 +54,10 @@ export class DialogClientModuleComponent implements OnInit {
   public userData: any;
   // Common properties: end
 
-  public autoCorrectedDatePipe: any;
-  public addressesObject: any;
-  public addresses: any;
   public clientType: string;
-  public contactsObject: any;
-  public contacts: any;
-  public documentsObject: any;
-  public documents: any;
+  public company: any;
+  public modules: any;
+  public person: any;
   public user: any;
 
   constructor(
@@ -76,8 +72,9 @@ export class DialogClientModuleComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.title = 'Cadastrar módulo de cliente';
     this.isStarted = false;
+    this.modules = ['Almoxarifado', 'CRM', 'Fluxo de caixa', 'Sistema'];
+    this.title = 'Cadastrar módulo de cliente';
     this.user = JSON.parse(sessionStorage.getItem('user'));
 
     this.clientModuleForm = new FormGroup({
@@ -92,35 +89,20 @@ export class DialogClientModuleComponent implements OnInit {
 
     this.companiesForm = new FormGroup({
       cnpj: new FormControl(null, [ValidateRequired, ValidateCnpj]),
-      business_name: new FormControl(null, Validators.required),
-      company_name: new FormControl(null)
+      company: new FormControl(this.company),
+      modules: new FormControl(null, ValidateRequired)
     });
-    this.mask = {
-      cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/],
-      date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
-      zip: [/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/],
-      phone: ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
-      cell_phone: ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
-      cnpj: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]
-    };
-
-    this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
-
-    this.addressesObject = [];
-
-    this.documentsObject = [];
-
-    this.contactsObject = [];
 
     this.mask = {
       cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/],
-      date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
       cnpj: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]
     };
+
+    this.clientModuleFormInit();
   }
 
   clientModuleFormInit = () => {
-    if (this.data.id) {
+    if (this.data && this.data.id) {
       this.submitToCreate = false;
       this.submitToUpdate = true;
       this.title = 'Atualizar módulo de cliente';
@@ -158,7 +140,9 @@ export class DialogClientModuleComponent implements OnInit {
         collectionsAndDocs: ['companies'],
         where: [['cnpj', '==', this.companiesForm.value.cnpj]]
       }).then(res => {
-        console.log(res[0]);
+        if (res[0] && res[0]['business_name']) {
+          this.company = res[0];
+        }
       });
     }
   }
@@ -193,21 +177,19 @@ export class DialogClientModuleComponent implements OnInit {
   }
 
   onCompaniesFormSubmit = () => {
-    console.log(this.clientModuleForm.get('description').value, this.user['uid']);
-    console.log(this.companiesForm.value);
-
     this._crud.update({
-      collectionsAndDocs: [this.clientModuleForm.get('description').value, this.user['uid']],
+      collectionsAndDocs: ['modulesPermissions', this.company._id, this.clientModuleForm.get('description').value],
       objectToUpdate: this.companiesForm.value
     }).catch(err => {
       console.log(err);
       return false;
     }).then(res => {
-      this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
+      console.log(this.company._id);
+      this._snackbar.open('Cadastro feito com sucesso.', '', {
         duration: 4000
       });
 
-      this._router.navigate(['/main']);
+      this._dialog.closeAll();
     });
   }
 }
