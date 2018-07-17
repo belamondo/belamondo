@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>{{title}}</h1>
-<form [formGroup]="paymentForm" #formDirective="ngForm">
+<!--<form [formGroup]="paymentForm" #formDirective="ngForm">-->
   <mat-dialog-content>
     <div *ngIf="!isStarted" class="container">
       <div class="spinner-container">
@@ -9,78 +9,107 @@
 
     <div class="flex">
       <div *ngIf="isStarted" class="container">
-
         <mat-card-content>
-          <div class="flex">
-            <mat-form-field>
-              <mat-label>Forma de pagamento</mat-label>
-              <mat-select placeholder="Escolha a forma de pagamento" formControlName="type" required>
-                <mat-option value="ticket unique">Boleto único</mat-option>
-                <mat-option value="ticket financed">Boleto - Parcelado</mat-option>
-                <mat-option value="card at sight">Cartão - À vista</mat-option>
-                <mat-option value="card financed">Cartão - Parcelado</mat-option>
-                <mat-option value="cash at sight">Dinheiro - À vista</mat-option>
-                <mat-option value="cash financed">Dinheiro - Parcelado</mat-option>
-              </mat-select>
-            </mat-form-field>
+          <div class="label">Valor Total: R$ {{this.paymentForm.value.amount}}</div>
+          
+          <mat-card style="display: inline-block;width: 90%;margin-bottom: 5px;" *ngFor="let paymentOption of paymentOptions; let j = index;">
+            <form [formGroup]="paymentOptions[j].form" #formDirective="ngForm">
+              <div class="flex" style="width: 10%;padding-top: 15px;float: left;">
+                &nbsp;
+                <i class="material-icons" *ngIf="j>0" style="cursor: pointer;margin: auto;font-size: 20px;" (click)="deletePaymentOption(j)">
+                  remove_circle
+                </i>
+              </div>
 
-            <mat-form-field>
-              <mat-label>Montante</mat-label>
-              <input matInput placeholder="Quantia a pagar" type="text" formControlName="amount" required>
-            </mat-form-field>
-          </div>
-
-          <div class="flex" *ngIf="paymentForm.value.type === 'ticket unique'">
-            <mat-form-field>
-              <mat-label>Data de pagamento</mat-label>
-              <input matInput placeholder="Digite data para pagamento" formControlName="date" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}"
-                [value]="date">
-            </mat-form-field>
-          </div>
-
-          <div *ngIf="paymentForm.value.type === 'ticket financed'">
-            <div class="flex">
-              <mat-form-field>
-                <mat-label>Número de parcelas</mat-label>
-                <input type="number" matInput placeholder="Digite número de parcelas" formControlName="quota_number" (keyup)="setQuotasArray($event)">
-              </mat-form-field>
-            </div>
-
-            <div *ngIf="paymentForm.value.quota_number > 0" formmArrayName="quotas">
-              <div class="flex" *ngFor="let quota of quotas; let i = index;">
-                <div>{{ quota.quota }}</div>
-
+              <div class="flex" style="width: 40%; float: left;">
                 <mat-form-field>
-                  <mat-label>Valor</mat-label>
-                  <input matInput placeholder="Valor" [value]="quota.value">
-                  <span matPrefix>R$&nbsp;</span>
-                </mat-form-field>
-
-                <mat-form-field>
-                  <mat-label>Data</mat-label>
-                  <input matInput placeholder="Data" [value]="quota.date | formatDateDmy">
+                  <mat-label>Forma de pagamento</mat-label>
+                  <mat-select placeholder="Escolha a forma de pagamento" formControlName="type" required>
+                    <mat-option value="ticket unique">Boleto - Único</mat-option>
+                    <mat-option value="ticket financed">Boleto - Parcelado</mat-option>
+                    <mat-option value="card at sight">Cartão - À vista</mat-option>
+                    <mat-option value="card financed">Cartão - Parcelado</mat-option>
+                    <mat-option value="cash at sight">Dinheiro - À vista</mat-option>
+                    <mat-option value="cash financed">Dinheiro - Parcelado</mat-option>
+                  </mat-select>
                 </mat-form-field>
               </div>
-            </div>
-          </div>
 
-          <div class="flex" *ngIf="paymentForm.value.type === 'card at sight'">
-            Card at sight
-          </div>
+              <div class="flex" style="width: 20%;float: left;margin-right: 10px;">
+                <mat-form-field>
+                  <mat-label>Valor</mat-label>
+                  <input type="number" matInput placeholder="Valor total" formControlName="amount">
+                </mat-form-field>
+              </div>
 
-          <div class="flex" *ngIf="paymentForm.value.type === 'card financed'">
-            Card financed
-          </div>
+              <div class="flex" style="width: 20%; ; float: left;" *ngIf="paymentOptions[j].form.value.type === 'ticket unique'">
+                <mat-form-field>
+                  <mat-label>Data de pagamento</mat-label>
+                  <input matInput placeholder="Digite data para pagamento" formControlName="date" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}"
+                    [value]="date">
+                </mat-form-field>
+              </div>
 
-          <div class="flex" *ngIf="paymentForm.value.type === 'cash at sight'">
-            Cash at sight
-          </div>
+              <div *ngIf="paymentOptions[j].form.value.type === 'ticket financed'">
+                <div class="flex" style="width: 20%;float: left;">
+                  <mat-form-field>
+                    <mat-label>Qtd de parcelas</mat-label>
+                    <input type="number" matInput placeholder="Digite número de parcelas" formControlName="quota_number" (keyup)="setQuotasArray($event, j)">
+                  </mat-form-field>
+                </div>
+                <div class="flex" style="width: 5%;padding-top: 15px;">
+                  <i class="material-icons" *ngIf="!paymentOptions[j].showQuotes" style="cursor: pointer;margin: auto;" (click)="showQuotaContainer(j, true)">
+                    keyboard_arrow_down
+                  </i>
 
-          <div class="flex" *ngIf="paymentForm.value.type === 'cash financed'">
-            Cash financed
-          </div>
+                  <i class="material-icons" *ngIf="paymentOptions[j].showQuotes" style="cursor: pointer;margin: auto;" (click)="showQuotaContainer(j, false)">
+                    keyboard_arrow_up
+                  </i>
+                </div>
 
-          <app-additional-field [params]="paramsToAdditionalField" (changeAdditionalField)="onOutputFromAdditionalField($event)"></app-additional-field>
+                <div formmArrayName="quotas">
+                  <div class="quotaContainer" *ngIf="paymentOptions[j].showQuotes">
+                    
+                    <div class="quotaNumber" style="font-weight: bold;float: left;">N˚</div>
+                    <div class="quotaDate" style="font-weight: bold;float: left;line-height: 50px;">Data</div>
+                    <div class="quotaValue" style="font-weight: bold;float: left;line-height: 50px;text-align: center;">Valor</div>
+                    
+                    <div style="clear: both;"></div>
+                    
+                    <div class="flex" *ngFor="let quota of paymentOptions[j].quotas; let i = index;" [ngStyle]="{ 'background-color' : (i % 2 == 0) ? 'rgb(243, 243, 243)' : null }">
+                      <div class="quotaNumber">{{ quota.quota }}</div>
+
+                      <mat-form-field class="quotaDate">
+                        <input matInput [value]="quota.date | formatDateDmy">
+                      </mat-form-field>
+
+                      <mat-form-field class="quotaValue">
+                        <input matInput [value]="quota.value">
+                        <span matPrefix>R$&nbsp;</span>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex" *ngIf="paymentOptions[j].form.value.type === 'card at sight'">
+                Card at sight
+              </div>
+
+              <div class="flex" *ngIf="paymentOptions[j].form.value.type === 'card financed'">
+                Card financed
+              </div>
+
+              <div class="flex" *ngIf="paymentOptions[j].form.value.type === 'cash at sight'">
+                Cash at sight
+              </div>
+
+              <div class="flex" *ngIf="paymentOptions[j].form.value.type === 'cash financed'">
+                Cash financed
+              </div>
+            </form>
+          </mat-card>
+          <button mat-raised-button color="primary" class="button" style="margin:20px 5% 0px 5%;width: 90%;" (click)="addNewPaymentOption()">Adicionar outro meio de pgto</button>
         </mat-card-content>
       </div>
     </div>
@@ -93,4 +122,4 @@
       <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
     </div>
   </mat-dialog-actions>
-</form>
+<!--</form>-->

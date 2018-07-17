@@ -46,7 +46,7 @@
               <mat-radio-button value="service" class="radioButton">Serviço</mat-radio-button>
             </mat-radio-group>
 
-            <mat-form-field appearance="outline" class="formField" *ngIf="incomingForm.value.sellingType === 'product' && products.length > 0">
+            <mat-form-field class="formField" *ngIf="incomingForm.value.sellingType === 'product' && products.length > 0">
               <mat-label>Produto</mat-label>
               <input matInput placeholder="Escolha o produto" type="text" formControlName="product" [matAutocomplete]="autoProduct">
             </mat-form-field>
@@ -56,7 +56,7 @@
               </mat-option>
             </mat-autocomplete>
 
-            <mat-form-field appearance="outline" class="formField" *ngIf="incomingForm.value.sellingType === 'service' && services.length > 0">
+            <mat-form-field class="formField" *ngIf="incomingForm.value.sellingType === 'service' && services.length > 0">
               <mat-label>Serviço</mat-label>
               <input matInput placeholder="Escolha o serviço" type="text" formControlName="service" [matAutocomplete]="autoService">
             </mat-form-field>
@@ -186,12 +186,11 @@
 
   <mat-dialog-actions>
     <div class="flex">
-      <button mat-raised-button [disabled]="incomingForm.invalid || isDisabled || !sellingObject || sellingObject.length < 1" (click)="onIncomingFormSubmit(this.formDirective)"
-        color="primary">
+      <button mat-raised-button [disabled]="incomingForm.invalid || isDisabled || !sellingObject || sellingObject.length < 1" (click)="onIncomingFormSubmit(this.formDirective)" >
         {{ submitButton }}
       </button>
 
-      <button mat-raised-button (click)="onPayment();" color="accent" [disabled]="incomingForm.invalid || isDisabled || !sellingObject || sellingObject.length < 1">Pagar</button>
+      <button mat-raised-button (click)="onPayment();" [disabled]="incomingForm.invalid || isDisabled || !sellingObject || sellingObject.length < 1">Forma de pgto</button>
 
       <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
     </div>

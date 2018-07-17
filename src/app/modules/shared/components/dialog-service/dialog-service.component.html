@@ -15,6 +15,11 @@
 					<input matInput placeholder="Descrição dos serviços" type="text" formControlName="name" required>
 				</mat-form-field>
 
+				<mat-form-field class="flex">
+					<mat-label>Preço</mat-label>
+					<input matInput placeholder="Preço" type="text" formControlName="price">
+				</mat-form-field>
+
 				<app-additional-field [params]="paramsToAdditionalField" (changeAdditionalField)="onOutputFromAdditionalField($event)"></app-additional-field>
 			</mat-card-content>
 				

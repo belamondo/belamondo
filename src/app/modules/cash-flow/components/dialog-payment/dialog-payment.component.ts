@@ -62,6 +62,7 @@ export class DialogPaymentComponent implements OnInit {
   public fields: any = [];
   public userData: any;
   public paramsToTableData: any;
+  public paymentOptions: any = [];
   // Common properties: end
 
   public autoCorrectedDatePipe: any;
@@ -115,6 +116,24 @@ export class DialogPaymentComponent implements OnInit {
           this.paymentFormInit();
         });
     }
+
+    /* Create array of payment options */
+    this.paymentOptions.push({
+      form: new FormGroup({
+        type: new FormControl(null, Validators.required),
+        amount: new FormControl(this.data.lastPrice, Validators.required),
+        date: new FormControl(null),
+        quota_number: new FormControl(null),
+        is_equal_quota: new FormControl(null),
+        quotas: new FormArray([
+         new FormControl(null), // value
+         new FormControl(null), // date
+         new FormControl(null) // quota index
+        ])
+      }),
+      showQuotes: false,
+      quotes: [],
+    });
   }
 
   onClose = () => {
@@ -131,30 +150,30 @@ export class DialogPaymentComponent implements OnInit {
       if (res[0]['payment']) {
         this.submitToCreate = false;
         this.submitToUpdate = true;
-        this.title = 'Atualizar pagamento';
+        this.title = 'Forma de Pagamento';
         this.submitButton = 'Atualizar';
       } else {
         this.submitToCreate = true;
         this.submitToUpdate = false;
-        this.title = 'Cadastrar pagamento';
+        this.title = 'Forma de Pagamento';
         this.submitButton = 'Salvar';
       }
     });
   }
 
-  setQuotasArray = (e) => {
+  setQuotasArray = (e, index) => {
     let quotas;
-    this.quotas = [];
+    this.paymentOptions[index].quotas = [];
 
-    quotas = this.paymentForm.value.quota_number;
+    quotas = this.paymentOptions[index].form.value.quota_number;
 
     if (!isNaN(e.key)) {
-      if (this.paymentForm.value.quota_number) {
+      if (this.paymentOptions[index].form.value.quota_number) {
         for (let i = 0; i < quotas; i++) {
           let date;
           date = new Date();
           date.setMonth(date.getMonth() + i);
-          this.quotas.push({
+          this.paymentOptions[index].quotas.push({
             value: this.paymentForm.value.amount / quotas,
             quota: i + 1,
             date: date
@@ -163,5 +182,35 @@ export class DialogPaymentComponent implements OnInit {
       }
     }
     // this.quotas = Array(this.paymentForm.value.quota_number).fill(0).map((x, i) => i);
+  }
+
+  /* Expand quota container to see details */
+  showQuotaContainer = (index, boolean) => {
+    this.paymentOptions[index].showQuotes = boolean;
+  }
+
+  /* Add a new payment option in a array of payments */
+  addNewPaymentOption = () => {
+    this.paymentOptions.push({
+      form: new FormGroup({
+        type: new FormControl(null, Validators.required),
+        amount: new FormControl(this.data.lastPrice, Validators.required),
+        date: new FormControl(null),
+        quota_number: new FormControl(null),
+        is_equal_quota: new FormControl(null),
+        quotas: new FormArray([
+         new FormControl(null), // value
+         new FormControl(null), // date
+         new FormControl(null) // quota index
+        ])
+      }),
+      showQuotes: false,
+      quotes: [],
+    });
+  }
+
+  /* Delete payment option in a array of payments */
+  deletePaymentOption = (index) => {
+    this.paymentOptions.splice(index, 1);
   }
 }

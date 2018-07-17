@@ -75,12 +75,21 @@ export class IncomingComponent implements OnInit {
           {
             icon: 'delete',
             description: 'Excluir',
-            tooltip: 'Excluir selecionados'
+            tooltip: 'Excluir selecionados',
+            disabled: true,
           },
         ]
       },
       list: {
         show: [{
+          field: 'date',
+          header: 'Data',
+          sort: 'sort'
+        }, {
+          field: 'client',
+          header: 'Cliente',
+          sort: 'sort'
+        }, {
           field: 'selling_final_price',
           header: 'Preço total'
         }, {
