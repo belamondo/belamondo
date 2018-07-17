@@ -284,7 +284,7 @@ export class DialogCompanyComponent implements OnInit {
             result.type = element.name;
           }
         });
-        
+
         this.contactsObject.push(result);
       }
     });
@@ -352,7 +352,6 @@ export class DialogCompanyComponent implements OnInit {
 
   checkCompanyExistence = (cnpj) => {
     if (!this.companyForm.get('cnpj').errors) {
-      let cnpj = this.companyForm.get('cnpj').value;
       this.cnpjToSearch =  cnpj.replace(/.-/, '');
 
       if ((this.cnpjToSearch.length > 13) && (this.cnpjToSearch !== this.cnpjToSearchCheck)) {

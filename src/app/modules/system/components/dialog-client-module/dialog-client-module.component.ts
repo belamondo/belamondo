@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormGroupDirective } from '@angular/forms';
 import { MatDatepickerIntl, MatSnackBar, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 
 /**
@@ -135,7 +135,8 @@ export class DialogClientModuleComponent implements OnInit {
 
     cnpj = this.companiesForm.value.cnpj.replace(/[^\d]+/g, '');
 
-    if (!this.companiesForm.get('cnpj').errors && cnpj.length === 14) { console.log(156);
+    if (!this.companiesForm.get('cnpj').errors && cnpj.length === 14) {
+      console.log(156);
       this._crud.readWithPromise({
         collectionsAndDocs: ['companies'],
         where: [['cnpj', '==', this.companiesForm.value.cnpj]]
@@ -176,20 +177,114 @@ export class DialogClientModuleComponent implements OnInit {
     });
   }
 
-  onCompaniesFormSubmit = () => {
-    this._crud.update({
-      collectionsAndDocs: ['modulesPermissions', this.company._id, this.clientModuleForm.get('description').value],
-      objectToUpdate: this.companiesForm.value
-    }).catch(err => {
-      console.log(err);
-      return false;
-    }).then(res => {
-      console.log(this.company._id);
-      this._snackbar.open('Cadastro feito com sucesso.', '', {
-        duration: 4000
-      });
+  onCompaniesFormSubmit = (formDirective: FormGroupDirective) => {
+    if (this.submitToUpdate) {
+      this._crud
+        .update({
+          collectionsAndDocs: [
+            this.userData[0]['_userType'],
+            this.userData[0]['_id'],
+            'userCompanies',
+            this.data.id
+          ],
+          objectToUpdate: this.companyForm.value
+        });
 
-      this._dialog.closeAll();
-    });
+      this._crud
+        .update({
+          collectionsAndDocs: [
+            this.userData[0]['_userType'],
+            this.userData[0]['_id'],
+            'userCompanies',
+            this.data.id,
+            'userCompaniesDocuments',
+            0
+          ],
+          objectToUpdate: {
+            documentsToParse: JSON.stringify(this.documentsObject)
+          }
+        });
+
+      this._crud
+        .update({
+          collectionsAndDocs: [
+            this.userData[0]['_userType'],
+            this.userData[0]['_id'],
+            'userCompanies',
+            this.data.id,
+            'userCompaniesContacts',
+            0
+          ],
+          objectToUpdate: {
+            contactsToParse: JSON.stringify(this.contactsObject)
+          }
+        });
+
+      this._crud
+        .update({
+          collectionsAndDocs: [
+            this.userData[0]['_userType'],
+            this.userData[0]['_id'],
+            'userCompanies',
+            this.data.id,
+            'userCompaniesAddresses',
+            0
+          ],
+          objectToUpdate: {
+            addressesToParse: JSON.stringify(this.addressesObject)
+          }
+        });
+
+      this._crud
+        .update({
+          collectionsAndDocs: [
+            this.userData[0]['_userType'],
+            this.userData[0]['_id'],
+            'userCompanies',
+            this.data.id,
+            'userCompaniesRelationships',
+            0
+          ],
+          objectToUpdate: {
+            relationshipsToParse: JSON.stringify(this.relationshipsObject)
+          }
+        });
+    }
+
+    if (this.submitToCreate) {
+      this.companiesForm.value.company = this.company;
+
+      this._crud
+        .update({
+          collectionsAndDocs: [
+            'modulesPermissions',
+            this.company._id
+          ],
+          objectToUpdate: this.companiesForm.value,
+        }).then(res => {
+          formDirective.resetForm();
+
+          this._snackbar.open('Cadastro feito com sucesso', '', {
+            duration: 4000
+          });
+        });
+    }
   }
+
+  // onCompaniesFormSubmit = () => {
+  //   this._crud.update({
+  //     collectionsAndDocs: ['modulesPermissions', this.company._id, this.clientModuleForm.get('description').value],
+  //     objectToUpdate: this.companiesForm.value
+  //   }).catch(err => {
+  //     console.log(err);
+  //     return false;
+  //   }).then(res => {
+  //     console.log(this.company._id);
+  //     this._snackbar.open('Cadastro feito com sucesso.', '', {
+  //       duration: 4000
+  //     });
+
+  //     this._dialog.closeAll();
+  //   });
+  // }
 }

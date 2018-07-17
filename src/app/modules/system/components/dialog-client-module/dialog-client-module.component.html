@@ -12,7 +12,7 @@
     </mat-radio-group>
   </form>
   <!--FORM DE PESSOA-->
-  <form [formGroup]="peopleForm" *ngIf="clientModuleForm.get('description').value === 'people'">
+  <form [formGroup]="peopleForm" *ngIf="clientModuleForm.get('description').value === 'people'"  #formDirective="ngForm">
     <div class="label">Pessoa</div>
     <mat-form-field id="cpf">
       <mat-label>CNPJ</mat-label>
@@ -24,7 +24,7 @@
     Formulário de animal
   </form>
   <!--FORM DE EMPRESA-->
-  <form [formGroup]="companiesForm" *ngIf="clientModuleForm.get('description').value === 'companies'">
+  <form [formGroup]="companiesForm" *ngIf="clientModuleForm.get('description').value === 'companies'"  #formDirective="ngForm">
     <div class="label">Empresa</div>
 
     <mat-form-field id="cpf">
@@ -42,7 +42,7 @@
 
       <mat-form-field>
         <mat-select placeholder="Módulos" formControlName="modules" multiple required>
-          <mat-option *ngFor="let module of modules" value="module">
+          <mat-option *ngFor="let module of modules" [value]="module">
             {{module}}
           </mat-option>
         </mat-select>
