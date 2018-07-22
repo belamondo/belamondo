@@ -35,6 +35,10 @@ export class TopbarMenuComponent implements OnInit, OnChanges {
   (window.screen.availWidth < 800) :
   true;
 
+  public moduleCashFlow: boolean;
+  public moduleCrm: boolean;
+  public moduleSystem: boolean;
+  public moduleWarehouse: boolean;
   public options: any;
   public user: any;
   public userData: any;
@@ -100,13 +104,41 @@ export class TopbarMenuComponent implements OnInit, OnChanges {
         this.userData = userData;
 
         this.isStarted = true;
+
+        this.setModulesPermissions();
       });
     } else {
       if (!this.userData) {
         this.userData = this._strategicData.userData$;
         this.isStarted = true;
+
+        this.setModulesPermissions();
       }
     }
+  }
+
+  setModulesPermissions = () => {
+    this._crud.readWithObservable({
+      collectionsAndDocs: ['modulesPermissions', this.userData[0]['_id']]
+    }).subscribe(res => {
+      res[0]['modules'].forEach(element => {
+        if (element === 'Almoxarifado') {
+          this.moduleWarehouse = true;
+        }
+
+        if (element === 'Fluxo de caixa') {
+          this.moduleCashFlow = true;
+        }
+
+        if (element === 'CRM') {
+          this.moduleCrm = true;
+        }
+
+        if (element === 'Sistema') {
+          this.moduleSystem = true;
+        }
+      });
+    });
   }
 
   logout = () => {

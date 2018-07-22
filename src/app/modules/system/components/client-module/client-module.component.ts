@@ -58,7 +58,7 @@ export class ClientModuleComponent implements OnInit {
 
   setSourceToTableData = () => {
     this._crud.readWithObservable({
-      collectionsAndDocs: [this.userData[0]['_userType'], this.userData[0]['_id'], 'modules']
+      collectionsAndDocs: ['modulesPermissions']
     }).subscribe(res => {
       this.sourceToTableData = res;
 

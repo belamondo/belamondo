@@ -31,6 +31,8 @@ const _firestore = initializeApp({
 export class CrudService {
   private user: any;
   constructor() {
+    const settings = {timestampsInSnapshots: true};
+    _firestore.app.firestore().settings(settings);
   }
 
   create = (params) => new Promise((resolve, reject) => {

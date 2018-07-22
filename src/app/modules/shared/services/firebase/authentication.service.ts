@@ -59,7 +59,8 @@ export class AuthenticationService {
     private _router: Router,
     public _snackbar: MatSnackBar,
     public _strategicData: StrategicDataService,
-  ) {}
+  ) {
+  }
 
   login = (params) => new Promise((res, rej) => {
     // Set params errors: start
@@ -101,46 +102,46 @@ export class AuthenticationService {
 
     if (params.loginMode === 'emailAndPassword') {
       _authentication.signInWithEmailAndPassword(params.user, params.password)
-      .catch(fbErr => {
-        if (fbErr) {
-          this._snackbar.open(fbErr['message'], '', {
-            duration: 4000
-          });
-        }
-      })
-      .then(fbRes => {
-        if (fbRes && fbRes['user']['uid']) {
-          fbRes['code'] = 'l-success-01';
-          fbRes['message'] = 'Welcome';
-          sessionStorage.clear();
-          this._strategicData.emptyAllData();
-
-          this._snackbar.open(fbRes['message'], '', {
-            duration: 4000
-          });
-
-          sessionStorage.setItem('user', JSON.stringify(fbRes['user']));
-
-          // Check if user loggedin is assigned and on what type of user
-          // Case not assigned, sending to profile choice
-
-          this._strategicData.setUserData()
-          .then(user => {
-            if (user[0]) {
-              this._router.navigate([params.navigateTo]);
-            } else {
-              this._router.navigate([params.navigateToProfile]);
-            }
-          });
-        } else {
-          res(fbRes);
-          if (fbRes) {
-            this._snackbar.open(fbRes['message'], '', {
+        .catch(fbErr => {
+          if (fbErr) {
+            this._snackbar.open(fbErr['message'], '', {
               duration: 4000
             });
           }
-        }
-      });
+        })
+        .then(fbRes => {
+          if (fbRes && fbRes['user']['uid']) {
+            fbRes['code'] = 'l-success-01';
+            fbRes['message'] = 'Welcome';
+            sessionStorage.clear();
+            this._strategicData.emptyAllData();
+
+            this._snackbar.open(fbRes['message'], '', {
+              duration: 4000
+            });
+
+            sessionStorage.setItem('user', JSON.stringify(fbRes['user']));
+
+            // Check if user loggedin is assigned and on what type of user
+            // Case not assigned, sending to profile choice
+
+            this._strategicData.setUserData()
+              .then(user => {
+                if (user[0]) {
+                  this._router.navigate([params.navigateTo]);
+                } else {
+                  this._router.navigate([params.navigateToProfile]);
+                }
+              });
+          } else {
+            res(fbRes);
+            if (fbRes) {
+              this._snackbar.open(fbRes['message'], '', {
+                duration: 4000
+              });
+            }
+          }
+        });
     }
   })
 

@@ -17,10 +17,10 @@
         </span>
         
         <mat-menu #appMenu="matMenu" yPosition="below">
-          <a mat-menu-item routerLink="" class="menu-item">Almoxarifado</a>
-          <a mat-menu-item routerLink="/crm" class="menu-item">CRM</a>
-          <a mat-menu-item routerLink="/cash-flow" class="menu-item">Fluxo de caixa</a>
-          <a mat-menu-item routerLink="/system" class="menu-item">Sistema</a>
+          <a mat-menu-item routerLink="" class="menu-item" *ngIf="moduleWarehouse">Almoxarifado</a>
+          <a mat-menu-item routerLink="/crm" class="menu-item" *ngIf="moduleCrm">CRM</a>
+          <a mat-menu-item routerLink="/cash-flow" class="menu-item" *ngIf="moduleCashFlow">Fluxo de caixa</a>
+          <a mat-menu-item routerLink="/system" class="menu-item" *ngIf="moduleSystem">Sistema</a>
         </mat-menu>
         
         <button *ngIf="params.views" mat-icon-button [matMenuTriggerFor]="appMenu">

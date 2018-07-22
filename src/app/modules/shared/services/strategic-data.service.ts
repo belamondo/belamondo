@@ -80,7 +80,7 @@ export class StrategicDataService implements OnInit {
         this._crud.readWithPromise({
           collectionsAndDocs: ['companies', this.user['uid']]
         }).then(resCompanies => {
-          if (resCompanies[0]) {
+          if (resCompanies[0]) { console.log(resCompanies);
             resCompanies[0]['_userType'] = 'companies';
             observer.next(resCompanies);
           } else {

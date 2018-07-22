@@ -112,7 +112,6 @@ export class DialogClientModuleComponent implements OnInit {
         .readWithObservable({
           collectionsAndDocs: [
             'modulesPermissions',
-            this.userData[0]['_id'],
             this.data.id
           ]
         }).subscribe(res => {
@@ -187,67 +186,7 @@ export class DialogClientModuleComponent implements OnInit {
             'userCompanies',
             this.data.id
           ],
-          objectToUpdate: this.companyForm.value
-        });
-
-      this._crud
-        .update({
-          collectionsAndDocs: [
-            this.userData[0]['_userType'],
-            this.userData[0]['_id'],
-            'userCompanies',
-            this.data.id,
-            'userCompaniesDocuments',
-            0
-          ],
-          objectToUpdate: {
-            documentsToParse: JSON.stringify(this.documentsObject)
-          }
-        });
-
-      this._crud
-        .update({
-          collectionsAndDocs: [
-            this.userData[0]['_userType'],
-            this.userData[0]['_id'],
-            'userCompanies',
-            this.data.id,
-            'userCompaniesContacts',
-            0
-          ],
-          objectToUpdate: {
-            contactsToParse: JSON.stringify(this.contactsObject)
-          }
-        });
-
-      this._crud
-        .update({
-          collectionsAndDocs: [
-            this.userData[0]['_userType'],
-            this.userData[0]['_id'],
-            'userCompanies',
-            this.data.id,
-            'userCompaniesAddresses',
-            0
-          ],
-          objectToUpdate: {
-            addressesToParse: JSON.stringify(this.addressesObject)
-          }
-        });
-
-      this._crud
-        .update({
-          collectionsAndDocs: [
-            this.userData[0]['_userType'],
-            this.userData[0]['_id'],
-            'userCompanies',
-            this.data.id,
-            'userCompaniesRelationships',
-            0
-          ],
-          objectToUpdate: {
-            relationshipsToParse: JSON.stringify(this.relationshipsObject)
-          }
+          objectToUpdate: this.companiesForm.value
         });
     }
 
@@ -262,7 +201,7 @@ export class DialogClientModuleComponent implements OnInit {
           ],
           objectToUpdate: this.companiesForm.value,
         }).then(res => {
-          formDirective.resetForm();
+          this._dialog.closeAll();
 
           this._snackbar.open('Cadastro feito com sucesso', '', {
             duration: 4000
