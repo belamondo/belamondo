@@ -1,6 +1,10 @@
-button {
-    font-size: small;
+#button-color {
+    font-size: 20px;
     width: 100%;
+    background-color: #000B48;
+    color: #ffffff;
+    font-display: 'poppins', sans-serif;
+    font-weight: 100;
 }
 
 form {
@@ -11,11 +15,11 @@ mat-card {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 300px;
-    height: 250px;
+    width: 450px;
+    height: 300px;
     z-index: 1;
-
     box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22) !important;
+    background-color: #36396a;
     font-size: small;
 }
 
@@ -23,14 +27,60 @@ mat-card {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     height: 100vh;
+    background: #000B48;
+}
 
-    background: linear-gradient(to bottom, #263B89 0%, #7C7DD7 100%);
+.mat-form-field-empty.mat-form-field-label {
+    color: green !important;
+}
+
+.mat-form-field-underline {
+    background-color: green !important;
+}
+
+#form-option {
+    margin-top: 20px;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+#form-option a {
+    text-decoration: none;
+    color: #ffffff;
+    font-family: 'poppins', sans-serif;
+    font-style: 200;
+    opacity: 1;
+    font-size: 20px;
+}
+
+mat-card form {
+    opacity: 1;
 }
 
 #background mat-form-field {
     display: block;
 }
+
+#logo {
+    font-family: 'poppins', sans-serif;
+    margin-bottom: 39px;
+    font-size: 100px;
+    font-weight: 100; 
+    color: #ffffff; 
+}
+
+#logo_m {
+    font-weight: 900;
+
+
+}
+
+
 
 /* Responsive stuffs - start */
 

@@ -29,8 +29,7 @@ const routes: Routes = [{
   component: LoginComponent
 }, {
   path: 'profile-choice',
-  component: ProfileChoiceComponent,
-  canActivate: [ProfileChoiceGuard]
+  component: ProfileChoiceComponent
 }, {
   path: 'main',
   loadChildren: './modules/main/main.module#MainModule',

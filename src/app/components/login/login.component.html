@@ -1,17 +1,24 @@
 <div id="background">
+  <div id="logo">
+    <label id="logo_m">M</label>oderatoro
+  </div>
   <mat-card>
-    <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
-      <mat-form-field>
-        <mat-label>Usuário</mat-label>
-        <input matInput formControlName="user" placeholder="Digite seu email">
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Senha</mat-label>
-        <input matInput formControlName="password" type="password" placeholder="Digite sua senha">
-      </mat-form-field>
-
-      <button mat-raised-button color="primary" [disabled]="disabled || loginForm.invalid || !loginForm.touched">Entrar</button>
-    </form>
+        <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+            <mat-form-field>
+              <mat-label>Usuário</mat-label>
+              <input matInput formControlName="user" placeholder="Digite seu email">
+            </mat-form-field>
+      
+            <mat-form-field>
+              <mat-label>Senha</mat-label>
+              <input matInput formControlName="password" type="password" placeholder="Digite sua senha">
+            </mat-form-field>
+      
+            <button mat-raised-button id="button-color" [disabled]="disabled || loginForm.invalid || !loginForm.touched">Sign In</button>
+            <div id="form-option">
+              <a href="">Create account</a>
+              <a href="">Forgot password?</a>
+            </div>
+          </form>
   </mat-card>
 </div>
