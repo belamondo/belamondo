@@ -27,7 +27,7 @@ import {
   MatTooltipModule,
   MatListModule,
   MatMenuModule,
-  MatExpansionModule,
+  MatExpansionModule
 } from '@angular/material';
 
 @NgModule({

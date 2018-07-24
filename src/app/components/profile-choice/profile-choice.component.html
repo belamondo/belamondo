@@ -1,18 +1,87 @@
-<mat-card class="container">
-  <form [formGroup]="profileChoiceForm" (ngSubmit)="onProfileChoiceFormSubmit()">
-    <mat-card-title>Tipo de usuário</mat-card-title>
-    
-    <mat-radio-group formControlName="description" (change)="checkUserExistence()">
-      <mat-radio-button value="animals">Animal</mat-radio-button>
-      <mat-radio-button value="companies">Empresa</mat-radio-button>
-      <mat-radio-button value="entities">Entidade</mat-radio-button>
-      <mat-radio-button value="people">Pessoa</mat-radio-button>
-    </mat-radio-group>
-  </form>
-</mat-card>
+<mat-toolbar id="menu-toolbar"> 
+  <div id="menu-toolbar-head">
+    <div id="area-user">
+        <div id="img-circle"></div>
+        <div id="name-profile">Giovanni</div>
+    </div>
+  </div>
+  <div id="menu-toolbar-footer">
+    <div id="logo">
+      <label id="logo_m">M</label>oderatoro
+    </div>
+  </div>
+</mat-toolbar>
+<div class="container">
+  <div id="profilechoice">
+    <div id="profile-choice-title">
+      Criar Perfil
+    </div>
+    <div id="profile-choice-select">
+      <div>
+        Escolha seu tipo de perfil - <span>Atenção: uma vez cadastrado o perfil, o tipo de perfil nunca poderá ser alterado</span>
+      </div>
+      <div id="area-form-profile">
+        <form [formGroup]="profileChoiceForm" (ngSubmit)="onProfileChoiceFormSubmit()">
+          <mat-radio-group formControlName="description" (change)="checkUserExistence()">
+            <mat-radio-button value="animals">Animal</mat-radio-button>
+            <mat-radio-button value="companies">Empresa</mat-radio-button>
+            <mat-radio-button value="entities">Entidade</mat-radio-button>
+            <mat-radio-button value="people">Pessoa</mat-radio-button>
+          </mat-radio-group>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div id="profile-choice-person">
+    <mat-horizontal-stepper [linear]="isLinear" #stepper>
+      <mat-step [stepControl]="dadosPessoais">
+        <ng-template matStepLabel>Dados Pessoais</ng-template>
+        <div id="form-person">
+          <mat-form-field id="form-width">
+            <input matInput placeholder="Nome Completo" required>
+          </mat-form-field>
+          <mat-form-field id="form-width">
+            <input matInput type="date" placeholder="Data de Nascimento" required>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field id="form-width">
+            <textarea matInput #message maxlength="255" placeholder="Apresentação pessoal:"></textarea>
+            <mat-hint align="end">{{ message.lenght }} / 255</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <button mat-button matStepperNext>Próximo</button>
+        </div>
+      </mat-step>
+      <mat-step [stepControl]="Documentos">
+        <ng-template matStepLabel>Documentos</ng-template>
+        <mat-form-field>
+          <mat-select placeholder="Tipo de Documento">
+            <mat-option value="1">CPF</mat-option>
+            <mat-option value="2">RG</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-step>
+      <mat-step [stepControl]="Endereco">
+        <ng-template matStepLabel>Endereço</ng-template>
+      </mat-step>
+      <mat-step [stepControl]="Contatos">
+        <ng-template matStepLabel>Contatos</ng-template>
+      </mat-step>
+      <mat-step [stepControl]="DadosEscolares">
+        <ng-template matStepLabel>Dados Escolares</ng-template>
+      </mat-step>
+      <mat-step [stepControl]="DadosProfissionais">
+        <ng-template matStepLabel>Dados Profissionais</ng-template>
+      </mat-step>  
+    </mat-horizontal-stepper>
+  </div>
+</div>
 
-<div *ngIf="isStarted">
-  <!--FORM DE PESSOA-->
+<!--
+  <div *ngIf="isStarted">
+  FORM DE PESSOA
   <mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'people'">
     <form [formGroup]="peopleForm" (ngSubmit)="onPeopleFormSubmit()">
       <mat-card-title>Perfil de pessoa</mat-card-title>
@@ -40,11 +109,11 @@
       <button mat-raised-button>Cadastrar</button>
     </form>
   </mat-card>
-  <!--FORM DE ANIMAL-->
+  FORM DE ANIMAL
   <mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'animals'">
     Formulário de animal
   </mat-card>
-  <!--FORM DE EMPRESA-->
+  FORM DE EMPRESA
   <mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'companies'">
     <form [formGroup]="companiesForm" (ngSubmit)="onCompaniesFormSubmit()">
       <mat-card-title>Perfil de empresa</mat-card-title>
@@ -119,11 +188,11 @@
         </section>
   
   
-        <!-- <section class="checkbox">
+         <section class="checkbox">
               <mat-label>Checkboxes</mat-label>
               <mat-checkbox>Checked</mat-checkbox>
               <mat-checkbox>Indeterminate</mat-checkbox>
-            </section> -->
+            </section> 
       </div>
   
       <section id="address">
@@ -152,8 +221,11 @@
       <button mat-raised-button [color]="primary">Cadastrar</button>
     </form>
   </mat-card>
-  <!--FORM DE ENTIDADE-->
+  <!--FORM DE ENTIDADE
   <mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'entities'">
     Formulário de entidade
   </mat-card>
 </div>
+-->
+
+

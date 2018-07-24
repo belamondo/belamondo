@@ -39,6 +39,7 @@ import { ValidateUniqueValue } from './../../modules/shared/validators/unique-va
   styleUrls: ['./profile-choice.component.css']
 })
 export class ProfileChoiceComponent implements OnInit {
+  public isLinear = false;
   public peopleForm: FormGroup;
   public companiesForm: FormGroup;
   public profileChoiceForm: FormGroup;

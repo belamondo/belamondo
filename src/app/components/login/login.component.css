@@ -32,12 +32,12 @@ mat-card {
     background: #000B48;
 }
 
-.mat-form-field-empty.mat-form-field-label {
-    color: green !important;
+/deep/ .mat-form-field-label  {
+    color: #ffffff !important;
 }
 
-.mat-form-field-underline {
-    background-color: green !important;
+/deep/ .mat-form-field-underline{
+    background-color: #ffffff !important;    
 }
 
 #form-option {
@@ -62,6 +62,10 @@ mat-card form {
     opacity: 1;
 }
 
+mat-form-field  {
+    color: #fff;
+}
+
 #background mat-form-field {
     display: block;
 }
@@ -76,8 +80,6 @@ mat-card form {
 
 #logo_m {
     font-weight: 900;
-
-
 }
 
 
@@ -92,6 +94,10 @@ mat-card form {
 
     mat-card {
         width: 80%;
+    }
+
+    #logo {
+        font-size: 40px;
     }
 }
 /* Responsive stuffs - end */

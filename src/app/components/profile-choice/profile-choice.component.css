@@ -1,3 +1,97 @@
+#menu-toolbar {
+    height: 239px;
+    background-color: #000B48;
+    display: flex;
+    flex-direction: column;
+}
+
+#menu-toolbar-head {
+    height: 119.5px;
+    width: 80%
+}
+
+#area-user {
+    width: 300px;
+    height: 119.5px;
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#img-circle {
+    background-color: #dedede;
+    width: 69px;
+    height: 69px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+#name-profile {
+    font-family: 'poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 400; 
+    color: #ffffff; 
+
+}
+
+#menu-toolbar-footer {
+    height: 119.5px;
+    width: 80%;
+}
+
+#logo {
+    width: 300px;
+    height: 119.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'poppins', sans-serif;
+    font-size: 50px;
+    font-weight: 100; 
+    color: #ffffff; 
+}
+
+#logo_m {
+    font-weight: 900;
+}
+
+#profile-choice-title {
+    height: 50px;
+    font-family: 'poppins', sans-serif;
+    font-size: 30px;
+    color: #000000;
+    border-bottom: #000000 solid 3px;
+    display: flex;
+    align-items: center;
+}
+
+#profile-choice-select {
+    padding-top: 50px;
+    height: 50px;
+    font-size: 20px;
+    font-family: 'poppins', sans-serif;
+    color: #000000;
+    font-weight: 400px;   
+}
+
+#profile-choice-select span {
+    color: #656565;
+}
+
+#area-form-profile {
+    padding-top: 20px;
+}
+
+#profile-choice-person {
+    margin-top: 20px;
+    background-color: red;
+}
+
+#form-width {
+    width: 400px;
+}
+
 #cnpj {
     width: 50%;
 }
