@@ -1,4 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+ /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import './assets/css/reset.css';
 @import url('https://fonts.googleapis.com/css?family=Roboto');
@@ -15,7 +15,7 @@ mat-icon {
 }
 
 mat-form-field {
-    width: 100%;
+    /* width: 100%; */
     margin-inline-end: 1em;
 }
 
@@ -62,7 +62,7 @@ img {
 
 .container {
     width: 80%;
-    margin: 40px 1% 40px 1%;
+    margin: 15px 1% 15px 1%;
     margin-left: auto;
     margin-right: auto;
 }

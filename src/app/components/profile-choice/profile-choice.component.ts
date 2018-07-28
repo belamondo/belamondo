@@ -36,7 +36,7 @@ import { ValidateUniqueValue } from './../../modules/shared/validators/unique-va
 @Component({
   selector: 'app-profile-choice',
   templateUrl: './profile-choice.component.html',
-  styleUrls: ['./profile-choice.component.css']
+  styleUrls: ['./profile-choice.component.css'],
 })
 export class ProfileChoiceComponent implements OnInit {
   public isLinear = false;
@@ -44,6 +44,7 @@ export class ProfileChoiceComponent implements OnInit {
   public companiesForm: FormGroup;
   public profileChoiceForm: FormGroup;
   public isStarted: boolean;
+  public profileChoice: string;
 
   public mask: any;
 
@@ -102,30 +103,6 @@ export class ProfileChoiceComponent implements OnInit {
     this.documentsObject = [];
 
     this.contactsObject = [];
-
-    this.mask = {
-      cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/],
-      date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
-      cnpj: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/]
-    };
-  }
-
-  checkUserExistence = () => {
-    this._crud.readWithObservable({
-      collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['uid']]
-    }).subscribe(resCompanies => { console.log(resCompanies);
-      if (resCompanies['length'] > 0) {
-        this._router.navigate(['/main/dashboard']);
-
-        this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
-          duration: 4000
-        });
-
-        return false;
-      } else {
-      }
-      this.isStarted = true;
-    });
   }
 
   addAddress = () => {

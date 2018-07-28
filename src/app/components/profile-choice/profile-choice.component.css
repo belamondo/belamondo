@@ -1,18 +1,18 @@
 #menu-toolbar {
-    height: 239px;
     background-color: #000B48;
     display: flex;
     flex-direction: column;
 }
 
+
 #menu-toolbar-head {
-    height: 119.5px;
+    height: 100px;
     width: 80%
 }
 
 #area-user {
     width: 300px;
-    height: 119.5px;
+    height: 100px;
     float: right;
     display: flex;
     justify-content: center;
@@ -32,22 +32,16 @@
     font-size: 20px;
     font-weight: 400; 
     color: #ffffff; 
-
-}
-
-#menu-toolbar-footer {
-    height: 119.5px;
-    width: 80%;
 }
 
 #logo {
     width: 300px;
-    height: 119.5px;
+    height: 60px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     font-family: 'poppins', sans-serif;
-    font-size: 50px;
+    font-size: 30px;
     font-weight: 100; 
     color: #ffffff; 
 }
@@ -59,15 +53,15 @@
 #profile-choice-title {
     height: 50px;
     font-family: 'poppins', sans-serif;
-    font-size: 30px;
+    font-size: 20px;
     color: #000000;
-    border-bottom: #000000 solid 3px;
+    border-bottom: #000000 solid 1px;
     display: flex;
     align-items: center;
 }
 
 #profile-choice-select {
-    padding-top: 50px;
+    padding-top: 20px;
     height: 50px;
     font-size: 20px;
     font-family: 'poppins', sans-serif;
@@ -88,8 +82,16 @@
     background-color: red;
 }
 
+#btn-choice button{
+    margin-left: 5px;
+}
+
 #form-width {
     width: 400px;
+}
+
+#form-width-document {
+    width: 150px;
 }
 
 #cnpj {

@@ -1,11 +1,5 @@
 <mat-toolbar id="menu-toolbar"> 
   <div id="menu-toolbar-head">
-    <div id="area-user">
-        <div id="img-circle"></div>
-        <div id="name-profile">Giovanni</div>
-    </div>
-  </div>
-  <div id="menu-toolbar-footer">
     <div id="logo">
       <label id="logo_m">M</label>oderatoro
     </div>
@@ -22,7 +16,7 @@
       </div>
       <div id="area-form-profile">
         <form [formGroup]="profileChoiceForm" (ngSubmit)="onProfileChoiceFormSubmit()">
-          <mat-radio-group formControlName="description" (change)="checkUserExistence()">
+          <mat-radio-group formControlName="description">
             <mat-radio-button value="animals">Animal</mat-radio-button>
             <mat-radio-button value="companies">Empresa</mat-radio-button>
             <mat-radio-button value="entities">Entidade</mat-radio-button>
@@ -32,52 +26,297 @@
       </div>
     </div>
   </div>
-  <div id="profile-choice-person">
-    <mat-horizontal-stepper [linear]="isLinear" #stepper>
-      <mat-step [stepControl]="dadosPessoais">
-        <ng-template matStepLabel>Dados Pessoais</ng-template>
+  <div *ngIf="profileChoiceForm.value.description">
+    <div id="profile-choice-person">
+    <mat-horizontal-stepper [linear]="isLinear" #stepper>,
+      <!-- 
+        Begin - Dados Principais 
+      -->
+      <!-- People -->
+      <mat-step [stepControl]="dadosPrincipais" *ngIf="profileChoiceForm.value.description === 'people'">
+        <ng-template matStepLabel>Dados Principais</ng-template>
         <div id="form-person">
           <mat-form-field id="form-width">
             <input matInput placeholder="Nome Completo" required>
           </mat-form-field>
           <mat-form-field id="form-width">
-            <input matInput type="date" placeholder="Data de Nascimento" required>
+            <input matInput placeholder="CPF" [textMask]="{mask: mask.cpf}"  required>
           </mat-form-field>
         </div>
         <div>
+          <mat-form-field id="form-width">
+            <input matInput type="date" placeholder="Data de Nascimento" required>
+          </mat-form-field>
           <mat-form-field id="form-width">
             <textarea matInput #message maxlength="255" placeholder="Apresentação pessoal:"></textarea>
             <mat-hint align="end">{{ message.lenght }} / 255</mat-hint>
           </mat-form-field>
         </div>
-        <div>
-          <button mat-button matStepperNext>Próximo</button>
+        <div id="btn-choice">
+          <button mat-raised-button color="primary" matStepperNext>Próximo</button>
         </div>
       </mat-step>
-      <mat-step [stepControl]="Documentos">
-        <ng-template matStepLabel>Documentos</ng-template>
-        <mat-form-field>
-          <mat-select placeholder="Tipo de Documento">
-            <mat-option value="1">CPF</mat-option>
-            <mat-option value="2">RG</mat-option>
-          </mat-select>
-        </mat-form-field>
+    
+      <!-- Companies -->
+      <mat-step [stepControl]="dadosPrincipais" *ngIf="profileChoiceForm.value.description === 'companies'">
+        <ng-template matStepLabel>Dados Principais</ng-template>
+        <div id="form-person">
+          <mat-form-field id="form-width">
+            <input matInput placeholder="Razão Social" required>
+          </mat-form-field>
+          <mat-form-field id="form-width">
+            <input matInput placeholder="Cnpj" [textMask]="{mask: mask.cnpj}"  required>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field id="form-width">
+            <input matInput type="date" placeholder="Data de Abertura" required>
+          </mat-form-field>
+          <mat-form-field id="form-width">
+            <textarea matInput #message maxlength="255" placeholder="Apresentação da Empresa:"></textarea>
+            <mat-hint align="end">{{ message.lenght }} / 255</mat-hint>
+          </mat-form-field>
+        </div>
+        <div id="btn-choice">
+          <button mat-raised-button color="primary" matStepperNext>Próximo</button>
+        </div>
       </mat-step>
+
+      <!-- Animals -->  
+      <mat-step [stepControl]="dadosPrincipais" *ngIf="profileChoiceForm.value.description === 'animals'">
+        <ng-template matStepLabel>Dados Principais</ng-template>
+        Dados dos animais
+      </mat-step>
+
+      <!-- Entities --> 
+      <mat-step [stepControl]="dadosPrincipais" *ngIf="profileChoiceForm.value.description === 'entities'">
+        <ng-template matStepLabel>Dados Principais</ng-template>
+        Dados das entidades
+      </mat-step>
+      <!-- 
+        End - Dados principais 
+      -->
+
+      <!-- 
+        Begin - Documentos 
+      -->
+      <!-- People --> 
+      <mat-step [stepControl]="Documentos" *ngIf="profileChoiceForm.value.description === 'people'">
+        <ng-template matStepLabel>Documentos</ng-template>
+        <div id="form-document">
+          <mat-form-field id="form-width">
+            <mat-select placeholder="Tipo de Documento">
+              <mat-option value="1">CNH</mat-option>
+              <mat-option value="2">Titulo Eleitoral</mat-option>
+              <mat-option value="3">Reservista</mat-option>
+              <mat-option value="4">RG</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field id="form-width">
+              <input matInput placeholder="Valor" required>
+          </mat-form-field>
+        </div>
+        <div id="btn-choice">
+          <button mat-raised-button color="primary" matStepperPrevious>Volta</button>
+          <button mat-raised-button color="primary" matStepperNext>Próximo</button>
+        </div>
+      </mat-step>
+
+      <!-- Companies --> 
+      <mat-step [stepControl]="Documentos" *ngIf="profileChoiceForm.value.description === 'companies'">
+        <ng-template matStepLabel>Documentos</ng-template>
+        <div id="form-document">
+          <mat-form-field id="form-width">
+            <mat-select placeholder="Tipo de Documento">
+              <mat-option value="1">Inscrição Estadual</mat-option>
+              <mat-option value="2">Inscrição Municipal</mat-option>
+              <mat-option value="3">Alvará</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field id="form-width">
+              <input matInput placeholder="Valor" required>
+          </mat-form-field>
+        </div>
+        <div id="btn-choice">
+          <button mat-raised-button color="primary" matStepperPrevious>Volta</button>
+          <button mat-raised-button color="primary" matStepperNext>Próximo</button>
+        </div>
+      </mat-step>
+
+      <!-- Animals --> 
+      <mat-step [stepControl]="Documentos" *ngIf="profileChoiceForm.value.description === 'animals'">
+        <ng-template matStepLabel>Documentos</ng-template>
+      </mat-step>
+
+      <!-- Entities --> 
+      <mat-step [stepControl]="Documentos" *ngIf="profileChoiceForm.value.description === 'entities'">
+        <ng-template matStepLabel>Documentos</ng-template>
+      </mat-step>
+      <!-- 
+        End - Documentos 
+      -->
+
+      <!-- 
+        Begin - Endereço 
+      -->
       <mat-step [stepControl]="Endereco">
         <ng-template matStepLabel>Endereço</ng-template>
+        <div>
+            <mat-form-field id="form-width-document">
+              <mat-label>CEP</mat-label>
+              <input matInput [textMask]="{mask: mask.zip}"  placeholder="Digite o seu Cep" required>
+            </mat-form-field>
+            <mat-form-field id="form-width-document">
+              <mat-label>Tipo de Endereço</mat-label>
+              <input matInput placeholder="Exemplo: Residêncial" required>
+            </mat-form-field>
+            <mat-form-field id="form-width">
+              <mat-label>Logradouro</mat-label>
+              <input matInput placeholder="Exemplo: Rua exemplo de tal" required>
+            </mat-form-field>
+            <mat-form-field id="form-width-document">
+              <mat-label>Número</mat-label>
+              <input matInput placeholder="Exemplo: 71" required>
+            </mat-form-field>
+            <mat-form-field id="form-width-document">
+              <mat-label>Bairro</mat-label>
+              <input matInput placeholder="Exemplo: Pajuçara" required>
+            </mat-form-field>
+            <mat-form-field id="form-width">
+              <mat-label>Complemento</mat-label>
+              <input matInput placeholder="Exemplo: Praça é Nossa!">
+            </mat-form-field>
+            <mat-form-field id="form-width-document">
+              <mat-label>Cidade</mat-label>
+              <input matInput placeholder="Exemplo: Maceió" required>
+            </mat-form-field>
+            <mat-form-field id="form-width-document">
+                <mat-label>Estado</mat-label>
+                <input matInput placeholder="Exemplo: Alagoas" required>
+              </mat-form-field>
+            <mat-form-field id="form-width-document">
+              <mat-label>Pais</mat-label>
+              <input matInput placeholder="Exemplo: Brasil" required>
+            </mat-form-field>
+        </div>
+        <div id="btn-choice">
+          <button mat-raised-button color="primary" matStepperPrevious>Volta</button>
+          <button mat-raised-button color="primary" matStepperNext>Próximo</button> 
+        </div>
       </mat-step>
+      <!-- 
+        End - Endereço 
+      -->
+
+      <!-- 
+        Begin - Endereço 
+      -->
       <mat-step [stepControl]="Contatos">
         <ng-template matStepLabel>Contatos</ng-template>
+        <div>
+          <mat-form-field>
+            <mat-select placeholder="Tipo de Contato">
+              <mat-option value="1">Telefone Fixo</mat-option>
+              <mat-option value="2">Celular</mat-option>
+              <mat-option value="3">Email</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Valor</mat-label>
+            <input matInput [textMask]="{mask: mask.cell_phone}" placeholder="Digite o valor" required>
+          </mat-form-field>
+        </div>
+        <div id="btn-choice">
+          <button mat-raised-button color="primary" matStepperPrevious>Volta</button>
+          <button mat-raised-button color="primary" matStepperNext>Próximo</button> 
+        </div>
       </mat-step>
-      <mat-step [stepControl]="DadosEscolares">
+      <!-- 
+        End - Endereço 
+      -->
+
+      <!-- 
+        Begin - Dados Escolares 
+      -->
+      <mat-step [stepControl]="DadosEscolares" *ngIf="profileChoiceForm.value.description === 'people'">
         <ng-template matStepLabel>Dados Escolares</ng-template>
+        <mat-form-field>
+          <mat-select #selectLevel placeholder="Nível" required>
+            <mat-option value="1">Fundamental</mat-option>
+            <mat-option value="2">Técnico</mat-option>
+            <mat-option value="3">Médio</mat-option>
+            <mat-option value="4">Superior</mat-option>
+            <mat-option value="5">Pós-graduação</mat-option>
+            <mat-option value="6">Mestrado</mat-option>
+            <mat-option value="7">Doutorado</mat-option>
+            <mat-option value="8">PwD</mat-option>
+            <mat-option value="9">Especialista</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field id="form-width">
+          <mat-label>Nome da Instituição</mat-label>
+          <input matInput placeholder="Digite o nome da instituição" required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Início</mat-label>
+          <input matInput type="date" required> 
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Término</mat-label>
+          <input matInput type="date" required>
+        </mat-form-field>
+        <mat-form-field *ngIf="this.selectLevel.value == 2 || this.selectLevel.value == 4 || this.selectLevel.value == 5 || this.selectLevel.value == 6 || this.selectLevel.value == 7 || this.selectLevel.value == 8 || this.selectLevel.value == 9">
+          <mat-label>Curso</mat-label>
+          <input matInput placeholder="Digite o nome do curso" required>
+        </mat-form-field>
+        <div id="btn-choice"> 
+          <button mat-raised-button color="primary" matStepperPrevious>Volta</button>
+          <button mat-raised-button color="primary" matStepperNext>Próximo</button> 
+        </div>
       </mat-step>
-      <mat-step [stepControl]="DadosProfissionais">
+      <!-- 
+        End - Dados Escolares 
+      -->
+
+      <!-- 
+        Begin - Dados Profissionais 
+      -->
+      <mat-step [stepControl]="DadosProfissionais" *ngIf="profileChoiceForm.value.description === 'people'">
         <ng-template matStepLabel>Dados Profissionais</ng-template>
+        <mat-form-field id="form-width-document">
+          <mat-label>Cnpj</mat-label>
+          <input matInput placeholder="Digite o cnpj" [textMask]="{mask: mask.cnpj}">
+        </mat-form-field>
+        <mat-form-field id="form-width">
+          <mat-label>Nome da Empresa</mat-label>
+          <input matInput placeholder="Digite o nome da empresa">
+        </mat-form-field>
+        <mat-form-field id="form-width">
+          <mat-label>Cargo</mat-label>
+          <input matInput placeholder="Seu Cargo">
+        </mat-form-field>
+        <mat-form-field id="form-width">
+          <mat-label>Descrição do Cargo</mat-label>
+          <input type="text" matInput placeholder="Descreva o seu cargo.">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Admissão</mat-label>
+          <input type="date" matInput>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Saída</mat-label>
+          <input type="date" matInput>
+        </mat-form-field>
+        <div>
+          <button mat-raised-button color="primary">Cadastrar</button>
+        </div>
       </mat-step>  
+      <!-- 
+        End - Dados Profissionais 
+      -->
     </mat-horizontal-stepper>
+    </div>
   </div>
-</div>
 
 <!--
   <div *ngIf="isStarted">
