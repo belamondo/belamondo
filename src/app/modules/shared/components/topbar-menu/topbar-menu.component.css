@@ -1,6 +1,142 @@
+#toolbar {
+  height: 160px;
+  width: 100%;
+  background-color: #000B48;
+  position: fixed;
+  top: 0;
+  z-index: 2;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#menu-toolbar {
+  width: 60%;
+  height: 60px;
+  flex-grow: 3;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+#menu-toolbar a {
+  text-decoration: none;
+  color: #FFFFFF;
+  font-size: 20px;
+  font-family: 'poppins', sans-serif;
+  font-weight: 00px;
+  margin-left: 20px;
+}
+
+#menu-toolbar a:hover {
+  border-bottom: #FFFFFF solid 1px;
+}
+
+#profile-toolbar {
+  width: 20%;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+#sidebarModule-toolbar {
+  width: 60px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 50px;
+}
+
+#sidebarModule-toolbar mat-icon {
+  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+#profile-toolbar span {
+  color: #ffffff;
+  font-size: 20px;
+  font-family: 'poppins', sans-serif;
+  font-weight: 400; 
+  margin-left: 10px;
+}
+
+#user-profile {
+  background-color: #ffffff;
+  border-radius: 50%;
+  width: 59px;
+  height: 59px;
+}
+
+#logo-toolbar {
+  width: 40%;
+  height: 80px;
+  flex-grow: 3;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+#logo {
+  font-family: 'poppins', sans-serif;
+  font-size: 60px;
+  margin-left: 20px;
+  font-weight: 100; 
+  color: #ffffff; 
+}
+
+#logo_m {
+  font-weight: 900;
+}
+
+#menuModule-toolbar {
+  width: 40%;
+  height: 80px;
+  flex-grow: 3;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+mat-drawer-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 100px;
+  z-index: 1;
+}
+
+mat-drawer {
+  position: absolute;
+  z-index: 1;
+  background-color: red;
+  width: 100%;
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+}
+
+
+
+
+
+
+
+
+/* 
 #header-content {
   display: flex;
   width: 100%;
+  z-index: 1;
 }
 
 #header-content div {
@@ -74,7 +210,13 @@
 }
 
 .sidenav-container mat-sidenav {
-  width: 250px;
+  width: 100vw;
+  z-index: 3;
+}
+
+mat-sidenav-container {
+  height: 100vh;
+  z-index: 3;
 }
 
 .sidenav-container mat-card {
@@ -123,4 +265,4 @@ mat-toolbar {
   background: #263B89;
   color: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24) !important;
-}
+} */

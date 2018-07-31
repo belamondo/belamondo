@@ -113,7 +113,7 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field id="form-width">
-              <input matInput placeholder="Valor" required>
+              <input matInput placeholder="Valor">
           </mat-form-field>
         </div>
         <div id="btn-choice">
@@ -134,7 +134,7 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field id="form-width">
-              <input matInput placeholder="Valor" required>
+              <input matInput placeholder="Valor">
           </mat-form-field>
         </div>
         <div id="btn-choice">
@@ -164,23 +164,23 @@
         <div>
             <mat-form-field id="form-width-document">
               <mat-label>CEP</mat-label>
-              <input matInput [textMask]="{mask: mask.zip}"  placeholder="Digite o seu Cep" required>
+              <input matInput [textMask]="{mask: mask.zip}"  placeholder="Digite o seu Cep">
             </mat-form-field>
             <mat-form-field id="form-width-document">
               <mat-label>Tipo de Endereço</mat-label>
-              <input matInput placeholder="Exemplo: Residêncial" required>
+              <input matInput placeholder="Exemplo: Residêncial">
             </mat-form-field>
             <mat-form-field id="form-width">
               <mat-label>Logradouro</mat-label>
-              <input matInput placeholder="Exemplo: Rua exemplo de tal" required>
+              <input matInput placeholder="Exemplo: Rua exemplo de tal">
             </mat-form-field>
             <mat-form-field id="form-width-document">
               <mat-label>Número</mat-label>
-              <input matInput placeholder="Exemplo: 71" required>
+              <input matInput placeholder="Exemplo: 71">
             </mat-form-field>
             <mat-form-field id="form-width-document">
               <mat-label>Bairro</mat-label>
-              <input matInput placeholder="Exemplo: Pajuçara" required>
+              <input matInput placeholder="Exemplo: Pajuçara">
             </mat-form-field>
             <mat-form-field id="form-width">
               <mat-label>Complemento</mat-label>
@@ -188,15 +188,15 @@
             </mat-form-field>
             <mat-form-field id="form-width-document">
               <mat-label>Cidade</mat-label>
-              <input matInput placeholder="Exemplo: Maceió" required>
+              <input matInput placeholder="Exemplo: Maceió">
             </mat-form-field>
             <mat-form-field id="form-width-document">
                 <mat-label>Estado</mat-label>
-                <input matInput placeholder="Exemplo: Alagoas" required>
+                <input matInput placeholder="Exemplo: Alagoas">
               </mat-form-field>
             <mat-form-field id="form-width-document">
               <mat-label>Pais</mat-label>
-              <input matInput placeholder="Exemplo: Brasil" required>
+              <input matInput placeholder="Exemplo: Brasil">
             </mat-form-field>
         </div>
         <div id="btn-choice">
@@ -223,7 +223,7 @@
           </mat-form-field>
           <mat-form-field>
             <mat-label>Valor</mat-label>
-            <input matInput [textMask]="{mask: mask.cell_phone}" placeholder="Digite o valor" required>
+            <input matInput [textMask]="{mask: mask.cell_phone}" placeholder="Digite o valor">
           </mat-form-field>
         </div>
         <div id="btn-choice">
@@ -241,7 +241,7 @@
       <mat-step [stepControl]="DadosEscolares" *ngIf="profileChoiceForm.value.description === 'people'">
         <ng-template matStepLabel>Dados Escolares</ng-template>
         <mat-form-field>
-          <mat-select #selectLevel placeholder="Nível" required>
+          <mat-select #selectLevel placeholder="Nível">
             <mat-option value="1">Fundamental</mat-option>
             <mat-option value="2">Técnico</mat-option>
             <mat-option value="3">Médio</mat-option>
@@ -255,19 +255,19 @@
         </mat-form-field>
         <mat-form-field id="form-width">
           <mat-label>Nome da Instituição</mat-label>
-          <input matInput placeholder="Digite o nome da instituição" required>
+          <input matInput placeholder="Digite o nome da instituição">
         </mat-form-field>
         <mat-form-field>
           <mat-label>Início</mat-label>
-          <input matInput type="date" required> 
+          <input matInput type="date"> 
         </mat-form-field>
         <mat-form-field>
           <mat-label>Término</mat-label>
-          <input matInput type="date" required>
+          <input matInput type="date">
         </mat-form-field>
         <mat-form-field *ngIf="this.selectLevel.value == 2 || this.selectLevel.value == 4 || this.selectLevel.value == 5 || this.selectLevel.value == 6 || this.selectLevel.value == 7 || this.selectLevel.value == 8 || this.selectLevel.value == 9">
           <mat-label>Curso</mat-label>
-          <input matInput placeholder="Digite o nome do curso" required>
+          <input matInput placeholder="Digite o nome do curso">
         </mat-form-field>
         <div id="btn-choice"> 
           <button mat-raised-button color="primary" matStepperPrevious>Volta</button>
