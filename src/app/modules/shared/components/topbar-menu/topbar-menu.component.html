@@ -1,107 +1,69 @@
-<div id="toolbar">
-    <div class="container">
-      <div id="menu-toolbar">
-        <div>
-          <a>Início</a>
-          <a>Perfil</a>
-          <a>Mensagens</a>
-        </div>
-      </div>
-      <div id="profile-toolbar" *ngIf="!isProfileChoice">
-        <div id="sidebarModule-toolbar">
+<div class="general-container" *ngIf="isStarted">  
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #snav mode="over" [fixedTopGap]="options.top" [fixedBottomGap]="options.bottom">
+      <div id="header-sidenav">
+        <div id="sidebar-close">
           <button mat-icon-button (click)="snav.toggle()">
-            <mat-icon>view_module</mat-icon>
-          </button>
+            <mat-icon>close</mat-icon>
+          </button>         
         </div>
-        <div id="user-profile"></div>
-        <span *ngIf="userData[0]['_userType'] === 'people'">
-          {{userData[0]['name'].split(' ')[0]}} 
-          <mat-icon>keyboard_arrow_down</mat-icon>
-        </span>
-        <span *ngIf="userData[0]['_userType'] === 'companies'">
-          {{userData[0]['business_name']}} 
-          <mat-icon>keyboard_arrow_down</mat-icon>
-        </span>
-      </div>
-      <br>
-      <div id="logo-toolbar">
-        <div id="logo">
-          <label id="logo_m">M</label>oderatoro
+        <div id="search-sidenav">
+          <mat-form-field>
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput placeholder="Pesquisar">
+          </mat-form-field>
+        </div>
+        <div id="buy-sidenav">
         </div>
       </div>
-      <div id="menuModule-toolbar">
-
-      </div>
-    </div>
-  </div>
-<mat-drawer-container class="example-container">
-  <mat-drawer #snav mode="over">I'm a drawer</mat-drawer>
-
-  <mat-drawer-content>
-      <button mat-icon-button (click)="snav.toggle()">
-          <mat-icon>view_module</mat-icon>
-        </button>
-  </mat-drawer-content>
-</mat-drawer-container>
-
-
-
-
-
-
-
-
-
-
-<!-- <div class="general-container" [class.is-mobile]="mobileQuery.matches" *ngIf="isStarted">
-  <mat-toolbar class="header-toolbar">
-    <div id="header-content" *ngIf="!isProfileChoice">
-      <div>
-        <button mat-icon-button (click)="snav.toggle()">
-          <mat-icon>menu</mat-icon>
-        </button>
-      </div>
-      
-      <div>
-        <span *ngIf="userData[0]['_userType'] === 'people'" style="font-size: small">
-          {{userData[0]['name'].split(' ')[0]}}
-        </span>
-        
-        <span *ngIf="userData[0]['_userType'] === 'companies'" style="font-size: small">
-          {{userData[0]['business_name']}}
-        </span>
-        
-        <mat-menu #appMenu="matMenu" yPosition="below">
-          <a mat-menu-item routerLink="" class="menu-item" *ngIf="moduleWarehouse">Almoxarifado</a>
-          <a mat-menu-item routerLink="/crm" class="menu-item" *ngIf="moduleCrm">CRM</a>
-          <a mat-menu-item routerLink="/cash-flow" class="menu-item" *ngIf="moduleCashFlow">Fluxo de caixa</a>
-          <a mat-menu-item routerLink="/system" class="menu-item" *ngIf="moduleSystem">Sistema</a>
-        </mat-menu>
-        
-        <button >
-          <mat-icon>view_module</mat-icon>
-        </button>
-        
-        <button mat-icon-button (click)="logout()">
-          <mat-icon>exit_to_app</mat-icon>
-        </button>
-      </div>
-    </div>
-  </mat-toolbar>
-  
-  <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
-    <mat-sidenav #snav [opened]="options.opened" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="options.fixed"
-    [fixedTopGap]="options.top" [fixedBottomGap]="options.bottom">
       <mat-nav-list>
-        <span class="app-title" (click)="_router.navigate(['/main'])">Belamondo</span><br />
-        <span class="app-name" (click)="_router.navigate(['/main'])">{{params.title}}</span>
-
-
-          
+        <div>
+          <a>
+            <mat-icon>shopping_cart</mat-icon>
+            <span>PDV</span>
+          </a>
+        </div>
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
-      <router-outlet></router-outlet>
+      <div id="toolbar">
+        <div class="container">
+          <div id="menu-toolbar">
+            <div>
+              <a>Início</a>
+              <a>Perfil</a>
+              <a>Mensagens</a>
+            </div>
+          </div>
+          <div id="profile-toolbar" *ngIf="!isProfileChoice">
+            <div id="sidebarModule-toolbar">
+              <button mat-icon-button (click)="snav.toggle()">
+                <mat-icon>view_module</mat-icon>
+              </button>
+            </div>
+            <div id="user-profile"></div>
+            <span *ngIf="userData[0]['_userType'] === 'people'">
+              {{userData[0]['name'].split(' ')[0]}} 
+              <mat-icon>keyboard_arrow_down</mat-icon>
+            </span>
+            <span *ngIf="userData[0]['_userType'] === 'companies'">
+              {{userData[0]['business_name']}} 
+              <mat-icon>keyboard_arrow_down</mat-icon>
+            </span>
+          </div>
+          <br>
+          <div id="logo-toolbar">
+            <div id="logo">
+              <label id="logo_m">M</label>oderatoro
+            </div>
+          </div>
+          <div id="menuModule-toolbar">
+          </div>
+        </div>
+      </div>
+      <div id="teste">
+        <router-outlet></router-outlet>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
-</div> -->
+</div>
