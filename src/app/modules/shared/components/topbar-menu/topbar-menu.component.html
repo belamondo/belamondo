@@ -1,29 +1,37 @@
 <div class="general-container" *ngIf="isStarted">  
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #snav mode="over" [fixedTopGap]="options.top" [fixedBottomGap]="options.bottom">
-      <div id="header-sidenav">
-        <div id="sidebar-close">
-          <button mat-icon-button (click)="snav.toggle()">
-            <mat-icon>close</mat-icon>
-          </button>         
+      <div class="container-sidemenu">
+        <div id="header-sidenav">
+          <div id="sidebar-close">
+            <button mat-icon-button (click)="snav.toggle()">
+              <mat-icon>close</mat-icon>
+            </button>         
+          </div>
+          <div id="search-sidenav">
+            <mat-form-field>
+              <mat-icon matPrefix>search</mat-icon>
+              <input matInput placeholder="Pesquisar">
+            </mat-form-field>
+          </div>
+          <div id="buy-sidenav">
+            asd
+          </div>
         </div>
-        <div id="search-sidenav">
-          <mat-form-field>
-            <mat-icon matPrefix>search</mat-icon>
-            <input matInput placeholder="Pesquisar">
-          </mat-form-field>
-        </div>
-        <div id="buy-sidenav">
-        </div>
-      </div>
-      <mat-nav-list>
-        <div>
-          <a>
-            <mat-icon>shopping_cart</mat-icon>
-            <span>PDV</span>
-          </a>
-        </div>
-      </mat-nav-list>
+        <mat-nav-list>
+          <div id="title-module">
+            <span>Meus Módulos</span>
+          </div>
+          <div id="module">
+            <a routerLink="/cash-flow">
+              <div id="my-module">
+                  <mat-icon>shopping_cart</mat-icon>
+                  <span>PDV</span>
+              </div>
+            </a> 
+          </div>
+        </mat-nav-list>
+    </div>
     </mat-sidenav>
     <mat-sidenav-content>
       <div id="toolbar">
@@ -57,7 +65,13 @@
               <label id="logo_m">M</label>oderatoro
             </div>
           </div>
-          <div id="menuModule-toolbar">
+          <div id="menuModule-toolbar" *ngIf="">
+            <div>
+              <a>Cadastro</a>
+              <a>Lançamentos</a>
+              <a>Contas a pagar/receber</a>
+              <a>Relatórios</a>
+            </div>
           </div>
         </div>
       </div>

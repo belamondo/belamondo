@@ -183,16 +183,17 @@ mat-sidenav {
 
 #sidebar-close {
   width: 100px;
-  align-items: center;
+  align-items: left;
   display: flex;
-  justify-content: center;
+  justify-content: left;
+  flex-grow: 1;
 }
 
 #search-sidenav {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-grow: 3;
+  flex-grow: 5;
 }
 
 #search-sidenav mat-icon{
@@ -201,9 +202,69 @@ mat-sidenav {
 
 #buy-sidenav {
   width: 100px;
-  align-items: center;
+  align-items: right;
   justify-content: center;
   display: flex;
+  flex-grow: 1;
+}
+
+.container-sidemenu {
+  width: 80%;
+  height: 100vh;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+mat-nav-list {
+  height: 300px;
+}
+
+mat-nav-list #title-module {
+  font-family: 'poppins', sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+mat-nav-list #module {
+  height: 230px;
+  display: flex;;
+  align-items: center;
+  justify-content: left;
+  flex-flow: wrap;
+
+}
+
+mat-nav-list #my-module:hover {
+  background-color: #272626a2;
+}
+
+mat-nav-list #my-module {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  height: 100px;
+  align-items: center;
+  flex-flow: wrap;
+  justify-content: center;
+  margin-left: 10px;
+  border-radius: 5px;
+}
+
+mat-nav-list #my-module mat-icon {
+  color: #ffffff;
+  font-size: 60px;
+  width: 200px;
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+mat-nav-list #my-module span {
+  color: #ffffff;
+  font-size: 20px;
+  font-family: 'poppins', sans-serif;
+  font-weight: 400;
+
 }
 
 
