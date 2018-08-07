@@ -65,9 +65,9 @@
               <label id="logo_m">M</label>oderatoro
             </div>
           </div>
-          <div id="menuModule-toolbar" *ngIf="">
+          <div id="menuModule-toolbar" *ngIf="params.title === 'PDV'">
             <div>
-              <a>Cadastro</a>
+              <a routerLink="products">Cadastro</a>
               <a>Lançamentos</a>
               <a>Contas a pagar/receber</a>
               <a>Relatórios</a>

@@ -1,3 +1,32 @@
 .spinner-container {
     margin-top: 100px;
 }
+
+.flex-container {
+    width: 100% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    flex-flow: wrap;
+}
+
+#table-produtos {
+    width: 600px;
+    height: 500px;
+    flex-grow: 3;
+}
+
+#detalhes-produtos {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#card-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #dedede;
+}
+

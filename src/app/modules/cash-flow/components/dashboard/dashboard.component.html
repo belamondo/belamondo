@@ -4,9 +4,28 @@
   </div>
 </mat-card>
 
-<div style="max-width: 800px; margin: auto;">
+<div style="width: 800px; margin: auto;">
   <mat-card *ngIf="isStarted" class="container">
-    <span>inicio</span>
-    <mat-card-title>Cash Flow Dashboard</mat-card-title>
+    <mat-card-title>Selecione a Empresa:</mat-card-title>
+    <mat-card-content>
+      <div id="escolha-empresa">
+        <div id="user-profile">
+        </div>
+        <div id="Empresa">
+          <div>
+            <h1>Multidoor Store</h1>
+          </div>
+          <div>
+            <span>000.000.0000-00</span>
+          </div>
+        </div>        
+      </div>
+    </mat-card-content>
+    <mat-card-footer>
+      <mat-paginator [length]="100"
+        [pageSize]="4"
+        [pageSizeOptions]="[5, 10, 25, 100]">
+      </mat-paginator>
+    </mat-card-footer>
   </mat-card>
 </div>

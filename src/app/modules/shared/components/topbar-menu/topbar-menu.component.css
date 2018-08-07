@@ -267,6 +267,27 @@ mat-nav-list #my-module span {
 
 }
 
+#menuModule-toolbar {
+  align-items: flex-end;
+  justify-content: right;
+  display: flex;
+  height: 55px;
+}
+
+#menuModule-toolbar a {
+  margin-bottom: 20px;
+  margin-left: 20px;
+  font-family: 'poppinss', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  justify-content: left;
+  text-decoration: none;
+}
+
+#menuModule-toolbar a:hover {
+  border-bottom: #FFFFFF solid 1px;
+} 
 
 /deep/ .mat-form-field-label  {
   color: #ffffff !important;
