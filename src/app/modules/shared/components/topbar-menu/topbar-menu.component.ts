@@ -105,41 +105,41 @@ export class TopbarMenuComponent implements OnInit, OnChanges {
 
         this.isStarted = true;
 
-        this.setModulesPermissions();
+        //this.setModulesPermissions();
       });
     } else {
       if (!this.userData) {
         this.userData = this._strategicData.userData$;
         this.isStarted = true;
 
-        this.setModulesPermissions();
+        //this.setModulesPermissions();
       }
     }
   }
 
-  setModulesPermissions = () => {
-    this._crud.readWithObservable({
-      collectionsAndDocs: ['modulesPermissions', this.userData[0]['_id']]
-    }).subscribe(res => {
-      res[0]['modules'].forEach(element => {
-        if (element === 'Almoxarifado') {
-          this.moduleWarehouse = true;
-        }
+  // //setModulesPermissions = () => {
+  //   this._crud.readWithObservable({
+  //     collectionsAndDocs: ['modulesPermissions', this.userData[0]['_id']]
+  //   }).subscribe(res => {
+  //     res[0]['modules'].forEach(element => {
+  //       if (element === 'Almoxarifado') {
+  //         this.moduleWarehouse = true;
+  //       }
 
-        if (element === 'Fluxo de caixa') {
-          this.moduleCashFlow = true;
-        }
+  //       if (element === 'Fluxo de caixa') {
+  //         this.moduleCashFlow = true;
+  //       }
 
-        if (element === 'CRM') {
-          this.moduleCrm = true;
-        }
+  //       if (element === 'CRM') {
+  //         this.moduleCrm = true;
+  //       }
 
-        if (element === 'Sistema') {
-          this.moduleSystem = true;
-        }
-      });
-    });
-  }
+  //       if (element === 'Sistema') {
+  //         this.moduleSystem = true;
+  //       }
+  //     });
+  //   });
+  // }
 
   logout = () => {
     let params;

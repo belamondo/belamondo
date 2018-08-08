@@ -18,3 +18,28 @@
 .title {
     font-size: large;
 }
+
+.flex-container {
+    width: 700px;
+}
+
+#input-full {
+    width: 81%;
+}
+
+#img-product {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #dedede;
+}
+
+/deep/ .mat-form-field-label  {
+    color: #000000   !important;
+}
+
+/deep/ .mat-form-field-underline{
+    background-color: #000000 !important;    
+}

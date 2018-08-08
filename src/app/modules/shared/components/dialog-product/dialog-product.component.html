@@ -8,41 +8,95 @@
     </div>
 
     <div class="flex">
-      <div *ngIf="isStarted" class="container">
-        <mat-card-content>
-          <mat-form-field>
-            <mat-label>Nome</mat-label>
-            <input matInput placeholder="Nome do produto" type="text" formControlName="name" required>
-          </mat-form-field>
+      <div *ngIf="isStarted" class="flex-container">
+        <mat-tab-group>
+          <mat-tab label="Cadastro">
+            <mat-card-content>
+              <div id="img-product">
+                <img src="" alt="">
+              </div>
+              <div class="flex">
+                <mat-form-field>
+                  <mat-label>Código</mat-label>
+                  <input matInput placeholder="Codigo do produto" type="text" formControlName="code" required>
+                </mat-form-field>
 
-          <div class="flex">
-            <mat-form-field>
-              <mat-label>Código de barras</mat-label>
-              <input matInput placeholder="Código de barras" type="text" formControlName="barcode">
-            </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Código de barras</mat-label>
+                  <input matInput placeholder="Código de barras" type="text" formControlName="barcode">
+                </mat-form-field>
 
-            <mat-form-field class="flex">
-              <mat-label>Unidade de medida</mat-label>
-              <input matInput placeholder="Unidade de medida" type="text" formControlName="unit">
-            </mat-form-field>
+                <mat-checkbox>Produto Inativo</mat-checkbox>
+              </div>
 
-            <mat-form-field class="flex">
-              <mat-label>Preço</mat-label>
-              <input matInput placeholder="Preço" type="text" formControlName="price">
-            </mat-form-field>
-          </div>
+                <mat-form-field  id="input-full">
+                  <mat-label>Especificação</mat-label>
+                  <input matInput placeholder="Especificação" type="text" formControlName="name" required>
+                </mat-form-field>
 
-          <app-additional-field [params]="paramsToAdditionalField" (changeAdditionalField)="onOutputFromAdditionalField($event)"></app-additional-field>
-        </mat-card-content>
+              <div class="flex">
+                <mat-form-field>
+                  <mat-label>Unidade de medida</mat-label>
+                  <mat-select matInput placeholder="Unidade de medida" type="text" formControlName="unit">
+                    <mat-option>
+                      teste
+                    </mat-option>
+                  </mat-select> 
+                </mat-form-field> 
+
+                <mat-form-field>
+                  <mat-label>Grupo</mat-label>
+                  <mat-select matInput placeholder="Unidade de medida" type="text" formControlName="Group">
+                    <mat-option>
+                      Grupo
+                    </mat-option>
+                  </mat-select> 
+                </mat-form-field> 
+
+                <mat-form-field>
+                  <mat-label>NCM</mat-label>
+                  <input matInput placeholder="Código de barras" type="text" formControlName="NCM">
+                </mat-form-field>
+              </div>
+              <div class="flex">
+                <mat-form-field class="flex">
+                  <mat-label>Data de validade</mat-label>
+                  <input matInput placeholder="Data de validade" type="date">
+                </mat-form-field>
+
+                <mat-form-field class="flex">
+                  <mat-label>Preço de custo</mat-label>
+                  <input matInput placeholder="Preço" type="text" formControlName="price">
+                </mat-form-field>
+
+                <mat-form-field class="flex">
+                  <mat-label>Preço de venda</mat-label>
+                  <input matInput placeholder="Preço" type="text" formControlName="priceSell">
+                </mat-form-field>                
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="Impostos">
+            Impostos
+          </mat-tab>
+          <mat-tab label="Dados Adicionais">
+            Dados Adicionais
+          </mat-tab>
+          <mat-tab label="Observações">
+            Observações
+          </mat-tab>
+        </mat-tab-group>
+
+
       </div>
     </div>
   </mat-dialog-content>
 
   <mat-dialog-actions>
     <div class="flex">
-      <button mat-raised-button [disabled]="productForm.invalid" class="button" (click)="onProductFormSubmit(this.formDirective)">{{submitButton}}</button>
+      <button mat-raised-button color="primary" [disabled]="productForm.invalid" class="button" (click)="onProductFormSubmit(this.formDirective)">{{submitButton}}</button>
 
-      <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
+      <button mat-raised-button (click)="onClose();">Fechar</button>
     </div>
   </mat-dialog-actions>
 </form>
